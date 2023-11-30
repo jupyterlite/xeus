@@ -52,7 +52,14 @@
         "watch:labextension": "jupyter labextension watch ."
     },
     "dependencies": {
-        "@jupyterlab/application": "^4.0.0"
+        "@jupyterlab/coreutils": "^6",
+        "@jupyterlab/services": "^7",
+        "@jupyterlite/contents": "^0.2.0",
+        "@jupyterlite/kernel": "^0.2.0",
+        "@jupyterlite/server": "^0.2.0",
+        "@lumino/coreutils": "^2",
+        "@lumino/signaling": "^2",
+        "comlink": "^4.3.1"
     },
     "devDependencies": {
         "@jupyterlab/builder": "^4.0.0",
@@ -91,7 +98,25 @@
     },
     "jupyterlab": {
         "extension": true,
-        "outputDir": "jupyterlite_xeus/labextension"
+        "outputDir": "jupyterlite_xeus/labextension",
+        "webpackConfig": "./webpack.config.js",
+        "sharedPackages": {
+            "@jupyterlite/kernel": {
+                "bundled": false,
+                "singleton": true
+            },
+            "@jupyterlite/server": {
+                "bundled": false,
+                "singleton": true
+            },
+            "@jupyterlite/contents": {
+                "bundled": false,
+                "singleton": true
+            }
+        }
+    },
+    "jupyterlite": {
+        "liteExtension": true
     },
     "eslintIgnore": [
         "node_modules",
