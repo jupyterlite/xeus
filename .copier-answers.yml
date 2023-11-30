@@ -1,0 +1,19 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v4.2.4
+_src_path: https://github.com/jupyterlab/extension-template
+author_email: ''
+author_name: JupyterLite Contributors
+data_format: string
+file_extension: ''
+has_binder: false
+has_settings: false
+kind: frontend
+labextension_name: '@jupyterlite/xeus'
+mimetype: ''
+mimetype_name: ''
+project_short_description: JupyterLite loader for Xeus kernels
+python_name: jupyterlite_xeus
+repository: https://github.com/jupyterlite/xeus
+test: true
+viewer_name: ''
+
