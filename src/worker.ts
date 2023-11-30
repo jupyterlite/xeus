@@ -97,13 +97,9 @@ async function get_stdin() {
 
 (self as any).get_stdin = get_stdin;
 
-
-
-
 class XeusKernel {
   constructor(resolve: any) {
     this._resolve = resolve;
-
   }
 
   async ready(): Promise<void> {
@@ -141,15 +137,13 @@ class XeusKernel {
 
   async processMessage(event: any): Promise<void> {
     const msg_type = event.msg.header.msg_type;
-    if(msg_type === 'initialize') {
-
+    if (msg_type === 'initialize') {
       const spec = event.spec;
       this._spec = spec;
       await this.initialize();
 
       return;
     }
-
 
     await this.ready();
 
@@ -162,7 +156,6 @@ class XeusKernel {
       globalThis.toplevel_promise_py_proxy = null;
       globalThis.toplevel_promise = null;
     }
-
 
     if (msg_type === 'input_reply') {
       resolveInputReply(event.msg);
@@ -188,19 +181,26 @@ class XeusKernel {
       }
     });
     try {
-
       await this.waitRunDependency();
       console.log(globalThis.Module);
 
-      if(globalThis.Module['async_init'] !== undefined) {
+      if (globalThis.Module['async_init'] !== undefined) {
         console.log('!!!async_init!!!!');
-        const kernel_root_url=`kernels/${dir}`
-        const pkg_root_url = `kernel_packages`
-        console.log("with kernel_root_url", kernel_root_url, "and pkg_root_url", pkg_root_url);
+        const kernel_root_url = `kernels/${dir}`;
+        const pkg_root_url = 'kernel_packages';
+        console.log(
+          'with kernel_root_url',
+          kernel_root_url,
+          'and pkg_root_url',
+          pkg_root_url
+        );
         const verbose = true;
-        await globalThis.Module['async_init'](kernel_root_url,pkg_root_url, verbose);
-      }
-      else{
+        await globalThis.Module['async_init'](
+          kernel_root_url,
+          pkg_root_url,
+          verbose
+        );
+      } else {
         console.log('!!!NO async_init!!!!');
       }
 
@@ -214,17 +214,15 @@ class XeusKernel {
       console.log('!!!start!!!');
       this._raw_xkernel.start();
       console.log('!!!start-DONE!!!');
-    }
-    catch (e) {
-        if( typeof e === 'number' ) {
-          const msg = globalThis.Module.get_exception_message(e);
-          console.error(msg);
-          throw new Error(msg);
-        }
-        else {
-          console.error(e);
-          throw(e);
-        }
+    } catch (e) {
+      if (typeof e === 'number') {
+        const msg = globalThis.Module.get_exception_message(e);
+        console.error(msg);
+        throw new Error(msg);
+      } else {
+        console.error(e);
+        throw e;
+      }
     }
     this._resolve();
   }
@@ -255,5 +253,3 @@ class XeusKernel {
 globalThis.ready = new Promise(resolve => {
   expose(new XeusKernel(resolve));
 });
-
-

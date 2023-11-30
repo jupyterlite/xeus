@@ -36,7 +36,7 @@ console.log(kernel_dir);
 
 // fetch kernel spec for each kernel
 const kernel_specs = kernel_dir.map(kernel_dir => {
-  let spec: any = getPkgJson('kernels/' + kernel_dir + '/kernel.json');
+  const spec: any = getPkgJson('kernels/' + kernel_dir + '/kernel.json');
   spec.name = kernel_dir;
   spec.dir = kernel_dir;
   spec.resources = {
@@ -49,7 +49,7 @@ const kernel_specs = kernel_dir.map(kernel_dir => {
 console.log(kernel_specs);
 
 const server_kernels = kernel_specs.map(spec => {
-  let server_kernel: JupyterLiteServerPlugin<void> = {
+  const server_kernel: JupyterLiteServerPlugin<void> = {
     // use name from spec
     id: `@jupyterlite/${spec.name}-extension:kernel`,
     autoStart: true,
