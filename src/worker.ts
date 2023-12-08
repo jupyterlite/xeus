@@ -97,9 +97,13 @@ async function get_stdin() {
 
 (self as any).get_stdin = get_stdin;
 
+
+
+
 class XeusKernel {
   constructor(resolve: any) {
     this._resolve = resolve;
+    
   }
 
   async ready(): Promise<void> {
@@ -137,13 +141,15 @@ class XeusKernel {
 
   async processMessage(event: any): Promise<void> {
     const msg_type = event.msg.header.msg_type;
-    if (msg_type === 'initialize') {
+    if(msg_type === 'initialize') {
+
       const spec = event.spec;
       this._spec = spec;
       await this.initialize();
 
       return;
     }
+
 
     await this.ready();
 
@@ -157,6 +163,7 @@ class XeusKernel {
       globalThis.toplevel_promise = null;
     }
 
+
     if (msg_type === 'input_reply') {
       resolveInputReply(event.msg);
     } else {
@@ -166,63 +173,52 @@ class XeusKernel {
 
   private async initialize() {
     const dir = this._spec.dir;
-    const wasm_name = this._spec.metadata.wasm_name;
-    const THE_WASM_KERNEL_FILE = `kernels/${dir}/${wasm_name}.js`;
-    const THE_WASM_FILE = `kernels/${dir}/${wasm_name}.wasm`;
-    console.log('importScripts', THE_WASM_KERNEL_FILE, THE_WASM_FILE);
-    importScripts(THE_WASM_KERNEL_FILE);
+    const binary_js = this._spec.argv[0];
+    const binary_wasm  = binary_js.replace(".js", ".wasm");
 
+    console.log(binary_js);
+    console.log(binary_wasm);
+
+    importScripts(binary_js);
     globalThis.Module = await createXeusModule({
       locateFile: (file: string) => {
         if (file.endsWith('.wasm')) {
-          return THE_WASM_FILE;
+          return binary_wasm;
         }
         return file;
       }
     });
     try {
+
       await this.waitRunDependency();
       console.log(globalThis.Module);
 
-      if (globalThis.Module['async_init'] !== undefined) {
-        console.log('!!!async_init!!!!');
-        const kernel_root_url = `kernels/${dir}`;
-        const pkg_root_url = 'kernel_packages';
-        console.log(
-          'with kernel_root_url',
-          kernel_root_url,
-          'and pkg_root_url',
-          pkg_root_url
-        );
+      if(globalThis.Module['async_init'] !== undefined) {
+        const kernel_root_url=`share/jupyter/kernels/${dir}`
+        const pkg_root_url = "share/jupyter/kernel_packages"
         const verbose = true;
-        await globalThis.Module['async_init'](
-          kernel_root_url,
-          pkg_root_url,
-          verbose
-        );
-      } else {
-        console.log('!!!NO async_init!!!!');
+        await globalThis.Module['async_init'](kernel_root_url, pkg_root_url, verbose);
       }
 
       await this.waitRunDependency();
-
+      
       this._raw_xkernel = new globalThis.Module.xkernel();
       this._raw_xserver = this._raw_xkernel.get_server();
       if (!this._raw_xkernel) {
         console.error('Failed to start kernel!');
       }
-      console.log('!!!start!!!');
       this._raw_xkernel.start();
-      console.log('!!!start-DONE!!!');
-    } catch (e) {
-      if (typeof e === 'number') {
-        const msg = globalThis.Module.get_exception_message(e);
-        console.error(msg);
-        throw new Error(msg);
-      } else {
-        console.error(e);
-        throw e;
-      }
+    }
+    catch (e) {
+        if( typeof e === 'number' ) {
+          const msg = globalThis.Module.get_exception_message(e);
+          console.error(msg);
+          throw new Error(msg);
+        }
+        else {
+          console.error(e);
+          throw(e);
+        }
     }
     this._resolve();
   }
@@ -253,3 +249,6 @@ class XeusKernel {
 globalThis.ready = new Promise(resolve => {
   expose(new XeusKernel(resolve));
 });
+
+
+
