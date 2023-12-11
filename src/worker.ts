@@ -6,8 +6,6 @@ console.log('worker loaded');
 
 import { expose } from 'comlink';
 
-
-
 import {
   DriveFS,
   DriveFSEmscriptenNodeOps,

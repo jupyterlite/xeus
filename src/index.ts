@@ -15,7 +15,6 @@ import { WebWorkerKernel } from './web_worker_kernel';
 const EXTENSION_NAME = 'xeus';
 const EXTENSION_STATIC_DIR = `../extensions/@jupyterlite/${EXTENSION_NAME}/static/`;
 
-
 // helper function to fetch json
 function getPkgJson(url: string) {
   const json_url = EXTENSION_STATIC_DIR + url;
@@ -45,9 +44,15 @@ const kernel_specs = kernel_dir.map(kernel_dir => {
   spec.dir = kernel_dir;
   spec.resources = {
     'logo-32x32':
-      EXTENSION_STATIC_DIR + 'share/jupyter/kernels/' + kernel_dir + '/logo-32x32.png',
+      EXTENSION_STATIC_DIR +
+      'share/jupyter/kernels/' +
+      kernel_dir +
+      '/logo-32x32.png',
     'logo-64x64':
-      EXTENSION_STATIC_DIR + 'share/jupyter/kernels/' + kernel_dir + '/logo-64x64.png'
+      EXTENSION_STATIC_DIR +
+      'share/jupyter/kernels/' +
+      kernel_dir +
+      '/logo-64x64.png'
   };
   return spec;
 });

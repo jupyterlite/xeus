@@ -23,7 +23,6 @@ interface IXeusKernel {
   processMessage(msg: any): Promise<void>;
 }
 
-
 export class WebWorkerKernel implements IKernel {
   /**
    * Instantiate a new WebWorkerKernel
@@ -48,10 +47,10 @@ export class WebWorkerKernel implements IKernel {
       this._processWorkerMessage(e.data);
     };
 
-    console.log("wrap");
+    console.log('wrap');
     this._remote = wrap(this._worker);
-    console.log("wrap done");
-    
+    console.log('wrap done');
+
     // this._remote.processMessage({
     //   msg: {
     //     header: {
@@ -61,11 +60,9 @@ export class WebWorkerKernel implements IKernel {
     //   spec: this._spec
     // });
 
-    if(false){
-      console.log('init filesystem');
-      this.initFileSystem(options);
+    console.log('init filesystem');
+    this.initFileSystem(options);
 
-    }
     console.log('constructing WebWorkerKernel done2');
   }
 
@@ -73,18 +70,17 @@ export class WebWorkerKernel implements IKernel {
     console.log('handleMessage', msg);
     this._parent = msg;
     this._parentHeader = msg.header;
-    console.log("send message to worker");
+    console.log('send message to worker');
     await this._sendMessageToWorker(msg);
-    console.log("send message to worker awaiting done");
+    console.log('send message to worker awaiting done');
   }
 
   private async _sendMessageToWorker(msg: any): Promise<void> {
-
-    if(this._first_message){
+    if (this._first_message) {
       this._first_message = false;
       console.log('first message');
       await this._remote.ready();
-      console.log("waited for ready");
+      console.log('waited for ready');
 
       await this._remote.processMessage({
         msg: {
@@ -97,7 +93,6 @@ export class WebWorkerKernel implements IKernel {
       console.log('first message done');
     }
 
-   
     // TODO Remove this??
     if (msg.header.msg_type !== 'input_reply') {
       this._executeDelegate = new PromiseDelegate<void>();
@@ -105,7 +100,9 @@ export class WebWorkerKernel implements IKernel {
 
     console.log(' this._remote.processMessage({ msg, parent: this.parent });');
     await this._remote.processMessage({ msg, parent: this.parent });
-    console.log(' this._remote.processMessage({ msg, parent: this.parent }); done');
+    console.log(
+      ' this._remote.processMessage({ msg, parent: this.parent }); done'
+    );
     if (msg.header.msg_type !== 'input_reply') {
       return await this._executeDelegate.promise;
     }
