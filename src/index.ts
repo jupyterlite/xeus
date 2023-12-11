@@ -12,11 +12,13 @@ import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
 
 import { WebWorkerKernel } from './web_worker_kernel';
 
-const rel_path = '../extensions/@jupyterlite/xeus-python-kernel/static/';
+const EXTENSION_NAME = 'xeus';
+const EXTENSION_STATIC_DIR = `../extensions/@jupyterlite/${EXTENSION_NAME}/static/`;
+
 
 // helper function to fetch json
 function getPkgJson(url: string) {
-  const json_url = rel_path + url;
+  const json_url = EXTENSION_STATIC_DIR + url;
   const xhr = new XMLHttpRequest();
   xhr.open('GET', json_url, false);
   xhr.send(null);
@@ -43,9 +45,9 @@ const kernel_specs = kernel_dir.map(kernel_dir => {
   spec.dir = kernel_dir;
   spec.resources = {
     'logo-32x32':
-      rel_path + 'share/jupyter/kernels/' + kernel_dir + '/logo-32x32.png',
+      EXTENSION_STATIC_DIR + 'share/jupyter/kernels/' + kernel_dir + '/logo-32x32.png',
     'logo-64x64':
-      rel_path + 'share/jupyter/kernels/' + kernel_dir + '/logo-64x64.png'
+      EXTENSION_STATIC_DIR + 'share/jupyter/kernels/' + kernel_dir + '/logo-64x64.png'
   };
   return spec;
 });
@@ -68,9 +70,10 @@ const server_kernels = kernel_specs.map(spec => {
       kernelspecs.register({
         spec: spec,
         create: async (options: IKernel.IOptions): Promise<IKernel> => {
-          const mountDrive = !!(
-            serviceWorker?.enabled && broadcastChannel?.enabled
-          );
+          // const mountDrive = !!(
+          //   serviceWorker?.enabled && broadcastChannel?.enabled
+          // );
+          const mountDrive = false;
 
           if (mountDrive) {
             console.info(

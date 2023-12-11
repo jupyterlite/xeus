@@ -2,7 +2,11 @@
 // Copyright (c) JupyterLite Contributors
 // Distributed under the terms of the Modified BSD License.
 
+console.log('worker loaded');
+
 import { expose } from 'comlink';
+
+
 
 import {
   DriveFS,
@@ -14,6 +18,8 @@ import {
 declare function createXeusModule(options: any): any;
 
 globalThis.Module = {};
+
+console.log('worker here');
 
 // const WASM_KERNEL_FILE = 'kernels/xlite/xlite.js';
 // const WASM_FILE = 'kernels/xlite/xlite.wasm';
@@ -99,6 +105,7 @@ async function get_stdin() {
 
 class XeusKernel {
   constructor(resolve: any) {
+    console.log('constructing kernel');
     this._resolve = resolve;
   }
 
@@ -107,6 +114,7 @@ class XeusKernel {
   }
 
   mount(driveName: string, mountpoint: string, baseUrl: string): void {
+    console.log('mounting drive');
     const { FS, PATH, ERRNO_CODES } = globalThis.Module;
 
     if (!FS) {
@@ -241,5 +249,6 @@ class XeusKernel {
 }
 
 globalThis.ready = new Promise(resolve => {
+  console.log('expose(new XeusKernel(resolve));');
   expose(new XeusKernel(resolve));
 });
