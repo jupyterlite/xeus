@@ -18,7 +18,7 @@ const resolve = {
 
 module.exports = [
   {
-    entry: './lib/worker.js',
+    entry: './src/worker.ts',
     output: {
       filename: 'worker.js',
       path: path.resolve(__dirname, 'lib'),
