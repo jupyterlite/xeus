@@ -25,7 +25,7 @@
         "url": "https://github.com/jupyterlite/xeus.git"
     },
     "scripts": {
-        "build": "jlpm build:lib      && jlpm build:worker       && jlpm build:labextension:dev",
+        "build": "jlpm build:lib && jlpm build:worker && jlpm build:labextension:dev",
         "build:prod": "jlpm clean && jlpm build:lib:prod && jlpm build:worker:prod  && jlpm build:labextension",
         "build:worker": "webpack --config worker.webpack.config.js --mode=development",
         "build:worker:prod": "webpack --config worker.webpack.config.js --mode=production",
