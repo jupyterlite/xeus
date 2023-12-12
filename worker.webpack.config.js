@@ -1,10 +1,14 @@
 const path = require('path');
 const rules = [
   {
-    test: /\.js$/,
-    exclude: /node_modules/,
-    loader: 'source-map-loader'
-  }
+    test: /\.ts$/,
+    loader: 'ts-loader'
+    //,
+    // options: {
+    //   configFile: path.resolve('./tsconfig.worker.json')
+    // }
+  },
+  { test: /\.js$/, loader: 'source-map-loader' }
 ];
 
 const resolve = {
@@ -13,7 +17,7 @@ const resolve = {
     child_process: false,
     crypto: false
   },
-  extensions: ['.js']
+  extensions: ['.ts', '.js']
 };
 
 module.exports = [
@@ -27,7 +31,7 @@ module.exports = [
     module: {
       rules
     },
-    devtool: 'source-map',
+    // devtool: 'source-map',
     resolve
   }
 ];
