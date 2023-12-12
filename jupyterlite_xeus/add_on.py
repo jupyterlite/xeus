@@ -81,12 +81,12 @@ class XeusAddon(FederatedExtensionAddon):
         yield from self.copy_kernels_from_prefix()
     
         # copy the jupyterlab extensions
-        #yield from self.copy_jupyterlab_extensions_from_prefix()
-    
-    def create_prefix(self):
-        print("environment_file", self.environment_file)
+        yield from self.copy_jupyterlab_extensions_from_prefix(manager)
 
         
+    
+    def create_prefix(self):
+    
         # read the environment file
         root_prefix = Path(self.cwd.name) / "env"
         env_name = "xeus-env"
@@ -111,31 +111,8 @@ class XeusAddon(FederatedExtensionAddon):
 
 
 
-    
-    def copy_jupyterlab_extensions_from_prefix(self):
-        # Find the federated extensions in the emscripten-env and install them
-        prefix = Path(self.prefix)
-        for pkg_json in self.env_extensions(prefix / SHARE_LABEXTENSIONS):
-            print("pkg_json", pkg_json)
-            yield from self.safe_copy_extension(pkg_json)
-    
 
-    def safe_copy_extension(self, pkg_json):
-        """Copy a labextension, and overwrite it
-        if it's already in the output
-        """
-        pkg_path = pkg_json.parent
-        stem = json.loads(pkg_json.read_text(**UTF8))["name"]
-        dest = self.output_extensions / stem
-        file_dep = [
-            p for p in pkg_path.rglob("*") if not (p.is_dir() or self.is_ignored_sourcemap(p.name))
-        ]
 
-        yield dict(
-            name=f"xeus:copy:ext:{stem}",
-            file_dep=file_dep,
-            actions=[(self.copy_one, [pkg_path, dest])],
-        )
 
         
 
@@ -173,7 +150,6 @@ class XeusAddon(FederatedExtensionAddon):
 
 
     def copy_kernel(self, kernel_dir, kernel_wasm, kernel_js):
-        print("copying kernel", kernel_dir.name)
 
         kernel_spec = json.loads((kernel_dir / "kernel.json").read_text(**UTF8))
 
@@ -247,3 +223,56 @@ class XeusAddon(FederatedExtensionAddon):
         for item in prefix_bundler.build():
             if item:
                 yield item
+
+    def copy_jupyterlab_extensions_from_prefix(self, manager):
+        # Find the federated extensions in the emscripten-env and install them
+        prefix = Path(self.prefix)
+        for pkg_json in self.env_extensions(prefix / SHARE_LABEXTENSIONS):
+            print("pkg_json", pkg_json)
+            yield from self.safe_copy_jupyterlab_extension(pkg_json)
+    
+        yield from self.register_jupyterlab_extension(manager)
+
+    def register_jupyterlab_extension(self, manager):
+
+        jupyterlite_json = manager.output_dir / JUPYTERLITE_JSON
+        lab_extensions_root = manager.output_dir / LAB_EXTENSIONS
+        lab_extensions = self.env_extensions(lab_extensions_root)
+
+        yield dict(
+            name="patch:xeus",
+            doc=f"ensure {JUPYTERLITE_JSON} includes the federated_extensions",
+            file_dep=[*lab_extensions, jupyterlite_json],
+            actions=[(self.patch_jupyterlite_json, [jupyterlite_json])],
+        )
+    
+
+    def safe_copy_jupyterlab_extension(self, pkg_json):
+        """Copy a labextension, and overwrite it
+        if it's already in the output
+        """
+        pkg_path = pkg_json.parent
+        stem = json.loads(pkg_json.read_text(**UTF8))["name"]
+        dest = self.output_extensions / stem
+        file_dep = [
+            p for p in pkg_path.rglob("*") if not (p.is_dir() or self.is_ignored_sourcemap(p.name))
+        ]
+
+        yield dict(
+            name=f"xeus:copy:ext:{stem}",
+            file_dep=file_dep,
+            actions=[(self.copy_one, [pkg_path, dest])],
+        )
+
+    def dedupe_federated_extensions(self, config):
+        if FEDERATED_EXTENSIONS not in config:
+            return
+
+        named = {}
+
+        # Making sure to dedupe extensions by keeping the most recent ones
+        for ext in config[FEDERATED_EXTENSIONS]:
+            if os.path.exists(self.output_extensions / ext["name"] / ext["load"]):
+                named[ext["name"]] = ext
+
+        config[FEDERATED_EXTENSIONS] = sorted(named.values(), key=lambda x: x["name"])
