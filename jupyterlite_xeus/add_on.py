@@ -75,7 +75,7 @@ class XeusAddon(FederatedExtensionAddon):
 
         # create the prefix if it does not exist
         if not self.prefix:
-            yield from self.create_prefix()
+            self.create_prefix()
     
         # copy the kernels from the prefix
         yield from self.copy_kernels_from_prefix()
