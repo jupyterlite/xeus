@@ -23,8 +23,12 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
+    "empack"
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
+
+[project.entry-points."jupyterlite.addon.v0"]
+jupyterlite-xeus = "jupyterlite_xeus.add_on:XeusAddon"
 
 [tool.hatch.version]
 source = "nodejs"

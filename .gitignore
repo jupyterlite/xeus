@@ -123,3 +123,9 @@ dmypy.json
 
 # Yarn cache
 .yarn/
+
+
+
+# experiments
+experiment.sh
+env.yml

@@ -25,8 +25,10 @@
         "url": "https://github.com/jupyterlite/xeus.git"
     },
     "scripts": {
-        "build": "jlpm build:lib && jlpm build:labextension:dev",
-        "build:prod": "jlpm clean && jlpm build:lib:prod && jlpm build:labextension",
+        "build": "jlpm build:lib && jlpm build:worker && jlpm build:labextension:dev",
+        "build:prod": "jlpm clean && jlpm build:lib:prod && jlpm build:worker:prod  && jlpm build:labextension",
+        "build:worker": "webpack --config worker.webpack.config.js --mode=development",
+        "build:worker:prod": "webpack --config worker.webpack.config.js --mode=production",
         "build:labextension": "jupyter labextension build .",
         "build:labextension:dev": "jupyter labextension build --development True .",
         "build:lib": "tsc --sourceMap",
@@ -52,7 +54,14 @@
         "watch:labextension": "jupyter labextension watch ."
     },
     "dependencies": {
-        "@jupyterlab/application": "^4.0.0"
+        "@jupyterlab/coreutils": "^6",
+        "@jupyterlab/services": "^7",
+        "@jupyterlite/contents": "^0.2.0",
+        "@jupyterlite/kernel": "^0.2.0",
+        "@jupyterlite/server": "^0.2.0",
+        "@lumino/coreutils": "^2",
+        "@lumino/signaling": "^2",
+        "comlink": "^4.3.1"
     },
     "devDependencies": {
         "@jupyterlab/builder": "^4.0.0",
@@ -78,7 +87,9 @@
         "stylelint-config-standard": "^34.0.0",
         "stylelint-csstree-validator": "^3.0.0",
         "stylelint-prettier": "^4.0.0",
+        "ts-loader": "^9.2.6",
         "typescript": "~5.0.2",
+        "webpack": "^5.87.0",
         "yjs": "^13.5.0"
     },
     "sideEffects": [
@@ -91,7 +102,24 @@
     },
     "jupyterlab": {
         "extension": true,
-        "outputDir": "jupyterlite_xeus/labextension"
+        "outputDir": "jupyterlite_xeus/labextension",
+        "sharedPackages": {
+            "@jupyterlite/kernel": {
+                "bundled": false,
+                "singleton": true
+            },
+            "@jupyterlite/server": {
+                "bundled": false,
+                "singleton": true
+            },
+            "@jupyterlite/contents": {
+                "bundled": false,
+                "singleton": true
+            }
+        }
+    },
+    "jupyterlite": {
+        "liteExtension": true
     },
     "eslintIgnore": [
         "node_modules",
