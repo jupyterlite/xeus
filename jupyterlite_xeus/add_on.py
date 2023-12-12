@@ -16,7 +16,7 @@ from jupyterlite_core.constants import (
 from traitlets import List, Unicode
 
 from .prefix_bundler import get_prefix_bundler
-from .create_conda_env import create_conda_env_from_yaml
+from .create_conda_env import create_conda_env_from_yaml,create_conda_env_from_specs
 
 EXTENSION_NAME = "xeus"
 STATIC_DIR = Path("@jupyterlite") / EXTENSION_NAME / "static"
@@ -85,16 +85,29 @@ class XeusAddon(FederatedExtensionAddon):
     
     def create_prefix(self):
         print("environment_file", self.environment_file)
+
+        
         # read the environment file
         root_prefix = Path(self.cwd.name) / "env"
         env_name = "xeus-env"
         env_prefix = root_prefix / "envs" / env_name
         self.prefix = str(env_prefix)
-        create_conda_env_from_yaml(
-            env_name=env_name,
-            root_prefix=root_prefix,
-            env_file=self.environment_file,
-        )
+
+        env_file = Path(self.environment_file)
+        if env_file.exists():
+            create_conda_env_from_yaml(
+                env_name=env_name,
+                root_prefix=root_prefix,
+                env_file=env_file
+            )
+        # this is atm for debugging
+        else:
+            create_conda_env_from_specs(
+                env_name=env_name,
+                root_prefix=root_prefix,
+                specs=["xeus-python"],
+                channels=["conda-forge", "https://repo.mamba.pm/emscripten-forge"],
+            )
 
 
 
