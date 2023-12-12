@@ -2824,6 +2824,7 @@ __metadata:
     stylelint-config-standard: ^34.0.0
     stylelint-csstree-validator: ^3.0.0
     stylelint-prettier: ^4.0.0
+    ts-loader: ^9.2.6
     typescript: ~5.0.2
     webpack: ^5.87.0
     yjs: ^13.5.0
@@ -4436,7 +4437,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^4.0.0":
+"chalk@npm:^4.0.0, chalk@npm:^4.1.0":
   version: 4.1.2
   resolution: "chalk@npm:4.1.2"
   dependencies:
@@ -5097,7 +5098,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"enhanced-resolve@npm:^5.15.0":
+"enhanced-resolve@npm:^5.0.0, enhanced-resolve@npm:^5.15.0":
   version: 5.15.0
   resolution: "enhanced-resolve@npm:5.15.0"
   dependencies:
@@ -7717,7 +7718,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"micromatch@npm:^4.0.4, micromatch@npm:^4.0.5":
+"micromatch@npm:^4.0.0, micromatch@npm:^4.0.4, micromatch@npm:^4.0.5":
   version: 4.0.5
   resolution: "micromatch@npm:4.0.5"
   dependencies:
@@ -9293,6 +9294,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"source-map@npm:^0.7.4":
+  version: 0.7.4
+  resolution: "source-map@npm:0.7.4"
+  checksum: 01cc5a74b1f0e1d626a58d36ad6898ea820567e87f18dfc9d24a9843a351aaa2ec09b87422589906d6ff1deed29693e176194dc88bcae7c9a852dc74b311dbf5
+  languageName: node
+  linkType: hard
+
 "spdx-correct@npm:^3.0.0":
   version: 3.2.0
   resolution: "spdx-correct@npm:3.2.0"
@@ -9875,6 +9883,22 @@ __metadata:
   bin:
     ts-jest: cli.js
   checksum: a8c9e284ed4f819526749f6e4dc6421ec666f20ab44d31b0f02b4ed979975f7580b18aea4813172d43e39b29464a71899f8893dd29b06b4a351a3af8ba47b402
+  languageName: node
+  linkType: hard
+
+"ts-loader@npm:^9.2.6":
+  version: 9.5.1
+  resolution: "ts-loader@npm:9.5.1"
+  dependencies:
+    chalk: ^4.1.0
+    enhanced-resolve: ^5.0.0
+    micromatch: ^4.0.0
+    semver: ^7.3.4
+    source-map: ^0.7.4
+  peerDependencies:
+    typescript: "*"
+    webpack: ^5.0.0
+  checksum: 7cf396e656d905388ea2a9b5e82f16d3c955fda8d3df2fbf219f4bee16ff50a3c995c44ae3e584634e9443f056cec70bb3151add3917ffb4588ecd7394bac0ec
   languageName: node
   linkType: hard
 

@@ -25,8 +25,8 @@
         "url": "https://github.com/jupyterlite/xeus.git"
     },
     "scripts": {
-        "build": "jlpm build:lib && jlpm build:labextension:dev",
-        "build:prod": "jlpm clean && jlpm build:lib:prod && jlpm build:labextension",
+        "build": "jlpm build:lib      && jlpm build:worker       && jlpm build:labextension:dev",
+        "build:prod": "jlpm clean && jlpm build:lib:prod && jlpm build:worker:prod  && jlpm build:labextension",
         "build:worker": "webpack --config worker.webpack.config.js --mode=development",
         "build:worker:prod": "webpack --config worker.webpack.config.js --mode=production",
         "build:labextension": "jupyter labextension build .",
@@ -87,6 +87,7 @@
         "stylelint-config-standard": "^34.0.0",
         "stylelint-csstree-validator": "^3.0.0",
         "stylelint-prettier": "^4.0.0",
+        "ts-loader": "^9.2.6",
         "typescript": "~5.0.2",
         "webpack": "^5.87.0",
         "yjs": "^13.5.0"

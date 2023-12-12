@@ -51,14 +51,14 @@ export class WebWorkerKernel implements IKernel {
     this._remote = wrap(this._worker);
     console.log('wrap done');
 
-    // this._remote.processMessage({
-    //   msg: {
-    //     header: {
-    //       msg_type: 'initialize'
-    //     }
-    //   },
-    //   spec: this._spec
-    // });
+    this._remote.processMessage({
+      msg: {
+        header: {
+          msg_type: 'initialize'
+        }
+      },
+      spec: this._spec
+    });
 
     console.log('init filesystem');
     this.initFileSystem(options);
@@ -76,23 +76,6 @@ export class WebWorkerKernel implements IKernel {
   }
 
   private async _sendMessageToWorker(msg: any): Promise<void> {
-    if (this._first_message) {
-      this._first_message = false;
-      console.log('first message');
-      await this._remote.ready();
-      console.log('waited for ready');
-
-      await this._remote.processMessage({
-        msg: {
-          header: {
-            msg_type: 'initialize'
-          }
-        },
-        spec: this._spec
-      });
-      console.log('first message done');
-    }
-
     // TODO Remove this??
     if (msg.header.msg_type !== 'input_reply') {
       this._executeDelegate = new PromiseDelegate<void>();
@@ -225,7 +208,6 @@ export class WebWorkerKernel implements IKernel {
     }
   }
 
-  private _first_message: boolean = true;
   private _spec: any;
   private _id: string;
   private _name: string;
