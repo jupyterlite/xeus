@@ -59,10 +59,10 @@ const kernel_specs = kernel_dir.map(kernel_dir => {
 
 console.log(kernel_specs);
 
-const server_kernels = kernel_specs.map(spec => {
+const server_kernels = kernel_specs.map(kernelspec => {
   const server_kernel: JupyterLiteServerPlugin<void> = {
     // use name from spec
-    id: `@jupyterlite/${spec.name}-extension:kernel`,
+    id: `@jupyterlite/${kernelspec.name}-extension:kernel`,
     autoStart: true,
     requires: [IKernelSpecs],
     optional: [IServiceWorkerManager, IBroadcastChannelWrapper],
@@ -73,7 +73,7 @@ const server_kernels = kernel_specs.map(spec => {
       broadcastChannel?: IBroadcastChannelWrapper
     ) => {
       kernelspecs.register({
-        spec: spec,
+        spec: kernelspec,
         create: async (options: IKernel.IOptions): Promise<IKernel> => {
           // const mountDrive = !!(
           //   serviceWorker?.enabled && broadcastChannel?.enabled
@@ -82,21 +82,19 @@ const server_kernels = kernel_specs.map(spec => {
 
           if (mountDrive) {
             console.info(
-              `${spec.name} contents will be synced with Jupyter Contents`
+              `${kernelspec.name} contents will be synced with Jupyter Contents`
             );
           } else {
             console.warn(
-              `${spec.name} contents will NOT be synced with Jupyter Contents`
+              `${kernelspec.name} contents will NOT be synced with Jupyter Contents`
             );
           }
 
-          return new WebWorkerKernel(
-            {
-              ...options,
-              mountDrive
-            },
-            spec
-          );
+          return new WebWorkerKernel({
+            ...options,
+            mountDrive,
+            kernelspec
+          });
         }
       });
     }
