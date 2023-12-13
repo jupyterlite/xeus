@@ -17,13 +17,6 @@ declare function createXeusModule(options: any): any;
 
 globalThis.Module = {};
 
-console.log('worker here');
-
-// const WASM_KERNEL_FILE = 'kernels/xlite/xlite.js';
-// const WASM_FILE = 'kernels/xlite/xlite.wasm';
-// TODO Remove this. This is to ensure we always perform node ops on Nodes and
-// not Streams, but why is it needed??? Why do we get Streams and not Nodes from
-// emscripten in the case of xeus-python???
 class StreamNodeOps extends DriveFSEmscriptenNodeOps {
   private getNode(nodeOrStream: any) {
     if (nodeOrStream['node']) {
@@ -143,9 +136,8 @@ class XeusKernel {
 
   async processMessage(event: any): Promise<void> {
     const msg_type = event.msg.header.msg_type;
-    if (msg_type === 'initialize') {
-      const spec = event.spec;
-      this._spec = spec;
+    if (msg_type === '__initialize__') {
+      this._kernelspec = event.msg.kernelspec;
       await this.initialize();
 
       return;
@@ -171,12 +163,13 @@ class XeusKernel {
   }
 
   private async initialize() {
-    const dir = this._spec.dir;
-    const binary_js = this._spec.argv[0];
-    const binary_wasm = binary_js.replace('.js', '.wasm');
+    // the location of the kernel on the server
+    // ie `share/jupyter/kernels/${dir}`
+    const dir = this._kernelspec.dir;
 
-    console.log(binary_js);
-    console.log(binary_wasm);
+    // location of the kernel binary on the server
+    const binary_js = this._kernelspec.argv[0];
+    const binary_wasm = binary_js.replace('.js', '.wasm');
 
     importScripts(binary_js);
     globalThis.Module = await createXeusModule({
@@ -191,6 +184,10 @@ class XeusKernel {
       await this.waitRunDependency();
       console.log(globalThis.Module);
 
+      // each kernel can have a `async_init` function
+      // which can do kernel specific **async** initialization
+      // This function is usually implemented in the pre/post.js
+      // in the emscripten build of that kernel
       if (globalThis.Module['async_init'] !== undefined) {
         const kernel_root_url = `share/jupyter/kernels/${dir}`;
         const pkg_root_url = 'share/jupyter/kernel_packages';
@@ -239,7 +236,7 @@ class XeusKernel {
     return promise;
   }
   private _resolve: any;
-  private _spec: any;
+  private _kernelspec: any;
   private _raw_xkernel: any;
   private _raw_xserver: any;
   private _drive: DriveFS | null = null;

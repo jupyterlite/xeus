@@ -29,13 +29,13 @@ export class WebWorkerKernel implements IKernel {
    *
    * @param options The instantiation options for a new WebWorkerKernel
    */
-  constructor(options: WebWorkerKernel.IOptions, spec: any) {
+  constructor(options: WebWorkerKernel.IOptions) {
     console.log('constructing WebWorkerKernel kernel');
     const { id, name, sendMessage, location } = options;
     this._id = id;
     this._name = name;
     this._location = location;
-    this._spec = spec;
+    this._kernelspec = options.kernelspec;
     this._sendMessage = sendMessage;
     console.log('constructing WebWorkerKernel worker');
     this._worker = new Worker(new URL('./worker.js', import.meta.url), {
@@ -54,10 +54,10 @@ export class WebWorkerKernel implements IKernel {
     this._remote.processMessage({
       msg: {
         header: {
-          msg_type: 'initialize'
-        }
-      },
-      spec: this._spec
+          msg_type: '__initialize__'
+        },
+        kernelspec: this._kernelspec
+      }
     });
 
     console.log('init filesystem');
@@ -208,7 +208,7 @@ export class WebWorkerKernel implements IKernel {
     }
   }
 
-  private _spec: any;
+  private _kernelspec: any;
   private _id: string;
   private _name: string;
   private _location: string;
@@ -233,5 +233,6 @@ export namespace WebWorkerKernel {
    */
   export interface IOptions extends IKernel.IOptions {
     mountDrive: boolean;
+    kernelspec: any;
   }
 }
