@@ -4,6 +4,8 @@ from pathlib import Path
 from subprocess import run as subprocess_run
 import os
 import yaml
+
+from ._pip import _install_pip_dependencies
 try:
     from mamba.api import create as mamba_create
     MAMBA_PYTHON_AVAILABLE = True
@@ -16,6 +18,26 @@ CONDA_COMMAND = shutil.which("conda")
 PLATFORM = "emscripten-wasm32"
 
 
+
+def _extract_specs(env_location, env_data):
+
+    specs = []
+    pip_dependencies = []
+
+    # iterate dependencies
+    for dependency in env_data.get("dependencies", []):
+        if isinstance(dependency, str):
+           specs.append(dependency)
+        elif isinstance(dependency, dict) and "pip" in dependency:
+            for pip_dependency in dependency["pip"]:
+                # If it's a local Python package, make its path relative to the environment file
+                if (env_location / pip_dependency).is_dir():
+                    pip_dependencies.append(env_location.parent / pip_dependency).resolve()
+                else:
+                    pip_dependencies.append(pip_dependency)
+
+    return specs, pip_dependencies
+
 def create_conda_env_from_yaml(
     env_name,
     root_prefix,
@@ -27,19 +49,17 @@ def create_conda_env_from_yaml(
     
     # get the channels
     channels = yaml_content.get("channels", [])
+
     # get the specs
-    specs = yaml_content.get("dependencies", [])
+    specs, pip_dependencies = _extract_specs(env_file.parent, yaml_content)
 
     create_conda_env_from_specs(
         env_name=env_name,
         root_prefix=root_prefix,
         specs=specs,
         channels=channels,
+        pip_dependencies=pip_dependencies
     )
-
-
-
-
 
 
 def create_conda_env_from_specs(
@@ -47,9 +67,36 @@ def create_conda_env_from_specs(
     root_prefix,
     specs,
     channels,
+    pip_dependencies=None,
+):
+    _create_conda_env_from_specs_impl(
+        env_name=env_name,
+        root_prefix=root_prefix,
+        specs=specs,
+        channels=channels,
+    )   
+    if pip_dependencies:
+        _install_pip_dependencies(
+            prefix_path=Path(root_prefix) / "envs" / env_name,
+            dependencies=pip_dependencies
+        )
+
+
+
+def _create_conda_env_from_specs_impl(
+    env_name,
+    root_prefix,
+    specs,
+    channels
 ):
     """Create the emscripten environment with the given specs."""
     prefix_path = Path(root_prefix) / "envs" / env_name
+
+
+    # Cleanup tmp dir in case it's not empty
+    shutil.rmtree(Path(root_prefix) / "envs", ignore_errors=True)
+    Path(root_prefix).mkdir(parents=True, exist_ok=True)
+    
 
     if MAMBA_PYTHON_AVAILABLE:
         mamba_create(

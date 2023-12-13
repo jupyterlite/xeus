@@ -17,9 +17,7 @@ from traitlets import List, Unicode
 
 from .prefix_bundler import get_prefix_bundler
 from .create_conda_env import create_conda_env_from_yaml,create_conda_env_from_specs
-
-EXTENSION_NAME = "xeus"
-STATIC_DIR = Path("@jupyterlite") / EXTENSION_NAME / "static"
+from .constants import EXTENSION_NAME, STATIC_DIR
 
 
 def get_kernel_binaries(path):
@@ -109,13 +107,6 @@ class XeusAddon(FederatedExtensionAddon):
                 channels=["conda-forge", "https://repo.mamba.pm/emscripten-forge"],
             )
 
-
-
-
-
-
-        
-
     def copy_kernels_from_prefix(self):
         
         if not os.path.exists(self.prefix) or not os.path.isdir(self.prefix):
@@ -145,8 +136,6 @@ class XeusAddon(FederatedExtensionAddon):
                 )
             ]
         )
-
-
 
 
     def copy_kernel(self, kernel_dir, kernel_wasm, kernel_js):
@@ -228,13 +217,8 @@ class XeusAddon(FederatedExtensionAddon):
         # Find the federated extensions in the emscripten-env and install them
         prefix = Path(self.prefix)
         for pkg_json in self.env_extensions(prefix / SHARE_LABEXTENSIONS):
-            print("pkg_json", pkg_json)
             yield from self.safe_copy_jupyterlab_extension(pkg_json)
     
-        yield from self.register_jupyterlab_extension(manager)
-
-    def register_jupyterlab_extension(self, manager):
-
         jupyterlite_json = manager.output_dir / JUPYTERLITE_JSON
         lab_extensions_root = manager.output_dir / LAB_EXTENSIONS
         lab_extensions = self.env_extensions(lab_extensions_root)
