@@ -4,5 +4,4 @@ channels:
   - conda-forge
 dependencies:
   - xeus-python 
-  - pip:
-    - python-random-name-generator
+  - ipycanvas
