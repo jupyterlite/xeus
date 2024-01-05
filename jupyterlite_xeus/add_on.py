@@ -15,9 +15,11 @@ from jupyterlite_core.constants import (
 )
 from traitlets import List, Unicode
 
-from .prefix_bundler import get_prefix_bundler
 from .create_conda_env import create_conda_env_from_yaml,create_conda_env_from_specs
 from .constants import EXTENSION_NAME, STATIC_DIR
+
+from empack.pack import DEFAULT_CONFIG_PATH, pack_env, pack_directory, add_tarfile_to_env_meta
+from empack.file_patterns import pkg_file_filter_from_yaml
 
 
 def get_kernel_binaries(path):
@@ -58,6 +60,12 @@ class XeusAddon(FederatedExtensionAddon):
         "",
         config=True,
         description='The path to the wasm prefix',
+    )
+
+    mounts = List(
+        [],
+        config=True,
+        description="List of paths in the form of <host_path>:<mount_path> to mount in the wasm prefix",
     )
 
     def __init__(self, *args, **kwargs):
@@ -169,49 +177,66 @@ class XeusAddon(FederatedExtensionAddon):
                 (self.copy_one, [kernel_dir / "logo-64x64.png", self.static_dir /"share"/ "jupyter"/ "kernels"/  kernel_dir.name / "logo-64x64.png" ])
             ])
 
+        yield from self.pack_prefix(kernel_dir=kernel_dir)
 
 
 
-        # this part is a bit more complicated:
-        # Some kernels expect certain files to be at a certain places on the hard drive.
-        # Ie python (even pure python without additional packages) expects to find certain *.py
-        # files in a dir like $PREFIX/lib/python3.11/... .
-        # Since the kernels run in the browser we need a way to take the needed files from the
-        # $PREFIX of the emscripten-32 wasm env, bundle them into smth like  tar.gz file(s) and
-        # copy them to the static/kernels/<kernel_name> dir.
-        #
-        # this concept of taking a prefix and turning it into something the kernels 
-        # can consume is called a "bundler" in this context. 
-        # At the moment, only xpython needs such a bundler, but this is likely to change in the future.
-        # therefore we do the following. Each kernel can specify which bundler it needs in its kernel.json file.
-        # If no bundler is specified, we assume that the default bundler is used (which does nothing atm).
+    def pack_prefix(self, kernel_dir):
 
-        language = kernel_spec["language"].lower()
-        prefix_bundler_name = kernel_spec["metadata"].get("prefix_bundler", None)
-        prefix_bundler_kwargs = kernel_spec["metadata"].get("prefix_bundler_kwargs", dict())
+        kernel_name = kernel_dir.name
+        packages_dir = Path(self.static_dir) / "share" / "jupyter" / "kernel_packages"
+        full_kernel_dir = Path(self.static_dir) / "share"/ "jupyter"/"kernels"/ kernel_name
+    
 
+        out_path = Path(self.cwd.name) / "packed_env"
+        out_path.mkdir(parents=True, exist_ok=True)
 
+        # Pack the environment (TODO make this configurable)
+        file_filters = pkg_file_filter_from_yaml(DEFAULT_CONFIG_PATH)
 
-        if language == "python":
-            # we can also drop the "if" above and just always use empack.
-            # but this will make the build a bit slower.
-            # Besides that, there should not be any harm in using empack for all kernels.
-            # If a kernel does not support empack, it will still just work and will
-            # **not ** do any extra work at runtime / kernel startup time.
-            prefix_bundler_name = "empack" 
-
-        
-
-        prefix_bundler = get_prefix_bundler(
-            addon=self,
-            prefix_bundler_name=prefix_bundler_name,
-            kernel_name=kernel_dir.name,
-            **prefix_bundler_kwargs
+        pack_env(
+            env_prefix=self.prefix,
+            relocate_prefix="/",
+            outdir=out_path,
+            use_cache=True,
+            file_filters=file_filters
         )
-        
-        for item in prefix_bundler.build():
-            if item:
-                yield item
+
+        empack_env_meta = "empack_env_meta.json"
+        # pack extra dirs
+        for mount_index,mount in enumerate(self.mounts):
+            if mount.count(":") != 1:
+                msg = f"invalid mount {mount}, must be <host_path>:<mount_path>"
+                raise ValueError(msg)
+            host_path, mount_path = mount.split(":")
+            mount_path = Path(mount_path)
+            if not mount_path.is_absolute():
+                msg = f"mount_path {mount_path} needs to be absolute"
+                raise ValueError(msg)
+            outname = f"mount_{mount_index}.tar.gz"
+            pack_directory(host_dir=host_path, mount_dir=mount_path, 
+                           outname=outname, outdir=out_path)
+            add_tarfile_to_env_meta(env_meta_filename=out_path / empack_env_meta,
+                tarfile=out_path / outname)
+            
+
+        # copy all the packages to the packages dir 
+        # (this is shared between multiple xeus-python kernels)
+        for pkg_path in out_path.iterdir():
+            if pkg_path.name.endswith(".tar.gz"):
+                yield dict(
+                    name=f"xeus:{kernel_name}:copy_package:{pkg_path.name}",
+                    actions=[(self.copy_one, [pkg_path, packages_dir / pkg_path.name ])],
+                )
+
+        # copy the empack_env_meta.json
+        # this is individual for xeus-python kernel
+        yield dict(
+            name=f"xeus:{kernel_name}:copy_env_file:{empack_env_meta}",
+            actions=[(self.copy_one, [out_path / empack_env_meta, Path(full_kernel_dir)/ empack_env_meta ])],
+        )
+
+
 
     def copy_jupyterlab_extensions_from_prefix(self, manager):
         # Find the federated extensions in the emscripten-env and install them
