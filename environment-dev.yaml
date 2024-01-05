@@ -1,0 +1,21 @@
+name: xeus-lite-dev
+channels:
+  - conda-forge
+dependencies:
+  - black
+  - build
+  - empack >=3.3 
+  - hatch-jupyter-builder
+  - hatch-nodejs-version
+  - jupyterlab >=4.0
+  - jupyterlite-core
+  - mamba
+  - nodejs
+  - pip
+  - pytest
+  - python
+  - requests
+  - ruff
+  - traitlets
+  - typer
+  - yarn

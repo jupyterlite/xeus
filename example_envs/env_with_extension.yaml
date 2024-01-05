@@ -1,4 +1,4 @@
-name: xeus-lite
+name: xeus-lite-wasm
 channels:
   - https://repo.mamba.pm/emscripten-forge 
   - conda-forge
