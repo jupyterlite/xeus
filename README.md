@@ -15,81 +15,154 @@ To install the extension, execute:
 pip install jupyterlite_xeus
 ```
 
-## Uninstall
+## Usage
 
-To remove the extension, execute:
+### From environment.yaml
+
+#### xeus-python kernel
+To create a `xeus-python` kernel with a custom environment, one creates an `environment.yaml` file with  `xeus-python` and the desiered dependencies. Here is an example with `numpy` as a additional dependency:
+
+```yaml
+name: xeus-lite-wasm
+channels:
+  - https://repo.mamba.pm/emscripten-forge 
+  - conda-forge
+dependencies:
+  - xeus-python 
+  - numpy
+```
+To build the jupyterlite run the following command, where `environment.yaml` is the path to the file you just created
+
 
 ```bash
-pip uninstall jupyterlite_xeus
+jupyter lite build --XeusAddon.environment_file=some_path/to/environment.yaml
 ```
+
+#### xeus-lua / xeus-sqlite / xeus-\<mylang\> 
+
+To create a `xeus-lua` or `xeus-sqlite` kernel you can
+do the same as above, just with 
+```yaml
+dependencies:
+  - xeus-lua
+```
+or
+```yaml
+dependencies:
+  - xeus-sqlite
+```
+
+Note that xeus-sqlite and xeus-lua do not yet support additional dependencies.
+To build the jupyterlite, run again:
+
+```bash
+jupyter lite build --XeusAddon.environment_file=environment.yaml
+```
+
+
+#### Multiple kernels
+
+To create a deployment with multiple kernels, you can just add them to the `environment.yaml` file:
+
+```yaml
+name: xeus-lite-wasm
+channels:
+  - https://repo.mamba.pm/emscripten-forge 
+  - conda-forge
+dependencies:
+  - xeus-python 
+  - xeus-lua
+  - xeus-sqlite
+  - numpy
+```
+
+### From local environment / prefix
+
+When developing a xeus-kernel, it is very usefull to be able to test it in a jupyterlite without having to publish it to emscripten-forge. Therefore you can also use a local environment / prefix to build a jupyterlite with a custom kernel. 
+
+
+#### Create a local environment / prefix
+
+This workflow usually starts with creating a local conda environment / prefix for `emscripten-wasm32` with all the dependencies you need to build your kernel (here we install dependencies for `xeus-python` )
+
+```bash
+micromamba create -n xeus-python-dev \
+    --platform=emscripten-wasm32 \
+    -c https://repo.mamba.pm/emscripten-forge \
+    -c https://repo.mamba.pm/conda-forge \
+    --yes \
+    "python>=3.11" pybind11 nlohmann_json pybind11_json numpy pytest \
+    bzip2 sqlite zlib libffi xtl pyjs \
+    xeus xeus-sqlite 
+```
+#### Build the kernel
+
+This dependes on your kernel but will look smth like this:
+
+```bash
+# path to your emscripten emsdk
+source $EMSDK_DIR/emsdk_env.sh
+
+WASM_ENV_NAME=xeus-python-dev
+WASM_ENV_PREFIX=$MAMBA_ROOT_PREFIX/envs/$WASM_ENV_NAME
+
+# let cmake know where the env is
+export PREFIX=$WASM_ENV_PREFIX
+export CMAKE_PREFIX_PATH=$PREFIX
+export CMAKE_SYSTEM_PREFIX_PATH=$PREFIX
+
+cd /path/to/your/kernel/src
+mkdir build_wasm
+cd build_wasm
+emcmake cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ON \
+    -DCMAKE_INSTALL_PREFIX=$PREFIX 
+    ..
+emmake make -j8 install
+```
+When running `jupyter lite build` we pass the `prefix` options and point it to the local environment / prefix we just created:
+
+```bash
+jupyter lite build  --XeusAddon.prefix=$WASM_ENV_PREFIX 
+```
+
+### Mounting additional files
+
+To copy additional files and directories into the virtual filesytem of the xeus-lite kernels you can use the `--XeusAddon.mount` option. 
+Each mount is specified as a pair of paths separated by a colon `:`. The first path is the path to the file or directory on the host machine, the second path is the path to the file or directory in the virtual filesystem of the kernel.
+
+```bash
+jupyter lite build \
+    --XeusAddon.environment_file=environment.yaml \
+    --XeusAddon.mounts=/some/path/on/host_machine:/some/path/in/virtual/filesystem 
+```
+
+
+
 
 ## Contributing
 
-### Development install
+### Development install from a conda / mamba environment
 
-Note: You will need NodeJS to build the extension package.
+Create the conda environment with `conda`/`mamba`/`micromamba` (replace `micromamba` with `conda` or `mamba` according to your preference):
 
-The `jlpm` command is JupyterLab's pinned version of
-[yarn](https://yarnpkg.com/) that is installed with JupyterLab. You may use
-`yarn` or `npm` in lieu of `jlpm` below.
 
 ```bash
-# Clone the repo to your local environment
-# Change directory to the jupyterlite_xeus directory
-# Install package in development mode
-pip install -e "."
-# Link your development version of the extension with JupyterLab
-jupyter labextension develop . --overwrite
-# Rebuild extension Typescript source after making changes
-jlpm build
+micromamba create -f environment-dev.yml -n xeus-lite-dev
 ```
 
-You can watch the source directory and run JupyterLab at the same time in different terminals to watch for changes in the extension's source and automatically rebuild the extension.
+Activate the environment:
 
 ```bash
-# Watch the source directory in one terminal, automatically rebuilding when needed
-jlpm watch
-# Run JupyterLab in another terminal
-jupyter lab
+micromamba activate xeus-lite-dev
 ```
 
-With the watch command running, every saved change will immediately be built locally and available in your running JupyterLab. Refresh JupyterLab to load the change in your browser (you may need to wait several seconds for the extension to be rebuilt).
-
-By default, the `jlpm build` command generates the source maps for this extension to make it easier to debug using the browser dev tools. To also generate source maps for the JupyterLab core extensions, you can run the following command:
 
 ```bash
-jupyter lab build --minimize=False
+python -m pip install -e .   -v --no-build-isolation
 ```
 
-### Development uninstall
-
-```bash
-pip uninstall jupyterlite_xeus
-```
-
-In development mode, you will also need to remove the symlink created by `jupyter labextension develop`
-command. To find its location, you can run `jupyter labextension list` to figure out where the `labextensions`
-folder is located. Then you can remove the symlink named `@jupyterlite/xeus` within that folder.
-
-### Testing the extension
-
-#### Frontend tests
-
-This extension is using [Jest](https://jestjs.io/) for JavaScript code testing.
-
-To execute them, execute:
-
-```sh
-jlpm
-jlpm test
-```
-
-#### Integration tests
-
-This extension uses [Playwright](https://playwright.dev/docs/intro) for the integration tests (aka user level tests).
-More precisely, the JupyterLab helper [Galata](https://github.com/jupyterlab/jupyterlab/tree/master/galata) is used to handle testing the extension in JupyterLab.
-
-More information are provided within the [ui-tests](./ui-tests/README.md) README.
 
 ### Packaging the extension
 
