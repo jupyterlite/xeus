@@ -20,33 +20,37 @@ pip install jupyterlite_xeus
 ### From environment.yaml
 
 #### xeus-python kernel
-To create a `xeus-python` kernel with a custom environment, one creates an `environment.yaml` file with  `xeus-python` and the desiered dependencies. Here is an example with `numpy` as a additional dependency:
+
+To create a `xeus-python` kernel with a custom environment, one creates an `environment.yaml` file with `xeus-python` and the desiered dependencies. Here is an example with `numpy` as a additional dependency:
 
 ```yaml
 name: xeus-lite-wasm
 channels:
-  - https://repo.mamba.pm/emscripten-forge 
+  - https://repo.mamba.pm/emscripten-forge
   - conda-forge
 dependencies:
-  - xeus-python 
+  - xeus-python
   - numpy
 ```
-To build the jupyterlite run the following command, where `environment.yaml` is the path to the file you just created
 
+To build the jupyterlite run the following command, where `environment.yaml` is the path to the file you just created
 
 ```bash
 jupyter lite build --XeusAddon.environment_file=some_path/to/environment.yaml
 ```
 
-#### xeus-lua / xeus-sqlite / xeus-\<mylang\> 
+#### xeus-lua / xeus-sqlite / xeus-\<mylang\>
 
 To create a `xeus-lua` or `xeus-sqlite` kernel you can
-do the same as above, just with 
+do the same as above, just with
+
 ```yaml
 dependencies:
   - xeus-lua
 ```
+
 or
+
 ```yaml
 dependencies:
   - xeus-sqlite
@@ -59,7 +63,6 @@ To build the jupyterlite, run again:
 jupyter lite build --XeusAddon.environment_file=environment.yaml
 ```
 
-
 #### Multiple kernels
 
 To create a deployment with multiple kernels, you can just add them to the `environment.yaml` file:
@@ -67,10 +70,10 @@ To create a deployment with multiple kernels, you can just add them to the `envi
 ```yaml
 name: xeus-lite-wasm
 channels:
-  - https://repo.mamba.pm/emscripten-forge 
+  - https://repo.mamba.pm/emscripten-forge
   - conda-forge
 dependencies:
-  - xeus-python 
+  - xeus-python
   - xeus-lua
   - xeus-sqlite
   - numpy
@@ -78,8 +81,7 @@ dependencies:
 
 ### From local environment / prefix
 
-When developing a xeus-kernel, it is very usefull to be able to test it in a jupyterlite without having to publish it to emscripten-forge. Therefore you can also use a local environment / prefix to build a jupyterlite with a custom kernel. 
-
+When developing a xeus-kernel, it is very usefull to be able to test it in a jupyterlite without having to publish it to emscripten-forge. Therefore you can also use a local environment / prefix to build a jupyterlite with a custom kernel.
 
 #### Create a local environment / prefix
 
@@ -93,8 +95,9 @@ micromamba create -n xeus-python-dev \
     --yes \
     "python>=3.11" pybind11 nlohmann_json pybind11_json numpy pytest \
     bzip2 sqlite zlib libffi xtl pyjs \
-    xeus xeus-sqlite 
+    xeus xeus-sqlite
 ```
+
 #### Build the kernel
 
 This dependes on your kernel but will look smth like this:
@@ -117,36 +120,33 @@ cd build_wasm
 emcmake cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ON \
-    -DCMAKE_INSTALL_PREFIX=$PREFIX 
+    -DCMAKE_INSTALL_PREFIX=$PREFIX
     ..
 emmake make -j8 install
 ```
+
 When running `jupyter lite build` we pass the `prefix` options and point it to the local environment / prefix we just created:
 
 ```bash
-jupyter lite build  --XeusAddon.prefix=$WASM_ENV_PREFIX 
+jupyter lite build  --XeusAddon.prefix=$WASM_ENV_PREFIX
 ```
 
 ### Mounting additional files
 
-To copy additional files and directories into the virtual filesytem of the xeus-lite kernels you can use the `--XeusAddon.mount` option. 
+To copy additional files and directories into the virtual filesytem of the xeus-lite kernels you can use the `--XeusAddon.mount` option.
 Each mount is specified as a pair of paths separated by a colon `:`. The first path is the path to the file or directory on the host machine, the second path is the path to the file or directory in the virtual filesystem of the kernel.
 
 ```bash
 jupyter lite build \
     --XeusAddon.environment_file=environment.yaml \
-    --XeusAddon.mounts=/some/path/on/host_machine:/some/path/in/virtual/filesystem 
+    --XeusAddon.mounts=/some/path/on/host_machine:/some/path/in/virtual/filesystem
 ```
-
-
-
 
 ## Contributing
 
 ### Development install from a conda / mamba environment
 
 Create the conda environment with `conda`/`mamba`/`micromamba` (replace `micromamba` with `conda` or `mamba` according to your preference):
-
 
 ```bash
 micromamba create -f environment-dev.yml -n xeus-lite-dev
@@ -158,11 +158,9 @@ Activate the environment:
 micromamba activate xeus-lite-dev
 ```
 
-
 ```bash
 python -m pip install -e .   -v --no-build-isolation
 ```
-
 
 ### Packaging the extension
 
