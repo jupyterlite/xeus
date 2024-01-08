@@ -33,7 +33,6 @@ try {
   kernel_dir = [];
   throw err;
 }
-console.log(kernel_dir);
 
 // fetch kernel spec for each kernel
 const kernel_specs = kernel_dir.map(kernel_dir => {
@@ -56,8 +55,6 @@ const kernel_specs = kernel_dir.map(kernel_dir => {
   };
   return spec;
 });
-
-console.log(kernel_specs);
 
 const server_kernels = kernel_specs.map(kernelspec => {
   const server_kernel: JupyterLiteServerPlugin<void> = {
