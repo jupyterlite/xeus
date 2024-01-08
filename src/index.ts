@@ -72,10 +72,9 @@ const server_kernels = kernel_specs.map(kernelspec => {
       kernelspecs.register({
         spec: kernelspec,
         create: async (options: IKernel.IOptions): Promise<IKernel> => {
-          // const mountDrive = !!(
-          //   serviceWorker?.enabled && broadcastChannel?.enabled
-          // );
-          const mountDrive = false;
+          const mountDrive = !!(
+            serviceWorker?.enabled && broadcastChannel?.enabled
+          );
 
           if (mountDrive) {
             console.info(
