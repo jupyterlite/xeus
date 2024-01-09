@@ -124,8 +124,9 @@ dmypy.json
 # Yarn cache
 .yarn/
 
-
-
 # experiments
 experiment.sh
 env.yml
+
+# Jupyterlite cache
+.jupyterlite.doit.db

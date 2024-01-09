@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: '*'
 
+defaults:
+  run:
+    shell: bash -l {0}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -103,17 +107,26 @@ jobs:
       with:
         name: extension-artifacts
 
+    - name: Install Conda environment with Micromamba
+      uses: mamba-org/setup-micromamba@v1
+      with:
+        environment-name: test-env
+        create-args: >-
+          pip
+
     - name: Install the extension
       run: |
         set -eux
-        python -m pip install "jupyterlab>=4.0.0,<5" jupyterlite_xeus*.whl
+        python -m pip install "jupyterlab>=4.0.0,<5" jupyterlite jupyterlite_xeus*.whl
 
     - name: Install dependencies
       working-directory: ui-tests
       env:
         YARN_ENABLE_IMMUTABLE_INSTALLS: 0
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-      run: jlpm install
+      run: |
+        jlpm install
+        jlpm run build
 
     - name: Set up browser cache
       uses: actions/cache@v3

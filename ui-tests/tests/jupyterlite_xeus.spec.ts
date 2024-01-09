@@ -1,19 +1,46 @@
-import { expect, test } from '@jupyterlab/galata';
+import { test } from '@jupyterlab/galata';
 
-/**
- * Don't load JupyterLab webpage before running the tests.
- * This is required to ensure we capture all log messages.
- */
-test.use({ autoGoto: false });
+import { expect } from '@playwright/test';
 
-test('should emit an activation console message', async ({ page }) => {
-  const logs: string[] = [];
+test.describe('General Tests', () => {
+  test.beforeEach(({ page }) => {
+    page.setDefaultTimeout(600000);
 
-  page.on('console', message => {
-    logs.push(message.text());
+    page.on('console', message => {
+      console.log('CONSOLE MSG ---', message.text());
+    });
   });
 
-  await page.goto();
+  test('Launcher should contain xeus-python and xeus-lua kernels', async ({
+    page
+  }) => {
+    await page.goto('lab/index.html');
 
-  expect(1).toEqual(1);
+    expect(await page.screenshot()).toMatchSnapshot(
+      'jupyter-xeus-launcher.png'
+    );
+  });
+
+  test('xeus-python should execute some code', async ({ page }) => {
+    await page.goto('lab/index.html');
+
+    // Launch a Python notebook
+    const xpython = page.locator('[title="Python 3.12 (XPython)"]').first();
+    await xpython.click();
+
+    // Wait for kernel to be idle
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
+    await page.notebook.addCell('code', 'import bqplot; print("ok")');
+    await page.notebook.runCell(1);
+
+    // Wait for kernel to be idle
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
+    const cell = await page.notebook.getCellOutput(1);
+
+    expect(await cell?.screenshot()).toMatchSnapshot(
+      'jupyter-xeus-execute.png'
+    );
+  });
 });
