@@ -138,7 +138,7 @@ micromamba create -n xeus-lite-host \
 micromamba activate xeus-lite-host
 
 # install jupyterlite_xeus via pip
-python -m pip install jupyterlite_xeus
+python -m pip install jupyterlite-xeus
 ```
 
 When running `jupyter lite build` we pass the `prefix` options and point it to the local environment / prefix we just created:
