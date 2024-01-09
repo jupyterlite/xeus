@@ -30,20 +30,24 @@ def get_kernel_binaries(path):
         kernel_spec = json.loads(json_file.read_text(**UTF8))
         argv = kernel_spec.get("argv")
         kernel_binary = argv[0]
-        
+
         kernel_binary_js = Path(kernel_binary+".js")
         kernel_binary_wasm = Path(kernel_binary+".wasm")
-         
+
         if kernel_binary_js.exists() and kernel_binary_wasm.exists():
             return kernel_binary_js, kernel_binary_wasm
         else:
             warnings.warn(f"kernel binaries not found for {path.name}")
-            
+
     else:
         warnings.warn(f"kernel.json not found for {path.name}")
-        
+
     return None
 
+
+class MountPoints(List):
+    def from_string(self, s):
+        return s.split(",")
 
 
 class XeusAddon(FederatedExtensionAddon):
@@ -62,17 +66,17 @@ class XeusAddon(FederatedExtensionAddon):
         description='The path to the wasm prefix',
     )
 
-    mounts = List(
+    mounts = MountPoints(
         [],
         config=True,
-        description="List of paths in the form of <host_path>:<mount_path> to mount in the wasm prefix",
+        description="A comma-separated list of mount points, in the form <host_path>:<mount_path> to mount in the wasm prefix",
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.static_dir = self.output_extensions / STATIC_DIR
         self.cwd = TemporaryDirectory()
-    
+
     def post_build(self, manager):
 
         # check that either prefix or environment_file is set
@@ -82,17 +86,15 @@ class XeusAddon(FederatedExtensionAddon):
         # create the prefix if it does not exist
         if not self.prefix:
             self.create_prefix()
-    
+
         # copy the kernels from the prefix
         yield from self.copy_kernels_from_prefix()
-    
+
         # copy the jupyterlab extensions
         yield from self.copy_jupyterlab_extensions_from_prefix(manager)
 
-        
-    
     def create_prefix(self):
-    
+
         # read the environment file
         root_prefix = Path(self.cwd.name) / "env"
         env_name = "xeus-env"
@@ -116,7 +118,7 @@ class XeusAddon(FederatedExtensionAddon):
             )
 
     def copy_kernels_from_prefix(self):
-        
+
         if not os.path.exists(self.prefix) or not os.path.isdir(self.prefix):
             raise ValueError(f"Prefix {self.prefix} does not exist or is not a directory")
 
@@ -127,7 +129,7 @@ class XeusAddon(FederatedExtensionAddon):
         # find all folders in the kernelspec path
         for kernel_dir in kernel_spec_path.iterdir():
             kernel_binaries = get_kernel_binaries(kernel_dir)
-            if kernel_binaries:      
+            if kernel_binaries:
                 kernel_js, kernel_wasm  = kernel_binaries
                 all_kernels.append(kernel_dir.name)
                 # take care of each kernel
@@ -145,9 +147,7 @@ class XeusAddon(FederatedExtensionAddon):
             ]
         )
 
-
     def copy_kernel(self, kernel_dir, kernel_wasm, kernel_js):
-
         kernel_spec = json.loads((kernel_dir / "kernel.json").read_text(**UTF8))
 
         # update kernel_executable path in kernel.json
@@ -179,14 +179,10 @@ class XeusAddon(FederatedExtensionAddon):
 
         yield from self.pack_prefix(kernel_dir=kernel_dir)
 
-
-
     def pack_prefix(self, kernel_dir):
-
         kernel_name = kernel_dir.name
         packages_dir = Path(self.static_dir) / "share" / "jupyter" / "kernel_packages"
         full_kernel_dir = Path(self.static_dir) / "share"/ "jupyter"/"kernels"/ kernel_name
-    
 
         out_path = Path(self.cwd.name) / "packed_env"
         out_path.mkdir(parents=True, exist_ok=True)
@@ -214,13 +210,12 @@ class XeusAddon(FederatedExtensionAddon):
                 msg = f"mount_path {mount_path} needs to be absolute"
                 raise ValueError(msg)
             outname = f"mount_{mount_index}.tar.gz"
-            pack_directory(host_dir=host_path, mount_dir=mount_path, 
+            pack_directory(host_dir=host_path, mount_dir=mount_path,
                            outname=outname, outdir=out_path)
             add_tarfile_to_env_meta(env_meta_filename=out_path / empack_env_meta,
                 tarfile=out_path / outname)
-            
 
-        # copy all the packages to the packages dir 
+        # copy all the packages to the packages dir
         # (this is shared between multiple xeus-python kernels)
         for pkg_path in out_path.iterdir():
             if pkg_path.name.endswith(".tar.gz"):
@@ -236,14 +231,12 @@ class XeusAddon(FederatedExtensionAddon):
             actions=[(self.copy_one, [out_path / empack_env_meta, Path(full_kernel_dir)/ empack_env_meta ])],
         )
 
-
-
     def copy_jupyterlab_extensions_from_prefix(self, manager):
         # Find the federated extensions in the emscripten-env and install them
         prefix = Path(self.prefix)
         for pkg_json in self.env_extensions(prefix / SHARE_LABEXTENSIONS):
             yield from self.safe_copy_jupyterlab_extension(pkg_json)
-    
+
         jupyterlite_json = manager.output_dir / JUPYTERLITE_JSON
         lab_extensions_root = manager.output_dir / LAB_EXTENSIONS
         lab_extensions = self.env_extensions(lab_extensions_root)
@@ -254,7 +247,6 @@ class XeusAddon(FederatedExtensionAddon):
             file_dep=[*lab_extensions, jupyterlite_json],
             actions=[(self.patch_jupyterlite_json, [jupyterlite_json])],
         )
-    
 
     def safe_copy_jupyterlab_extension(self, pkg_json):
         """Copy a labextension, and overwrite it
