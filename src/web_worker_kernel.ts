@@ -202,7 +202,7 @@ export class WebWorkerKernel implements IKernel {
 
     await this._remote.ready();
 
-    if (false || options.mountDrive) {
+    if (options.mountDrive) {
       await this._remote.mount(driveName, '/drive', PageConfig.getBaseUrl());
       await this._remote.cd(localPath);
     }
