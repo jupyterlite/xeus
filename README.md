@@ -95,7 +95,7 @@ micromamba create -n xeus-python-dev \
     --yes \
     "python>=3.11" pybind11 nlohmann_json pybind11_json numpy pytest \
     bzip2 sqlite zlib libffi xtl pyjs \
-    xeus xeus-sqlite
+    xeus xeus-sqlite xeus-lite
 ```
 
 #### Build the kernel
@@ -120,7 +120,7 @@ cd build_wasm
 emcmake cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ON \
-    -DCMAKE_INSTALL_PREFIX=$PREFIX
+    -DCMAKE_INSTALL_PREFIX=$PREFIX \
     ..
 emmake make -j8 install
 ```
@@ -128,7 +128,7 @@ emmake make -j8 install
 When running `jupyter lite build` we pass the `prefix` options and point it to the local environment / prefix we just created:
 
 ```bash
-jupyter lite build  --XeusAddon.prefix=$WASM_ENV_PREFIX
+jupyter lite build --XeusAddon.prefix=$WASM_ENV_PREFIX
 ```
 
 ### Mounting additional files
