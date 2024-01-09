@@ -2,8 +2,6 @@
 // Copyright (c) JupyterLite Contributors
 // Distributed under the terms of the Modified BSD License.
 
-console.log('worker loaded');
-
 import { expose } from 'comlink';
 
 import {
@@ -12,6 +10,7 @@ import {
   IEmscriptenFSNode,
   IStats
 } from '@jupyterlite/contents';
+import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 
 declare function createXeusModule(options: any): any;
 
@@ -96,7 +95,6 @@ async function get_stdin() {
 
 class XeusKernel {
   constructor(resolve: any) {
-    console.log('constructing kernel');
     this._resolve = resolve;
   }
 
@@ -105,7 +103,6 @@ class XeusKernel {
   }
 
   mount(driveName: string, mountpoint: string, baseUrl: string): void {
-    console.log('mounting drive');
     const { FS, PATH, ERRNO_CODES } = globalThis.Module;
 
     if (!FS) {
@@ -164,14 +161,14 @@ class XeusKernel {
 
   private async initialize() {
     // the location of the kernel on the server
-    // ie `share/jupyter/kernels/${dir}`
+    // ie `xeus/kernels/${dir}`
     const dir = this._kernelspec.dir;
 
     // location of the kernel binary on the server
     const binary_js = this._kernelspec.argv[0];
     const binary_wasm = binary_js.replace('.js', '.wasm');
 
-    importScripts(binary_js);
+    importScripts(URLExt.join(PageConfig.getBaseUrl(), binary_js));
     globalThis.Module = await createXeusModule({
       locateFile: (file: string) => {
         if (file.endsWith('.wasm')) {
@@ -182,15 +179,20 @@ class XeusKernel {
     });
     try {
       await this.waitRunDependency();
-      console.log(globalThis.Module);
 
       // each kernel can have a `async_init` function
       // which can do kernel specific **async** initialization
       // This function is usually implemented in the pre/post.js
       // in the emscripten build of that kernel
       if (globalThis.Module['async_init'] !== undefined) {
-        const kernel_root_url = `share/jupyter/kernels/${dir}`;
-        const pkg_root_url = 'share/jupyter/kernel_packages';
+        const kernel_root_url = URLExt.join(
+          PageConfig.getBaseUrl(),
+          `xeus/kernels/${dir}`
+        );
+        const pkg_root_url = URLExt.join(
+          PageConfig.getBaseUrl(),
+          'xeus/kernel_packages'
+        );
         const verbose = true;
         await globalThis.Module['async_init'](
           kernel_root_url,
@@ -244,6 +246,5 @@ class XeusKernel {
 }
 
 globalThis.ready = new Promise(resolve => {
-  console.log('expose(new XeusKernel(resolve));');
   expose(new XeusKernel(resolve));
 });

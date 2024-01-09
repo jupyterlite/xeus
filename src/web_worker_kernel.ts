@@ -30,26 +30,21 @@ export class WebWorkerKernel implements IKernel {
    * @param options The instantiation options for a new WebWorkerKernel
    */
   constructor(options: WebWorkerKernel.IOptions) {
-    console.log('constructing WebWorkerKernel kernel');
     const { id, name, sendMessage, location } = options;
     this._id = id;
     this._name = name;
     this._location = location;
     this._kernelspec = options.kernelspec;
     this._sendMessage = sendMessage;
-    console.log('constructing WebWorkerKernel worker');
     this._worker = new Worker(new URL('./worker.js', import.meta.url), {
       type: 'module'
     });
-    console.log('constructing WebWorkerKernel done');
 
     this._worker.onmessage = e => {
       this._processWorkerMessage(e.data);
     };
 
-    console.log('wrap');
     this._remote = wrap(this._worker);
-    console.log('wrap done');
 
     this._remote.processMessage({
       msg: {
@@ -60,19 +55,13 @@ export class WebWorkerKernel implements IKernel {
       }
     });
 
-    console.log('init filesystem');
     this.initFileSystem(options);
-
-    console.log('constructing WebWorkerKernel done2');
   }
 
   async handleMessage(msg: KernelMessage.IMessage): Promise<void> {
-    console.log('handleMessage', msg);
     this._parent = msg;
     this._parentHeader = msg.header;
-    console.log('send message to worker');
     await this._sendMessageToWorker(msg);
-    console.log('send message to worker awaiting done');
   }
 
   private async _sendMessageToWorker(msg: any): Promise<void> {
@@ -81,11 +70,7 @@ export class WebWorkerKernel implements IKernel {
       this._executeDelegate = new PromiseDelegate<void>();
     }
 
-    console.log(' this._remote.processMessage({ msg, parent: this.parent });');
     await this._remote.processMessage({ msg, parent: this.parent });
-    console.log(
-      ' this._remote.processMessage({ msg, parent: this.parent }); done'
-    );
     if (msg.header.msg_type !== 'input_reply') {
       return await this._executeDelegate.promise;
     }
@@ -120,7 +105,6 @@ export class WebWorkerKernel implements IKernel {
    * @param msg The worker message to process.
    */
   private _processWorkerMessage(msg: any): void {
-    console.log('processWorkerMessage', msg);
     if (!msg.header) {
       return;
     }
