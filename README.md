@@ -100,7 +100,7 @@ micromamba create -n xeus-python-dev \
 
 #### Build the kernel
 
-This dependes on your kernel but will look smth like this:
+This depends on your kernel but will look something like this:
 
 ```bash
 # path to your emscripten emsdk
@@ -123,6 +123,22 @@ emcmake cmake \
     -DCMAKE_INSTALL_PREFIX=$PREFIX \
     ..
 emmake make -j8 install
+```
+
+#### Build the JupyterLite site
+
+You will need to create a new environment with the dependencies to build the JupyterLite site.
+
+```bash
+# create new environment
+micromamba create -n xeus-lite-host \
+    jupyterlite-core
+
+# activate the environment
+micromamba activate xeus-lite-host
+
+# install jupyterlite_xeus via pip
+python -m pip install jupyterlite-xeus
 ```
 
 When running `jupyter lite build` we pass the `prefix` options and point it to the local environment / prefix we just created:
