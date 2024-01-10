@@ -147,7 +147,7 @@ class XeusAddon(FederatedExtensionAddon):
         kernel_spec = json.loads((kernel_dir / "kernel.json").read_text(**UTF8))
 
         # update kernel_executable path in kernel.json
-        kernel_spec["argv"][0] = f"bin/{kernel_js.name}"
+        kernel_spec["argv"][0] = f"xeus/bin/{kernel_js.name}"
 
         # write to temp file
         kernel_json = Path(self.cwd.name) / f"{kernel_dir.name}_kernel.json"

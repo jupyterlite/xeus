@@ -165,10 +165,10 @@ class XeusKernel {
     const dir = this._kernelspec.dir;
 
     // location of the kernel binary on the server
-    const binary_js = this._kernelspec.argv[0];
+    const binary_js = URLExt.join(PageConfig.getBaseUrl(), this._kernelspec.argv[0]);
     const binary_wasm = binary_js.replace('.js', '.wasm');
 
-    importScripts(URLExt.join(PageConfig.getBaseUrl(), binary_js));
+    importScripts(binary_js);
     globalThis.Module = await createXeusModule({
       locateFile: (file: string) => {
         if (file.endsWith('.wasm')) {

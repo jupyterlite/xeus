@@ -13,12 +13,12 @@ import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
 
 import { WebWorkerKernel } from './web_worker_kernel';
 
-// helper function to fetch json
-async function getJson(url: string) {
+function getJson(url: string) {
   const json_url = URLExt.join(PageConfig.getBaseUrl(), url);
-
-  const response = await fetch(json_url);
-  return JSON.parse(await response.text());
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', json_url, false);
+  xhr.send(null);
+  return JSON.parse(xhr.responseText);
 }
 
 const xeusKernelsPlugin: JupyterLiteServerPlugin<void> = {
@@ -26,30 +26,30 @@ const xeusKernelsPlugin: JupyterLiteServerPlugin<void> = {
   autoStart: true,
   requires: [IKernelSpecs],
   optional: [IServiceWorkerManager, IBroadcastChannelWrapper],
-  activate: async (
+  activate: (
     app: JupyterLiteServer,
     kernelspecs: IKernelSpecs,
     serviceWorker?: IServiceWorkerManager,
     broadcastChannel?: IBroadcastChannelWrapper
   ) => {
-    let kernel_dir: string[] = [];
+    let kernel_list: string[] = [];
     try {
-      kernel_dir = await getJson('xeus/kernels.json');
+      kernel_list = getJson('xeus/kernels.json');
     } catch (err) {
       console.log(`Could not fetch xeus/kernels.json: ${err}`);
       throw err;
     }
 
     // Fetch kernel spec for each kernel
-    kernel_dir.map(async kernel_dir => {
-      const kernelspec = await getJson(
-        'xeus/kernels/' + kernel_dir + '/kernel.json'
+    for (const kernel of kernel_list) {
+      const kernelspec = getJson(
+        'xeus/kernels/' + kernel + '/kernel.json'
       );
-      kernelspec.name = kernel_dir;
-      kernelspec.dir = kernel_dir;
+      kernelspec.name = kernel;
+      kernelspec.dir = kernel;
       kernelspec.resources = {
-        'logo-32x32': 'xeus/kernels/' + kernel_dir + '/logo-32x32.png',
-        'logo-64x64': 'xeus/kernels/' + kernel_dir + '/logo-64x64.png'
+        'logo-32x32': URLExt.join(PageConfig.getBaseUrl(), 'xeus/kernels/' + kernel + '/logo-32x32.png'),
+        'logo-64x64': URLExt.join(PageConfig.getBaseUrl(), 'xeus/kernels/' + kernel + '/logo-64x64.png'),
       };
 
       kernelspecs.register({
@@ -76,7 +76,7 @@ const xeusKernelsPlugin: JupyterLiteServerPlugin<void> = {
           });
         }
       });
-    });
+    };
   }
 };
 
