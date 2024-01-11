@@ -10,7 +10,7 @@ import {
   IEmscriptenFSNode,
   IStats
 } from '@jupyterlite/contents';
-import { PageConfig, URLExt } from '@jupyterlab/coreutils';
+import { URLExt } from '@jupyterlab/coreutils';
 
 declare function createXeusModule(options: any): any;
 
@@ -133,12 +133,6 @@ class XeusKernel {
 
   async processMessage(event: any): Promise<void> {
     const msg_type = event.msg.header.msg_type;
-    if (msg_type === '__initialize__') {
-      this._kernelspec = event.msg.kernelspec;
-      await this.initialize();
-
-      return;
-    }
 
     await this.ready();
 
@@ -159,16 +153,9 @@ class XeusKernel {
     }
   }
 
-  private async initialize() {
-    // the location of the kernel on the server
-    // ie `xeus/kernels/${dir}`
-    const dir = this._kernelspec.dir;
-
+  async initialize(kernel_spec: any, base_url: string) {
     // location of the kernel binary on the server
-    const binary_js = URLExt.join(
-      PageConfig.getBaseUrl(),
-      this._kernelspec.argv[0]
-    );
+    const binary_js = URLExt.join(base_url, kernel_spec.argv[0]);
     const binary_wasm = binary_js.replace('.js', '.wasm');
 
     importScripts(binary_js);
@@ -189,13 +176,10 @@ class XeusKernel {
       // in the emscripten build of that kernel
       if (globalThis.Module['async_init'] !== undefined) {
         const kernel_root_url = URLExt.join(
-          PageConfig.getBaseUrl(),
-          `xeus/kernels/${dir}`
+          base_url,
+          `xeus/kernels/${kernel_spec.dir}`
         );
-        const pkg_root_url = URLExt.join(
-          PageConfig.getBaseUrl(),
-          'xeus/kernel_packages'
-        );
+        const pkg_root_url = URLExt.join(base_url, 'xeus/kernel_packages');
         const verbose = true;
         await globalThis.Module['async_init'](
           kernel_root_url,
@@ -241,11 +225,9 @@ class XeusKernel {
     return promise;
   }
   private _resolve: any;
-  private _kernelspec: any;
   private _raw_xkernel: any;
   private _raw_xserver: any;
   private _drive: DriveFS | null = null;
-  //private _ready: PromiseLike<void>;
 }
 
 globalThis.ready = new Promise(resolve => {
