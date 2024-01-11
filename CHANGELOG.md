@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.0a3
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.0a2...4d5b63f49145ac5f3ee94ae30a3a0144f4092a52))
+
+### Bugs fixed
+
+- Attempt to fix the base_url from the worker [#34](https://github.com/jupyterlite/xeus/pull/34) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-11&to=2024-01-11&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-11..2024-01-11&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.0a2
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.0a1...f67bf1ef74d0a58faf126df98658025abfd6538f))
@@ -28,8 +44,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-09&to=2024-01-11&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-09..2024-01-11&type=Issues) | [@Vipul-Cariappa](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AVipul-Cariappa+updated%3A2024-01-09..2024-01-11&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.0a1
 
