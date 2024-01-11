@@ -7,11 +7,8 @@ from pathlib import Path
 import csv
 from .constants import PYTHON_VERSION
 
-def _install_pip_dependencies(
-    prefix_path, 
-    dependencies, 
-    log=None
-):
+
+def _install_pip_dependencies(prefix_path, dependencies, log=None):
     # Why is this so damn complicated?
     # Isn't it easier to download the .whl ourselves? pip is hell
 
@@ -97,4 +94,3 @@ def _install_pip_dependencies(
             os.makedirs(dest_path.parent, exist_ok=True)
 
             shutil.copy(src_path, dest_path)
-

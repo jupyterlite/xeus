@@ -15,24 +15,28 @@ from jupyterlite_core.constants import (
 )
 from traitlets import List, Unicode
 
-from .create_conda_env import create_conda_env_from_yaml,create_conda_env_from_specs
+from .create_conda_env import create_conda_env_from_yaml, create_conda_env_from_specs
 from .constants import EXTENSION_NAME
 
-from empack.pack import DEFAULT_CONFIG_PATH, pack_env, pack_directory, add_tarfile_to_env_meta
+from empack.pack import (
+    DEFAULT_CONFIG_PATH,
+    pack_env,
+    pack_directory,
+    add_tarfile_to_env_meta,
+)
 from empack.file_patterns import pkg_file_filter_from_yaml
 
 
 def get_kernel_binaries(path):
-    """ return path to the kernel binary (js and wasm) if they exist, else None"""
+    """return path to the kernel binary (js and wasm) if they exist, else None"""
     json_file = path / "kernel.json"
     if json_file.exists():
-
         kernel_spec = json.loads(json_file.read_text(**UTF8))
         argv = kernel_spec.get("argv")
         kernel_binary = argv[0]
 
-        kernel_binary_js = Path(kernel_binary+".js")
-        kernel_binary_wasm = Path(kernel_binary+".wasm")
+        kernel_binary_js = Path(kernel_binary + ".js")
+        kernel_binary_wasm = Path(kernel_binary + ".wasm")
 
         if kernel_binary_js.exists() and kernel_binary_wasm.exists():
             return kernel_binary_js, kernel_binary_wasm
@@ -53,7 +57,6 @@ class MountPoints(List):
 class XeusAddon(FederatedExtensionAddon):
     __all__ = ["post_build"]
 
-
     environment_file = Unicode(
         "environment.yml",
         config=True,
@@ -63,7 +66,7 @@ class XeusAddon(FederatedExtensionAddon):
     prefix = Unicode(
         "",
         config=True,
-        description='The path to the wasm prefix',
+        description="The path to the wasm prefix",
     )
 
     mounts = MountPoints(
@@ -102,9 +105,7 @@ class XeusAddon(FederatedExtensionAddon):
         env_file = Path(self.environment_file)
         if env_file.exists():
             create_conda_env_from_yaml(
-                env_name=env_name,
-                root_prefix=root_prefix,
-                env_file=env_file
+                env_name=env_name, root_prefix=root_prefix, env_file=env_file
             )
         # this is atm for debugging
         else:
@@ -117,7 +118,9 @@ class XeusAddon(FederatedExtensionAddon):
 
     def copy_kernels_from_prefix(self):
         if not os.path.exists(self.prefix) or not os.path.isdir(self.prefix):
-            raise ValueError(f"Prefix {self.prefix} does not exist or is not a directory")
+            raise ValueError(
+                f"Prefix {self.prefix} does not exist or is not a directory"
+            )
 
         kernel_spec_path = Path(self.prefix) / "share" / "jupyter" / "kernels"
 
@@ -126,7 +129,7 @@ class XeusAddon(FederatedExtensionAddon):
         for kernel_dir in kernel_spec_path.iterdir():
             kernel_binaries = get_kernel_binaries(kernel_dir)
             if kernel_binaries:
-                kernel_js, kernel_wasm  = kernel_binaries
+                kernel_js, kernel_wasm = kernel_binaries
                 all_kernels.append(kernel_dir.name)
                 # take care of each kernel
                 yield from self.copy_kernel(kernel_dir, kernel_wasm, kernel_js)
@@ -137,10 +140,8 @@ class XeusAddon(FederatedExtensionAddon):
         yield dict(
             name=f"copy:{kernel_file}",
             actions=[
-                (
-                    self.copy_one, [kernel_file, self.xeus_output_dir / "kernels.json"]
-                )
-            ]
+                (self.copy_one, [kernel_file, self.xeus_output_dir / "kernels.json"])
+            ],
         )
 
     def copy_kernel(self, kernel_dir, kernel_wasm, kernel_js):
@@ -154,30 +155,69 @@ class XeusAddon(FederatedExtensionAddon):
         kernel_json.write_text(json.dumps(kernel_spec), **UTF8)
 
         # copy the kernel binary files to the bin dir
-        yield dict(name=f"copy:{kernel_dir.name}:binaries",  actions=[
-            (self.copy_one, [kernel_js, self.xeus_output_dir / "bin" / kernel_js.name ]),
-            (self.copy_one, [kernel_wasm, self.xeus_output_dir / "bin" / kernel_wasm.name ]),
-        ])
+        yield dict(
+            name=f"copy:{kernel_dir.name}:binaries",
+            actions=[
+                (
+                    self.copy_one,
+                    [kernel_js, self.xeus_output_dir / "bin" / kernel_js.name],
+                ),
+                (
+                    self.copy_one,
+                    [kernel_wasm, self.xeus_output_dir / "bin" / kernel_wasm.name],
+                ),
+            ],
+        )
 
         # copy the kernel.json file
         yield dict(
             name=f"copy:{kernel_dir.name}:kernel.json",
-            actions=[(self.copy_one, [kernel_json, self.xeus_output_dir / "kernels"/ kernel_dir.name / "kernel.json" ])],
+            actions=[
+                (
+                    self.copy_one,
+                    [
+                        kernel_json,
+                        self.xeus_output_dir
+                        / "kernels"
+                        / kernel_dir.name
+                        / "kernel.json",
+                    ],
+                )
+            ],
         )
         # copy the logo files
         yield dict(
             name=f"copy:{kernel_dir.name}:logos",
             actions=[
-                (self.copy_one, [kernel_dir / "logo-32x32.png", self.xeus_output_dir / "kernels" / kernel_dir.name / "logo-32x32.png" ]),
-                (self.copy_one, [kernel_dir / "logo-64x64.png", self.xeus_output_dir / "kernels" / kernel_dir.name / "logo-64x64.png" ])
-            ])
+                (
+                    self.copy_one,
+                    [
+                        kernel_dir / "logo-32x32.png",
+                        self.xeus_output_dir
+                        / "kernels"
+                        / kernel_dir.name
+                        / "logo-32x32.png",
+                    ],
+                ),
+                (
+                    self.copy_one,
+                    [
+                        kernel_dir / "logo-64x64.png",
+                        self.xeus_output_dir
+                        / "kernels"
+                        / kernel_dir.name
+                        / "logo-64x64.png",
+                    ],
+                ),
+            ],
+        )
 
         yield from self.pack_prefix(kernel_dir=kernel_dir)
 
     def pack_prefix(self, kernel_dir):
         kernel_name = kernel_dir.name
         packages_dir = self.xeus_output_dir / "kernel_packages"
-        full_kernel_dir = self.xeus_output_dir / "kernels"/ kernel_name
+        full_kernel_dir = self.xeus_output_dir / "kernels" / kernel_name
 
         out_path = Path(self.cwd.name) / "packed_env"
         out_path.mkdir(parents=True, exist_ok=True)
@@ -190,12 +230,12 @@ class XeusAddon(FederatedExtensionAddon):
             relocate_prefix="/",
             outdir=out_path,
             use_cache=True,
-            file_filters=file_filters
+            file_filters=file_filters,
         )
 
         empack_env_meta = "empack_env_meta.json"
         # pack extra dirs
-        for mount_index,mount in enumerate(self.mounts):
+        for mount_index, mount in enumerate(self.mounts):
             if mount.count(":") != 1:
                 msg = f"invalid mount {mount}, must be <host_path>:<mount_path>"
                 raise ValueError(msg)
@@ -205,10 +245,15 @@ class XeusAddon(FederatedExtensionAddon):
                 msg = f"mount_path {mount_path} needs to be absolute"
                 raise ValueError(msg)
             outname = f"mount_{mount_index}.tar.gz"
-            pack_directory(host_dir=host_path, mount_dir=mount_path,
-                           outname=outname, outdir=out_path)
-            add_tarfile_to_env_meta(env_meta_filename=out_path / empack_env_meta,
-                tarfile=out_path / outname)
+            pack_directory(
+                host_dir=host_path,
+                mount_dir=mount_path,
+                outname=outname,
+                outdir=out_path,
+            )
+            add_tarfile_to_env_meta(
+                env_meta_filename=out_path / empack_env_meta, tarfile=out_path / outname
+            )
 
         # copy all the packages to the packages dir
         # (this is shared between multiple xeus-python kernels)
@@ -216,14 +261,22 @@ class XeusAddon(FederatedExtensionAddon):
             if pkg_path.name.endswith(".tar.gz"):
                 yield dict(
                     name=f"xeus:{kernel_name}:copy_package:{pkg_path.name}",
-                    actions=[(self.copy_one, [pkg_path, packages_dir / pkg_path.name ])],
+                    actions=[(self.copy_one, [pkg_path, packages_dir / pkg_path.name])],
                 )
 
         # copy the empack_env_meta.json
         # this is individual for xeus-python kernel
         yield dict(
             name=f"xeus:{kernel_name}:copy_env_file:{empack_env_meta}",
-            actions=[(self.copy_one, [out_path / empack_env_meta, Path(full_kernel_dir)/ empack_env_meta ])],
+            actions=[
+                (
+                    self.copy_one,
+                    [
+                        out_path / empack_env_meta,
+                        Path(full_kernel_dir) / empack_env_meta,
+                    ],
+                )
+            ],
         )
 
     def copy_jupyterlab_extensions_from_prefix(self, manager):
@@ -251,7 +304,9 @@ class XeusAddon(FederatedExtensionAddon):
         stem = json.loads(pkg_json.read_text(**UTF8))["name"]
         dest = self.output_extensions / stem
         file_dep = [
-            p for p in pkg_path.rglob("*") if not (p.is_dir() or self.is_ignored_sourcemap(p.name))
+            p
+            for p in pkg_path.rglob("*")
+            if not (p.is_dir() or self.is_ignored_sourcemap(p.name))
         ]
 
         yield dict(
