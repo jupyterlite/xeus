@@ -25,7 +25,7 @@ test.describe('General Tests', () => {
     await page.goto('lab/index.html');
 
     // Launch a Python notebook
-    const xpython = page.locator('[title="Python 3.12 (XPython)"]').first();
+    const xpython = page.locator('[title="Python 3.11 (XPython)"]').first();
     await xpython.click();
 
     // Wait for kernel to be idle
