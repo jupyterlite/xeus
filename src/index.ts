@@ -2,6 +2,7 @@
 // Copyright (c) JupyterLite Contributors
 // Distributed under the terms of the Modified BSD License.
 
+import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 import {
   IServiceWorkerManager,
   JupyterLiteServer,
@@ -12,54 +13,25 @@ import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
 
 import { WebWorkerKernel } from './web_worker_kernel';
 
-const EXTENSION_NAME = 'xeus';
-const EXTENSION_STATIC_DIR = `../extensions/@jupyterlite/${EXTENSION_NAME}/static/`;
-
-// helper function to fetch json
-function getPkgJson(url: string) {
-  const json_url = EXTENSION_STATIC_DIR + url;
+function getJson(url: string) {
+  const json_url = URLExt.join(PageConfig.getBaseUrl(), url);
   const xhr = new XMLHttpRequest();
   xhr.open('GET', json_url, false);
   xhr.send(null);
   return JSON.parse(xhr.responseText);
 }
 
-let kernel_dir: string[] = [];
+let kernel_list: string[] = [];
 try {
-  kernel_dir = getPkgJson('share/jupyter/kernels.json');
+  kernel_list = getJson('xeus/kernels.json');
 } catch (err) {
-  console.log(err);
-  console.log('could not fetch share/jupyter/kernels/kernels.json');
-  kernel_dir = [];
+  console.log(`Could not fetch xeus/kernels.json: ${err}`);
   throw err;
 }
 
-// fetch kernel spec for each kernel
-const kernel_specs = kernel_dir.map(kernel_dir => {
-  const spec: any = getPkgJson(
-    'share/jupyter/kernels/' + kernel_dir + '/kernel.json'
-  );
-  spec.name = kernel_dir;
-  spec.dir = kernel_dir;
-  spec.resources = {
-    'logo-32x32':
-      EXTENSION_STATIC_DIR +
-      'share/jupyter/kernels/' +
-      kernel_dir +
-      '/logo-32x32.png',
-    'logo-64x64':
-      EXTENSION_STATIC_DIR +
-      'share/jupyter/kernels/' +
-      kernel_dir +
-      '/logo-64x64.png'
-  };
-  return spec;
-});
-
-const server_kernels = kernel_specs.map(kernelspec => {
-  const server_kernel: JupyterLiteServerPlugin<void> = {
-    // use name from spec
-    id: `@jupyterlite/${kernelspec.name}-extension:kernel`,
+const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
+  return {
+    id: `@jupyterlite/xeus-${kernel}:register`,
     autoStart: true,
     requires: [IKernelSpecs],
     optional: [IServiceWorkerManager, IBroadcastChannelWrapper],
@@ -69,6 +41,21 @@ const server_kernels = kernel_specs.map(kernelspec => {
       serviceWorker?: IServiceWorkerManager,
       broadcastChannel?: IBroadcastChannelWrapper
     ) => {
+      // Fetch kernel spec
+      const kernelspec = getJson('xeus/kernels/' + kernel + '/kernel.json');
+      kernelspec.name = kernel;
+      kernelspec.dir = kernel;
+      kernelspec.resources = {
+        'logo-32x32': URLExt.join(
+          PageConfig.getBaseUrl(),
+          'xeus/kernels/' + kernel + '/logo-32x32.png'
+        ),
+        'logo-64x64': URLExt.join(
+          PageConfig.getBaseUrl(),
+          'xeus/kernels/' + kernel + '/logo-64x64.png'
+        )
+      };
+
       kernelspecs.register({
         spec: kernelspec,
         create: async (options: IKernel.IOptions): Promise<IKernel> => {
@@ -95,9 +82,6 @@ const server_kernels = kernel_specs.map(kernelspec => {
       });
     }
   };
-  return server_kernel;
 });
-
-const plugins: JupyterLiteServerPlugin<any>[] = server_kernels;
 
 export default plugins;

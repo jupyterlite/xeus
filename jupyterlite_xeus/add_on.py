@@ -16,7 +16,7 @@ from jupyterlite_core.constants import (
 from traitlets import List, Unicode
 
 from .create_conda_env import create_conda_env_from_yaml,create_conda_env_from_specs
-from .constants import EXTENSION_NAME, STATIC_DIR
+from .constants import EXTENSION_NAME
 
 from empack.pack import DEFAULT_CONFIG_PATH, pack_env, pack_directory, add_tarfile_to_env_meta
 from empack.file_patterns import pkg_file_filter_from_yaml
@@ -74,11 +74,10 @@ class XeusAddon(FederatedExtensionAddon):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.static_dir = self.output_extensions / STATIC_DIR
+        self.xeus_output_dir = Path(self.manager.output_dir) / "xeus"
         self.cwd = TemporaryDirectory()
 
     def post_build(self, manager):
-
         # check that either prefix or environment_file is set
         if not self.prefix and not self.environment_file:
             raise ValueError("Either prefix or environment_file must be set")
@@ -94,7 +93,6 @@ class XeusAddon(FederatedExtensionAddon):
         yield from self.copy_jupyterlab_extensions_from_prefix(manager)
 
     def create_prefix(self):
-
         # read the environment file
         root_prefix = Path(self.cwd.name) / "env"
         env_name = "xeus-env"
@@ -118,12 +116,10 @@ class XeusAddon(FederatedExtensionAddon):
             )
 
     def copy_kernels_from_prefix(self):
-
         if not os.path.exists(self.prefix) or not os.path.isdir(self.prefix):
             raise ValueError(f"Prefix {self.prefix} does not exist or is not a directory")
 
         kernel_spec_path = Path(self.prefix) / "share" / "jupyter" / "kernels"
-
 
         all_kernels = []
         # find all folders in the kernelspec path
@@ -139,10 +135,10 @@ class XeusAddon(FederatedExtensionAddon):
         kernel_file = Path(self.cwd.name) / "kernels.json"
         kernel_file.write_text(json.dumps(all_kernels), **UTF8)
         yield dict(
-            name=f"copy:kernels.json",
+            name=f"copy:{kernel_file}",
             actions=[
                 (
-                    self.copy_one, [kernel_file, self.static_dir / "share"/"jupyter" / "kernels.json" ]
+                    self.copy_one, [kernel_file, self.xeus_output_dir / "kernels.json"]
                 )
             ]
         )
@@ -151,38 +147,37 @@ class XeusAddon(FederatedExtensionAddon):
         kernel_spec = json.loads((kernel_dir / "kernel.json").read_text(**UTF8))
 
         # update kernel_executable path in kernel.json
-        kernel_spec["argv"][0] = f"bin/{kernel_js.name}"
+        kernel_spec["argv"][0] = f"xeus/bin/{kernel_js.name}"
 
         # write to temp file
         kernel_json = Path(self.cwd.name) / f"{kernel_dir.name}_kernel.json"
         kernel_json.write_text(json.dumps(kernel_spec), **UTF8)
 
-
         # copy the kernel binary files to the bin dir
         yield dict(name=f"copy:{kernel_dir.name}:binaries",  actions=[
-            (self.copy_one, [kernel_js, self.static_dir / "bin"/ kernel_js.name ]),
-            (self.copy_one, [kernel_wasm, self.static_dir / "bin"/ kernel_wasm.name ]),
+            (self.copy_one, [kernel_js, self.xeus_output_dir / "bin" / kernel_js.name ]),
+            (self.copy_one, [kernel_wasm, self.xeus_output_dir / "bin" / kernel_wasm.name ]),
         ])
 
         # copy the kernel.json file
         yield dict(
             name=f"copy:{kernel_dir.name}:kernel.json",
-            actions=[(self.copy_one, [kernel_json, self.static_dir /"share"/"jupyter"/ "kernels"/ kernel_dir.name / "kernel.json" ])],
+            actions=[(self.copy_one, [kernel_json, self.xeus_output_dir / "kernels"/ kernel_dir.name / "kernel.json" ])],
         )
         # copy the logo files
         yield dict(
             name=f"copy:{kernel_dir.name}:logos",
             actions=[
-                (self.copy_one, [kernel_dir / "logo-32x32.png", self.static_dir /"share"/ "jupyter"/ "kernels"/  kernel_dir.name / "logo-32x32.png" ]),
-                (self.copy_one, [kernel_dir / "logo-64x64.png", self.static_dir /"share"/ "jupyter"/ "kernels"/  kernel_dir.name / "logo-64x64.png" ])
+                (self.copy_one, [kernel_dir / "logo-32x32.png", self.xeus_output_dir / "kernels" / kernel_dir.name / "logo-32x32.png" ]),
+                (self.copy_one, [kernel_dir / "logo-64x64.png", self.xeus_output_dir / "kernels" / kernel_dir.name / "logo-64x64.png" ])
             ])
 
         yield from self.pack_prefix(kernel_dir=kernel_dir)
 
     def pack_prefix(self, kernel_dir):
         kernel_name = kernel_dir.name
-        packages_dir = Path(self.static_dir) / "share" / "jupyter" / "kernel_packages"
-        full_kernel_dir = Path(self.static_dir) / "share"/ "jupyter"/"kernels"/ kernel_name
+        packages_dir = self.xeus_output_dir / "kernel_packages"
+        full_kernel_dir = self.xeus_output_dir / "kernels"/ kernel_name
 
         out_path = Path(self.cwd.name) / "packed_env"
         out_path.mkdir(parents=True, exist_ok=True)
