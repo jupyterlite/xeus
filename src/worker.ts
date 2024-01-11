@@ -165,7 +165,10 @@ class XeusKernel {
     const dir = this._kernelspec.dir;
 
     // location of the kernel binary on the server
-    const binary_js = URLExt.join(PageConfig.getBaseUrl(), this._kernelspec.argv[0]);
+    const binary_js = URLExt.join(
+      PageConfig.getBaseUrl(),
+      this._kernelspec.argv[0]
+    );
     const binary_wasm = binary_js.replace('.js', '.wasm');
 
     importScripts(binary_js);
