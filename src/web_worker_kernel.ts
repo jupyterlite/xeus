@@ -14,6 +14,8 @@ import { KernelMessage } from '@jupyterlab/services';
 import { IKernel } from '@jupyterlite/kernel';
 
 interface IXeusKernel {
+  initialize(kernel_spec: any, base_url: string): Promise<void>;
+
   ready(): Promise<void>;
 
   mount(driveName: string, mountpoint: string, baseUrl: string): Promise<void>;
@@ -46,14 +48,7 @@ export class WebWorkerKernel implements IKernel {
 
     this._remote = wrap(this._worker);
 
-    this._remote.processMessage({
-      msg: {
-        header: {
-          msg_type: '__initialize__'
-        },
-        kernelspec: this._kernelspec
-      }
-    });
+    this._remote.initialize(this._kernelspec, PageConfig.getBaseUrl());
 
     this.initFileSystem(options);
   }
