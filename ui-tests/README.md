@@ -7,9 +7,6 @@ and [Galata](https://github.com/jupyterlab/jupyterlab/tree/main/galata) helper.
 
 The Playwright configuration is defined in [playwright.config.js](./playwright.config.js).
 
-The JupyterLab server configuration to use for the integration test is defined
-in [jupyter_server_test_config.py](./jupyter_server_test_config.py).
-
 The default configuration will produce video for failing tests and an HTML report.
 
 > There is a new experimental UI mode that you may fall in love with; see [that video](https://www.youtube.com/watch?v=jF0yA-JLQW0).
