@@ -20,7 +20,11 @@ from jupyterlite_core.constants import (
 )
 from traitlets import List, Unicode
 
-from .create_conda_env import create_conda_env_from_yaml, create_conda_env_from_specs
+from .create_conda_env import (
+    create_conda_env_from_env_file,
+    create_conda_env_from_specs,
+)
+from .constants import EXTENSION_NAME
 from .constants import EXTENSION_NAME
 
 from empack.pack import (
@@ -110,15 +114,18 @@ class XeusAddon(FederatedExtensionAddon):
     def create_prefix(self):
         # read the environment file
         root_prefix = Path(self.cwd.name) / "env"
-        env_name = "xeus-env"
+        env_file = Path(self.environment_file)
+
+        # open the env yaml file
+        with open(env_file, "r") as file:
+            yaml_content = yaml.safe_load(file)
+
+        env_name = yaml_content.get("name", "xeus-env")
         env_prefix = root_prefix / "envs" / env_name
         self.prefix = str(env_prefix)
 
-        env_file = Path(self.environment_file)
         if env_file.exists():
-            create_conda_env_from_yaml(
-                env_name=env_name, root_prefix=root_prefix, env_file=env_file
-            )
+            create_conda_env_from_env_file(root_prefix, yaml_content, env_file.parent)
         # this is atm for debugging
         else:
             create_conda_env_from_specs(

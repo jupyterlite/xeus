@@ -91,7 +91,7 @@ This workflow usually starts with creating a local conda environment / prefix fo
 micromamba create -n xeus-python-dev \
     --platform=emscripten-wasm32 \
     -c https://repo.mamba.pm/emscripten-forge \
-    -c https://repo.mamba.pm/conda-forge \
+    -c conda-forge \
     --yes \
     "python>=3.11" pybind11 nlohmann_json pybind11_json numpy pytest \
     bzip2 sqlite zlib libffi xtl pyjs \
