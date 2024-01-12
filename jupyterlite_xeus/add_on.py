@@ -182,9 +182,10 @@ class XeusAddon(FederatedExtensionAddon):
 
         kernel_spec["resources"] = {}
         for image in image_files:
-            kernel_spec["resources"][image.stem] = (
-                self.xeus_output_dir / "kernels" / kernel_dir.name / image.name,
+            output_image = (
+                self.xeus_output_dir / "kernels" / kernel_dir.name / image.name
             )
+            kernel_spec["resources"][image.stem] = str(output_image)
 
             # copy the logo file
             yield dict(
@@ -194,10 +195,7 @@ class XeusAddon(FederatedExtensionAddon):
                         self.copy_one,
                         [
                             kernel_dir / image.name,
-                            self.xeus_output_dir
-                            / "kernels"
-                            / kernel_dir.name
-                            / image.name,
+                            output_image,
                         ],
                     ),
                 ],
