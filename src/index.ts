@@ -45,6 +45,12 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
       const kernelspec = getJson('xeus/kernels/' + kernel + '/kernel.json');
       kernelspec.name = kernel;
       kernelspec.dir = kernel;
+      for (const [key, value] of Object.entries(kernelspec.resources)) {
+        kernelspec.resources[key] = URLExt.join(
+          PageConfig.getBaseUrl(),
+          value as string
+        );
+      }
 
       kernelspecs.register({
         spec: kernelspec,
