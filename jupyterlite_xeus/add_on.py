@@ -3,7 +3,12 @@ import json
 import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from urllib.parse import urlparse
 import warnings
+
+import yaml
+
+import requests
 
 from jupyterlite_core.addons.federated_extensions import FederatedExtensionAddon
 from jupyterlite_core.constants import (
@@ -24,7 +29,7 @@ from empack.pack import (
     pack_directory,
     add_tarfile_to_env_meta,
 )
-from empack.file_patterns import pkg_file_filter_from_yaml
+from empack.file_patterns import PkgFileFilter, pkg_file_filter_from_yaml
 
 
 def get_kernel_binaries(path):
@@ -56,6 +61,13 @@ class MountPoints(List):
 
 class XeusAddon(FederatedExtensionAddon):
     __all__ = ["post_build"]
+
+    empack_config = Unicode(
+        None,
+        config=True,
+        allow_none=True,
+        description="The path or URL to the empack config file",
+    )
 
     environment_file = Unicode(
         "environment.yml",
@@ -222,8 +234,23 @@ class XeusAddon(FederatedExtensionAddon):
         out_path = Path(self.cwd.name) / "packed_env"
         out_path.mkdir(parents=True, exist_ok=True)
 
-        # Pack the environment (TODO make this configurable)
+        pack_kwargs = {}
+
         file_filters = pkg_file_filter_from_yaml(DEFAULT_CONFIG_PATH)
+        empack_config = self.empack_config
+
+        # Download env filter config
+        if empack_config:
+            empack_config_is_url = urlparse(empack_config).scheme in ("http", "https")
+            if empack_config_is_url:
+                empack_config_content = requests.get(empack_config).content
+                pack_kwargs["file_filters"] = PkgFileFilter.parse_obj(
+                    yaml.safe_load(empack_config_content)
+                )
+            else:
+                pack_kwargs["file_filters"] = pkg_file_filter_from_yaml(empack_config)
+        else:
+            pack_kwargs["file_filters"] = pkg_file_filter_from_yaml(DEFAULT_CONFIG_PATH)
 
         pack_env(
             env_prefix=self.prefix,
