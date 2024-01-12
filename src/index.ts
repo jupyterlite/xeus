@@ -53,6 +53,10 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
         'logo-64x64': URLExt.join(
           PageConfig.getBaseUrl(),
           'xeus/kernels/' + kernel + '/logo-64x64.png'
+        ),
+        'logo-svg': URLExt.join(
+          PageConfig.getBaseUrl(),
+          'xeus/kernels/' + kernel + '/logo-svg.svg'
         )
       };
 
