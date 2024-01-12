@@ -23,7 +23,9 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-    "empack"
+    "empack>=3.1,<4",
+    "traitlets",
+    "jupyterlite-core>=0.2,<0.3",
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 
