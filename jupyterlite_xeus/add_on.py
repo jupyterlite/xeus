@@ -234,6 +234,16 @@ class XeusAddon(FederatedExtensionAddon):
                         / "logo-64x64.png",
                     ],
                 ),
+                (
+                    self.copy_one,
+                    [
+                        kernel_dir / "logo-svg.svg",
+                        self.xeus_output_dir
+                        / "kernels"
+                        / kernel_dir.name
+                        / "logo-svg.svg",
+                    ],
+                ),
             ],
         )
 
