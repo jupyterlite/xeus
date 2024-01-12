@@ -2,6 +2,32 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.0a4
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.0a3...36d47f86fe101481f0c777e24aef5b983fc329d8))
+
+### Enhancements made
+
+- Bring back empack filtering [#38](https://github.com/jupyterlite/xeus/pull/38) ([@martinRenou](https://github.com/martinRenou))
+- Show warning if there is no kernel in the prefix [#37](https://github.com/jupyterlite/xeus/pull/37) ([@martinRenou](https://github.com/martinRenou))
+- SVG Icon [#36](https://github.com/jupyterlite/xeus/pull/36) ([@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- Fix missing dependencies [#35](https://github.com/jupyterlite/xeus/pull/35) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Bring back jupyterlite-xeus-python unit tests [#39](https://github.com/jupyterlite/xeus/pull/39) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-11&to=2024-01-12&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-11..2024-01-12&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.0a3
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.0a2...4d5b63f49145ac5f3ee94ae30a3a0144f4092a52))
@@ -15,8 +41,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-11&to=2024-01-11&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-11..2024-01-11&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.0a2
 
