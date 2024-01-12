@@ -124,6 +124,12 @@ class XeusAddon(FederatedExtensionAddon):
 
         kernel_spec_path = Path(self.prefix) / "share" / "jupyter" / "kernels"
 
+        if not kernel_spec_path.exists():
+            warnings.warn(
+                f"No kernels are installed in the prefix. Try adding e.g. xeus-python in your environment.yml file."
+            )
+            return
+
         all_kernels = []
         # find all folders in the kernelspec path
         for kernel_dir in kernel_spec_path.iterdir():
