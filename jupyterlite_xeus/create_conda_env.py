@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 from subprocess import run as subprocess_run
 import os
-import yaml
 
 from ._pip import _install_pip_dependencies
 
@@ -33,24 +32,25 @@ def _extract_specs(env_location, env_data):
                 # If it's a local Python package, make its path relative to the environment file
                 if (env_location / pip_dependency).is_dir():
                     pip_dependencies.append(
-                        env_location.parent / pip_dependency
-                    ).resolve()
+                        (env_location / pip_dependency).resolve()
+                    )
                 else:
                     pip_dependencies.append(pip_dependency)
 
     return specs, pip_dependencies
 
 
-def create_conda_env_from_yaml(env_name, root_prefix, env_file):
-    # open the env yaml file
-    with open(env_file, "r") as file:
-        yaml_content = yaml.safe_load(file)
+def create_conda_env_from_env_file(root_prefix, env_file_content, env_file_location):
+    # get the name of the environment
+    env_name = env_file_content.get("name", "xeus-env")
 
     # get the channels
-    channels = yaml_content.get("channels", [])
+    channels = env_file_content.get(
+        "channels", ["https://repo.mamba.pm/emscripten-forge", "conda-forge"]
+    )
 
     # get the specs
-    specs, pip_dependencies = _extract_specs(env_file.parent, yaml_content)
+    specs, pip_dependencies = _extract_specs(env_file_location, env_file_content)
 
     create_conda_env_from_specs(
         env_name=env_name,
