@@ -175,6 +175,34 @@ class XeusAddon(FederatedExtensionAddon):
         # update kernel_executable path in kernel.json
         kernel_spec["argv"][0] = f"xeus/bin/{kernel_js.name}"
 
+        # find logos in the directory
+        image_files = []
+        for file_type in ["*.jpg", "*.png", "*.svg"]:
+            image_files.extend(kernel_dir.glob(file_type))
+
+        kernel_spec["resources"] = {}
+        for image in image_files:
+            kernel_spec["resources"][image.stem] = (
+                self.xeus_output_dir / "kernels" / kernel_dir.name / image.name,
+            )
+
+            # copy the logo file
+            yield dict(
+                name=f"copy:{kernel_dir.name}:{image.name}",
+                actions=[
+                    (
+                        self.copy_one,
+                        [
+                            kernel_dir / image.name,
+                            self.xeus_output_dir
+                            / "kernels"
+                            / kernel_dir.name
+                            / image.name,
+                        ],
+                    ),
+                ],
+            )
+
         # write to temp file
         kernel_json = Path(self.cwd.name) / f"{kernel_dir.name}_kernel.json"
         kernel_json.write_text(json.dumps(kernel_spec), **UTF8)
@@ -208,42 +236,6 @@ class XeusAddon(FederatedExtensionAddon):
                         / "kernel.json",
                     ],
                 )
-            ],
-        )
-        # copy the logo files
-        yield dict(
-            name=f"copy:{kernel_dir.name}:logos",
-            actions=[
-                (
-                    self.copy_one,
-                    [
-                        kernel_dir / "logo-32x32.png",
-                        self.xeus_output_dir
-                        / "kernels"
-                        / kernel_dir.name
-                        / "logo-32x32.png",
-                    ],
-                ),
-                (
-                    self.copy_one,
-                    [
-                        kernel_dir / "logo-64x64.png",
-                        self.xeus_output_dir
-                        / "kernels"
-                        / kernel_dir.name
-                        / "logo-64x64.png",
-                    ],
-                ),
-                (
-                    self.copy_one,
-                    [
-                        kernel_dir / "logo-svg.svg",
-                        self.xeus_output_dir
-                        / "kernels"
-                        / kernel_dir.name
-                        / "logo-svg.svg",
-                    ],
-                ),
             ],
         )
 

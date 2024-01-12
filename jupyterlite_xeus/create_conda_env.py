@@ -31,9 +31,7 @@ def _extract_specs(env_location, env_data):
             for pip_dependency in dependency["pip"]:
                 # If it's a local Python package, make its path relative to the environment file
                 if (env_location / pip_dependency).is_dir():
-                    pip_dependencies.append(
-                        (env_location / pip_dependency).resolve()
-                    )
+                    pip_dependencies.append((env_location / pip_dependency).resolve())
                 else:
                     pip_dependencies.append(pip_dependency)
 
