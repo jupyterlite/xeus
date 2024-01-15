@@ -12,11 +12,6 @@ module.exports = {
     video: 'retain-on-failure'
   },
   retries: 1,
-  expect: {
-    toMatchSnapshot: {
-      maxDiffPixelRatio: 0.05
-    }
-  },
   webServer: [
     {
       command: 'yarn start',
