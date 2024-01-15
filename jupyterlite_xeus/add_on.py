@@ -31,6 +31,7 @@ from empack.pack import (
     DEFAULT_CONFIG_PATH,
     pack_env,
     pack_directory,
+    pack_file,
     add_tarfile_to_env_meta,
 )
 from empack.file_patterns import PkgFileFilter, pkg_file_filter_from_yaml
@@ -287,12 +288,26 @@ class XeusAddon(FederatedExtensionAddon):
                 msg = f"mount_path {mount_path} needs to be absolute"
                 raise ValueError(msg)
             outname = f"mount_{mount_index}.tar.gz"
-            pack_directory(
-                host_dir=host_path,
-                mount_dir=mount_path,
-                outname=outname,
-                outdir=out_path,
-            )
+
+            if host_path.is_dir():
+
+                pack_directory(
+                    host_dir=host_path,
+                    mount_dir=mount_path,
+                    outname=outname,
+                    outdir=out_path,
+                )
+            elif host_path.is_file():
+                pack_file(
+                    host_file=host_path,
+                    mount_file=mount_path,
+                    outname=outname,
+                    outdir=out_path,
+                )    
+            else:
+                msg = f"host_path {host_path} needs to be a file or a directory"
+                raise ValueError(msg)
+
             add_tarfile_to_env_meta(
                 env_meta_filename=out_path / empack_env_meta, tarfile=out_path / outname
             )
