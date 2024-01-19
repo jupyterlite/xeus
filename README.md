@@ -1,6 +1,7 @@
-# jupyterlite_xeus
+# JupyterLite Xeus
 
 [![Github Actions Status](https://github.com/jupyterlite/xeus/workflows/Build/badge.svg)](https://github.com/jupyterlite/xeus/actions/workflows/build.yml)
+
 JupyterLite loader for Xeus kernels
 
 ## Requirements
@@ -21,7 +22,7 @@ pip install jupyterlite_xeus
 
 #### xeus-python kernel
 
-To create a `xeus-python` kernel with a custom environment, one creates an `environment.yaml` file with `xeus-python` and the desiered dependencies. Here is an example with `numpy` as a additional dependency:
+To load a `xeus-python` kernel with a custom environment, create an `environment.yaml` file with `xeus-python` and the desired dependencies. Here is an example with `numpy` as a additional dependency:
 
 ```yaml
 name: xeus-lite-wasm
@@ -33,7 +34,7 @@ dependencies:
   - numpy
 ```
 
-To build the jupyterlite run the following command, where `environment.yaml` is the path to the file you just created
+To build JupyterLite, run the following command where `environment.yaml` is the path to the file you just created
 
 ```bash
 jupyter lite build --XeusAddon.environment_file=some_path/to/environment.yaml
@@ -41,7 +42,7 @@ jupyter lite build --XeusAddon.environment_file=some_path/to/environment.yaml
 
 #### xeus-lua / xeus-sqlite / xeus-\<mylang\>
 
-To create a `xeus-lua` or `xeus-sqlite` kernel you can
+To load a `xeus-lua` or `xeus-sqlite` kernel you can
 do the same as above, just with
 
 ```yaml
@@ -56,8 +57,8 @@ dependencies:
   - xeus-sqlite
 ```
 
-Note that xeus-sqlite and xeus-lua do not yet support additional dependencies.
-To build the jupyterlite, run again:
+Note that `xeus-sqlite` and `xeus-lua` do not support additional dependencies yet.
+To build JupyterLite, run again:
 
 ```bash
 jupyter lite build --XeusAddon.environment_file=environment.yaml
@@ -65,7 +66,7 @@ jupyter lite build --XeusAddon.environment_file=environment.yaml
 
 #### Multiple kernels
 
-To create a deployment with multiple kernels, you can just add them to the `environment.yaml` file:
+To create a deployment with multiple kernels, you can simply add them to the `environment.yaml` file:
 
 ```yaml
 name: xeus-lite-wasm
@@ -81,11 +82,11 @@ dependencies:
 
 ### From local environment / prefix
 
-When developing a xeus-kernel, it is very usefull to be able to test it in a jupyterlite without having to publish it to emscripten-forge. Therefore you can also use a local environment / prefix to build a jupyterlite with a custom kernel.
+When developing a xeus-kernel, it is very useful to be able to test it in JupyterLite without having to publish the kernel to emscripten-forge. Therefore, you can also use a local environment / prefix to build JupyterLite with a custom kernel.
 
 #### Create a local environment / prefix
 
-This workflow usually starts with creating a local conda environment / prefix for `emscripten-wasm32` with all the dependencies you need to build your kernel (here we install dependencies for `xeus-python` )
+This workflow usually starts with creating a local conda environment / prefix for the `emscripten-wasm32` platform with all the dependencies required to build your kernel (here we install dependencies for `xeus-python`).
 
 ```bash
 micromamba create -n xeus-python-dev \
@@ -95,12 +96,12 @@ micromamba create -n xeus-python-dev \
     --yes \
     "python>=3.11" pybind11 nlohmann_json pybind11_json numpy pytest \
     bzip2 sqlite zlib libffi xtl pyjs \
-    xeus xeus-sqlite xeus-lite
+    xeus xeus-lite
 ```
 
 #### Build the kernel
 
-This depends on your kernel but will look something like this:
+This depends on your kernel, but it will look something like this:
 
 ```bash
 # path to your emscripten emsdk
@@ -141,7 +142,7 @@ micromamba activate xeus-lite-host
 python -m pip install jupyterlite-xeus
 ```
 
-When running `jupyter lite build` we pass the `prefix` options and point it to the local environment / prefix we just created:
+When running `jupyter lite build`, we pass the `prefix` option and point it to the local environment / prefix we just created:
 
 ```bash
 jupyter lite build --XeusAddon.prefix=$WASM_ENV_PREFIX
@@ -149,7 +150,7 @@ jupyter lite build --XeusAddon.prefix=$WASM_ENV_PREFIX
 
 ### Mounting additional files
 
-To copy additional files and directories into the virtual filesytem of the xeus-lite kernels you can use the `--XeusAddon.mount` option.
+To copy additional files and directories into the virtual filesystem of the xeus-lite kernels you can use the `--XeusAddon.mount` option.
 Each mount is specified as a pair of paths separated by a colon `:`. The first path is the path to the file or directory on the host machine, the second path is the path to the file or directory in the virtual filesystem of the kernel.
 
 ```bash
@@ -180,4 +181,4 @@ python -m pip install -e .   -v --no-build-isolation
 
 ### Packaging the extension
 
-See [RELEASE](RELEASE.md)
+See [RELEASE](RELEASE.md).
