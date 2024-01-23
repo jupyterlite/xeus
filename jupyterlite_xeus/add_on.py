@@ -115,7 +115,7 @@ class XeusAddon(FederatedExtensionAddon):
     def create_prefix(self):
         # read the environment file
         root_prefix = Path(self.cwd.name) / "env"
-        env_file = Path(self.environment_file)
+        env_file = Path(self.manager.lite_dir) / self.environment_file
 
         # open the env yaml file
         with open(env_file, "r") as file:
@@ -303,7 +303,7 @@ class XeusAddon(FederatedExtensionAddon):
                     mount_file=mount_path,
                     outname=outname,
                     outdir=out_path,
-                )    
+                )
             else:
                 msg = f"host_path {host_path} needs to be a file or a directory"
                 raise ValueError(msg)
