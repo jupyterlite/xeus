@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.3
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.2...f38a7ef494d43abba7c20a26a348bcb6521f8b43))
+
+### Enhancements made
+
+- Add support for mounting single file [#44](https://github.com/jupyterlite/xeus/pull/44) ([@DerThorsten](https://github.com/DerThorsten))
+
+### Bugs fixed
+
+- Fix: Path to environment file should be relative to the lite dir [#47](https://github.com/jupyterlite/xeus/pull/47) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Update README [#46](https://github.com/jupyterlite/xeus/pull/46) ([@IsabelParedes](https://github.com/IsabelParedes))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-15&to=2024-01-23&type=c))
+
+[@DerThorsten](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3ADerThorsten+updated%3A2024-01-15..2024-01-23&type=Issues) | [@IsabelParedes](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AIsabelParedes+updated%3A2024-01-15..2024-01-23&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-15..2024-01-23&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.2
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.1...b2a787aacb2189a7db56c074693683aca4147ef9))
@@ -15,8 +39,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-12&to=2024-01-15&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-12..2024-01-15&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.1
 
