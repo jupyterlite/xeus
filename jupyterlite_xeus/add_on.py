@@ -114,20 +114,21 @@ class XeusAddon(FederatedExtensionAddon):
 
     def create_prefix(self):
         # read the environment file
+        env_name = "xeus-env"
         root_prefix = Path(self.cwd.name) / "env"
         env_file = Path(self.manager.lite_dir) / self.environment_file
 
-        # open the env yaml file
-        with open(env_file, "r") as file:
-            yaml_content = yaml.safe_load(file)
-
-        env_name = yaml_content.get("name", "xeus-env")
-        env_prefix = root_prefix / "envs" / env_name
-        self.prefix = str(env_prefix)
-
+        # open the env yaml file if it's provided
         if env_file.exists():
+            with open(env_file, "r") as file:
+                yaml_content = yaml.safe_load(file)
+
+            env_name = yaml_content.get("name", "xeus-env")
+
+            env_prefix = root_prefix / "envs" / env_name
+            self.prefix = str(env_prefix)
+
             create_conda_env_from_env_file(root_prefix, yaml_content, env_file.parent)
-        # this is atm for debugging
         else:
             create_conda_env_from_specs(
                 env_name=env_name,
