@@ -18,7 +18,7 @@ from jupyterlite_core.constants import (
     SHARE_LABEXTENSIONS,
     UTF8,
 )
-from traitlets import List, Unicode
+from traitlets import Bool, List, Unicode
 
 from .create_conda_env import (
     create_conda_env_from_env_file,
@@ -35,6 +35,8 @@ from empack.pack import (
     add_tarfile_to_env_meta,
 )
 from empack.file_patterns import PkgFileFilter, pkg_file_filter_from_yaml
+
+EMPACK_ENV_META = "empack_env_meta.json"
 
 
 def get_kernel_binaries(path):
@@ -84,6 +86,13 @@ class XeusAddon(FederatedExtensionAddon):
         "",
         config=True,
         description="The path to the wasm prefix",
+    )
+
+    mount_jupyterlite_content = Bool(
+        None,
+        allow_none=True,
+        config=True,
+        description="Whether or not to mount the jupyterlite content into the kernel. This would make the jupyterlite content available under the '/files' directory, and the kernels will automatically be started from there.",
     )
 
     mounts = MountPoints(
@@ -277,21 +286,27 @@ class XeusAddon(FederatedExtensionAddon):
             file_filters=file_filters,
         )
 
-        empack_env_meta = "empack_env_meta.json"
-        # pack extra dirs
+        # Pack user defined mount points
         for mount_index, mount in enumerate(self.mounts):
             if mount.count(":") != 1:
-                msg = f"invalid mount {mount}, must be <host_path>:<mount_path>"
-                raise ValueError(msg)
+                raise ValueError(
+                    f"invalid mount {mount}, must be <host_path>:<mount_path>"
+                )
+
             host_path, mount_path = mount.split(":")
             mount_path = Path(mount_path)
+
             if not mount_path.is_absolute():
-                msg = f"mount_path {mount_path} needs to be absolute"
-                raise ValueError(msg)
+                raise ValueError(f"mount_path {mount_path} needs to be absolute")
+
+            if str(mount_path).startswith("/files"):
+                raise ValueError(
+                    f"Mount point '/files' is reserved for jupyterlite content. Cannot mount {mount}"
+                )
+
             outname = f"mount_{mount_index}.tar.gz"
 
             if host_path.is_dir():
-
                 pack_directory(
                     host_dir=host_path,
                     mount_dir=mount_path,
@@ -306,32 +321,53 @@ class XeusAddon(FederatedExtensionAddon):
                     outdir=out_path,
                 )
             else:
-                msg = f"host_path {host_path} needs to be a file or a directory"
-                raise ValueError(msg)
+                raise ValueError(
+                    f"host_path {host_path} needs to be a file or a directory"
+                )
 
             add_tarfile_to_env_meta(
-                env_meta_filename=out_path / empack_env_meta, tarfile=out_path / outname
+                env_meta_filename=out_path / EMPACK_ENV_META, tarfile=out_path / outname
+            )
+
+        # Pack JupyterLite content if enabled
+        # If we only build a voici output, mount jupyterlite content into the kernel by default
+        if self.mount_jupyterlite_content or (
+            self.manager.apps == ["voici"] and self.mount_jupyterlite_content is None
+        ):
+            contents_dir = self.manager.output_dir / "files"
+
+            outname = f"mount_{len(self.mounts)}.tar.gz"
+
+            pack_directory(
+                host_dir=contents_dir,
+                mount_dir="/files",
+                outname=outname,
+                outdir=out_path,
+            )
+
+            add_tarfile_to_env_meta(
+                env_meta_filename=out_path / EMPACK_ENV_META, tarfile=out_path / outname
             )
 
         # copy all the packages to the packages dir
-        # (this is shared between multiple xeus-python kernels)
+        # (this is shared between multiple kernels)
         for pkg_path in out_path.iterdir():
             if pkg_path.name.endswith(".tar.gz"):
                 yield dict(
-                    name=f"xeus:{kernel_name}:copy_package:{pkg_path.name}",
+                    name=f"xeus:{kernel_name}:copy:{pkg_path.name}",
                     actions=[(self.copy_one, [pkg_path, packages_dir / pkg_path.name])],
                 )
 
         # copy the empack_env_meta.json
-        # this is individual for xeus-python kernel
+        # this is individual for each kernel
         yield dict(
-            name=f"xeus:{kernel_name}:copy_env_file:{empack_env_meta}",
+            name=f"xeus:{kernel_name}:copy_env_file:{EMPACK_ENV_META}",
             actions=[
                 (
                     self.copy_one,
                     [
-                        out_path / empack_env_meta,
-                        Path(full_kernel_dir) / empack_env_meta,
+                        out_path / EMPACK_ENV_META,
+                        Path(full_kernel_dir) / EMPACK_ENV_META,
                     ],
                 )
             ],
