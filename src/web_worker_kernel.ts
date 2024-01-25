@@ -22,6 +22,8 @@ interface IXeusKernel {
 
   cd(path: string): Promise<void>;
 
+  isDir(path: string): Promise<boolean>;
+
   processMessage(msg: any): Promise<void>;
 }
 
@@ -183,6 +185,11 @@ export class WebWorkerKernel implements IKernel {
 
     if (options.mountDrive) {
       await this._remote.mount(driveName, '/drive', PageConfig.getBaseUrl());
+    }
+
+    if (await this._remote.isDir('/files')) {
+      await this._remote.cd('/files');
+    } else if (options.mountDrive) {
       await this._remote.cd(localPath);
     }
   }

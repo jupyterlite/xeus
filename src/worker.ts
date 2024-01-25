@@ -131,6 +131,15 @@ class XeusKernel {
     globalThis.Module.FS.chdir(path);
   }
 
+  isDir(path: string) {
+    try {
+      const lookup = globalThis.Module.FS.lookupPath(path);
+      return globalThis.Module.FS.isDir(lookup.node.mode);
+    } catch (e) {
+      return false;
+    }
+  }
+
   async processMessage(event: any): Promise<void> {
     const msg_type = event.msg.header.msg_type;
 
