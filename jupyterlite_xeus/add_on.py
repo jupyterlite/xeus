@@ -92,7 +92,7 @@ class XeusAddon(FederatedExtensionAddon):
         None,
         allow_none=True,
         config=True,
-        description="Whether or not to mount the jupyterlite content into the kernel. This allows bypassing the file-system core JupyterLite implementation.",
+        description="Whether or not to mount the jupyterlite content into the kernel. This would make the jupyterlite content available under the '/files' directory, and the kernels will automatically be started from there.",
     )
 
     mounts = MountPoints(
