@@ -89,7 +89,8 @@ class XeusAddon(FederatedExtensionAddon):
     )
 
     mount_jupyterlite_content = Bool(
-        False,
+        None,
+        allow_none=True,
         config=True,
         description="Whether or not to mount the jupyterlite content into the kernel. This allows bypassing the file-system core JupyterLite implementation.",
     )
@@ -329,7 +330,10 @@ class XeusAddon(FederatedExtensionAddon):
             )
 
         # Pack JupyterLite content if enabled
-        if self.mount_jupyterlite_content:
+        # If we only build a voici output, mount jupyterlite content into the kernel by default
+        if self.mount_jupyterlite_content or (
+            self.manager.apps == ["voici"] and self.mount_jupyterlite_content is None
+        ):
             contents_dir = self.manager.output_dir / "files"
 
             outname = f"mount_{len(self.mounts)}.tar.gz"
