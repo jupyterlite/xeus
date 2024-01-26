@@ -15,10 +15,18 @@ Try it here!
 
 ```{eval-rst}
 .. replite::
-   :kernel: xeus-python
+   :kernel: xpython
    :height: 600px
 
    print("Hello from xeus-python!")
+```
+
+```{eval-rst}
+.. replite::
+   :kernel: xlua
+   :height: 600px
+
+   print("Hello from xeus-lua!")
 ```
 
 ## Installation
