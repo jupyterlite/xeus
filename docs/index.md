@@ -9,7 +9,7 @@ Currently supported kernels are:
 - [xeus-nelson](https://github.com/jupyter-xeus/xeus-nelson)
 - [xeus-javascript](https://github.com/jupyter-xeus/xeus-javascript)
 
-We are also working on bringing [xeus-cpp](https://github.com/jupyter-xeus/xeus-cpp) and [xeus-r](https://github.com/jupyter-xeus/xeus-r) into jupyterlite, stay tuned!
+We are also working on bringing [xeus-cpp](https://github.com/compiler-research/xeus-cpp) and [xeus-r](https://github.com/jupyter-xeus/xeus-r) into jupyterlite, stay tuned!
 
 Try it here!
 
