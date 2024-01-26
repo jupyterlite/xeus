@@ -53,7 +53,7 @@ dependencies:
   - pillow
   - ipywidgets
   - pip:
-    - ipycanvas
+      - ipycanvas
 ```
 
 You can then run the usual `jupyter lite build` or `voici my-notebook.ipynb`. The `environment.yml` file will be picked-up automatically by `jupyterlite-xeus`, installing `xeus-python`, `xeus-lua`, `xeus-nelson` and some useful Python packages into the user environment.
