@@ -1,26 +1,17 @@
-# xeus-python in JupyterLite 🚀🪐
+# xeus kernels in JupyterLite 🚀🪐
 
-The [xeus-python](https://github.com/jupyter-xeus/xeus-python) kernel compiled to WebAssembly and installable in JupyterLite!
+jupyterlite-xeus is a facility tool bringing xeus kernels into JupyterLite and Voici.
 
-> [!WARNING]
-> jupyterlite-xeus-python is DEPRECATED.
-> Please see {ref}`migration`.
+Currently supported kernels are:
 
-Features:
+- [xeus-python](https://github.com/jupyter-xeus/xeus-python)
+- [xeus-lua](https://github.com/jupyter-xeus/xeus-lua)
+- [xeus-nelson](https://github.com/jupyter-xeus/xeus-nelson)
+- [xeus-javascript](https://github.com/jupyter-xeus/xeus-javascript)
 
-- all IPython features included (magics, matplotlib inline `etc`)
-- code completion
-- code inspection
-- interactive widgets (ipywidgets, ipyleaflet, bqplot, ipycanvas `etc`)
-- JupyterLite custom file-system mounting
+We are also working on bringing [xeus-cpp](https://github.com/jupyter-xeus/xeus-cpp) and [xeus-r](https://github.com/jupyter-xeus/xeus-r) into jupyterlite, stay tuned!
 
-How does it compare to the [Pyodide kernel](https://github.com/jupyterlite/pyodide-kernel) for JupyterLite?
-
-- `from time import sleep` works!
-- starts faster!
-- it's lighter by default!
-- pre-installed packages! No more piplite (see {ref}`configuration` page)
-- no more piplite, but we will be working on a mambalite, stay tuned :D
+Try it here!
 
 ```{eval-rst}
 .. replite::
@@ -30,13 +21,48 @@ How does it compare to the [Pyodide kernel](https://github.com/jupyterlite/pyodi
    print("Hello from xeus-python!")
 ```
 
+## Installation
+
+You can install `jupyterlite-xeus` with conda/mamba
+
+```
+mamba install -c conda-forge jupyterlite-xeus
+```
+
+Or with `pip`:
+
+```
+pip install jupyterlite-xeus
+```
+
+## Usage
+
+Once installed, you can create an `environment.yml` file at the root of your jupyterlite build directory containing the following:
+
+```yml
+name: xeus-kernels
+channels:
+  - https://repo.mamba.pm/emscripten-forge
+  - conda-forge
+dependencies:
+  - xeus-python
+  - xeus-lua
+  - xeus-nelson
+  - numpy
+  - matplotlib
+  - pillow
+  - ipywidgets
+  - pip:
+    - ipycanvas
+```
+
+You can then run the usual `jupyter lite build` or `voici my-notebook.ipynb`. The `environment.yml` file will be picked-up automatically by `jupyterlite-xeus`, installing `xeus-python`, `xeus-lua`, `xeus-nelson` and some useful Python packages into the user environment.
+
 ```{toctree}
 :caption: Usage
 :maxdepth: 2
 
-installation
 deploy
 configuration
-migration
 changelog
 ```

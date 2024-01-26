@@ -4,7 +4,7 @@
 
 ## Pre-installed packages
 
-`xeus-python` allows you to pre-install packages in the Python runtime. You can pre-install packages by adding an `environment.yml` file in the JupyterLite build directory, this file will be found automatically by xeus-python which will pre-build the environment when running `jupyter lite build`.
+`jupyterlite-xeus` allows you to pre-install packages in the runtime. You can pre-install packages by adding an `environment.yml` file in the JupyterLite build directory, this file will be found automatically by jupyterlite-xeus which will pre-build the environment when running `jupyter lite build`.
 
 Furthermore, this automatically installs any labextension that it founds, for example installing ipyleaflet will make ipyleaflet work without the need to manually install the jupyter-leaflet labextension.
 
@@ -16,6 +16,7 @@ channels:
   - https://repo.mamba.pm/emscripten-forge
   - conda-forge
 dependencies:
+  - xeus-python
   - numpy
   - matplotlib
   - ipycanvas
@@ -30,11 +31,11 @@ jupyter lite build
 You can also pick another name for that environment file (_e.g._ `custom.yml`), by doing so, you will need to specify that name to xeus-python:
 
 ```
-jupyter lite build --XeusPythonEnv.environment_file=custom.yml
+jupyter lite build --XeusAddon.environment_file=custom.yml
 ```
 
 ```{warning}
-It is common to provide `pip` dependencies in a conda environment file. This is currently **partially supported** by xeus-python. See "pip packages" section.
+It is common to provide `pip` dependencies in a conda environment file. This is currently **partially supported** by jupyterlite-xeus. See "pip packages" section.
 ```
 
 Then those packages are usable directly:
@@ -59,7 +60,7 @@ Then those packages are usable directly:
 
 ⚠ This feature is experimental. You won't have the same user-experience as when using conda/mamba in a "normal" setup ⚠
 
-`xeus-python` provides a way to install packages with pip.
+`jupyterlite-xeus` provides a way to install packages with pip.
 
 There are a couple of limitations that you should be aware of:
 
@@ -98,7 +99,7 @@ dependencies:
 ## Advanced Configuration
 
 ```{warning}
-This section is mostly for reference and should not be needed for regular use of the `jupyterlite-xeus-python` kernel.
+This section is mostly for reference and should not be needed for regular use of the `jupyterlite-xeus` kernel.
 ```
 
 ### Provide a custom `empack_config.yaml`
@@ -126,7 +127,7 @@ This example defines a set of custom rules for the `xarray` package to make sure
 You can use this file when building JupyterLite:
 
 ```shell
-jupyter lite build --XeusPythonEnv.empack_config=empack_config.yaml
+jupyter lite build --XeusAddon.empack_config=empack_config.yaml
 ```
 
 ```{note}

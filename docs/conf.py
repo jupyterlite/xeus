@@ -10,7 +10,7 @@ myst_enable_extensions = [
 master_doc = "index"
 source_suffix = ".rst"
 
-project = "jupyterlite-xeus-python"
+project = "jupyterlite-xeus"
 copyright = "JupyterLite Team"
 author = "JupyterLite Team"
 
