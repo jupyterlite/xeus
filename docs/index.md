@@ -71,6 +71,8 @@ You can then run the usual `jupyter lite build` or `voici my-notebook.ipynb`. Th
 :maxdepth: 2
 
 deploy
-configuration
+environment
+files
+advanced
 changelog
 ```
