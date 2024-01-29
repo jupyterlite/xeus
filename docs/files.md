@@ -30,6 +30,10 @@ This approach has behavior differences with the service worker approach:
 - Kernels will automatically start from the `/files` directory, where the jupyterlite content is mounted.
 - If your kernel changes the content (creates files, updates files content _etc_), changes **will not** reflect in the JupyterLite served content. This means that if you open the updated files from the filebrowser UI by double clicking on them, you will see the initial content of the files. It also means that restarting the kernel will reinitialize the `/files` directory content, and it will not be shared between kernels.
 
+```{note}
+This option is set to True by default when generating a [Voici dashboard](https://github.com/voila-dashboards/voici)
+```
+
 ## Extra mount points
 
 You can mount extra directories into the kernel using the mounts option:
