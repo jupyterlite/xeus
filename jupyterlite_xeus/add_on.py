@@ -331,7 +331,7 @@ class XeusAddon(FederatedExtensionAddon):
         # Pack JupyterLite content if enabled
         # If we only build a voici output, mount jupyterlite content into the kernel by default
         if self.mount_jupyterlite_content or (
-            self.manager.apps == ["voici"] and self.mount_jupyterlite_content is None
+            list(self.manager.apps) == ["voici"] and self.mount_jupyterlite_content is None
         ):
             contents_dir = self.manager.output_dir / "files"
 
