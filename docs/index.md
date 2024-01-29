@@ -1,5 +1,7 @@
 # xeus kernels in JupyterLite 🚀🪐
 
+![Xeus logo](./xeus.svg)
+
 jupyterlite-xeus is a facility tool bringing xeus kernels into JupyterLite and Voici.
 
 Currently supported kernels are:

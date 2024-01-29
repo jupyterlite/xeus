@@ -22,7 +22,7 @@ jupyterlite_dir = "."
 
 html_theme_options = {
     "logo": {
-        "image_light": "xeus-python.svg",
-        "image_dark": "xeus-python.svg",
+        "image_light": "jupyterlite.svg",
+        "image_dark": "jupyterlite.svg",
     }
 }
