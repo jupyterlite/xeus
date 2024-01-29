@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.5
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.4...f442f25bcac03cb6a500d41ecd233768097e6201))
+
+### Bugs fixed
+
+- Fix voici check [#55](https://github.com/jupyterlite/xeus/pull/55) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Docs: add note about behavior in Voici [#54](https://github.com/jupyterlite/xeus/pull/54) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-29&to=2024-01-29&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-29..2024-01-29&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.4
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.3...970155afafc5be159b550c17ff16bec0160d103d))
@@ -24,8 +44,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-23&to=2024-01-29&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2024-01-23..2024-01-29&type=Issues) | [@katotetsuro](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Akatotetsuro+updated%3A2024-01-23..2024-01-29&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-23..2024-01-29&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.3
 
