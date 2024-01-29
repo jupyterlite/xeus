@@ -262,7 +262,6 @@ class XeusAddon(FederatedExtensionAddon):
 
         pack_kwargs = {}
 
-        file_filters = pkg_file_filter_from_yaml(DEFAULT_CONFIG_PATH)
         empack_config = self.empack_config
 
         # Download env filter config
@@ -283,7 +282,7 @@ class XeusAddon(FederatedExtensionAddon):
             relocate_prefix="/",
             outdir=out_path,
             use_cache=True,
-            file_filters=file_filters,
+            **pack_kwargs,
         )
 
         # Pack user defined mount points
