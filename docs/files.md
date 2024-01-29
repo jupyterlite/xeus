@@ -25,9 +25,10 @@ jupyter lite build --XeusAddon.mount_jupyterlite_content=True
 ```
 
 This approach has behavior differences with the service worker approach:
+
 - This makes file access more robust, not depending on the service worker.
 - Kernels will automatically start from the `/files` directory, where the jupyterlite content is mounted.
-- If your kernel changes the content (creates files, updates files content *etc*), changes **will not** reflect in the JupyterLite served content. This means that if you open the updated files from the filebrowser UI by double clicking on them, you will see the initial content of the files. It also means that restarting the kernel will reinitialize the `/files` directory content, and it will not be shared between kernels.
+- If your kernel changes the content (creates files, updates files content _etc_), changes **will not** reflect in the JupyterLite served content. This means that if you open the updated files from the filebrowser UI by double clicking on them, you will see the initial content of the files. It also means that restarting the kernel will reinitialize the `/files` directory content, and it will not be shared between kernels.
 
 ## Extra mount points
 
