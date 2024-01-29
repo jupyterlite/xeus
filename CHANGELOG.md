@@ -2,6 +2,31 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.4
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.3...970155afafc5be159b550c17ff16bec0160d103d))
+
+### Enhancements made
+
+- Allow mounting jupyterlite content [#49](https://github.com/jupyterlite/xeus/pull/49) ([@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- fix loading empack_config [#53](https://github.com/jupyterlite/xeus/pull/53) ([@katotetsuro](https://github.com/katotetsuro))
+- Prevent from failing if there is no environment file [#48](https://github.com/jupyterlite/xeus/pull/48) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Add documentation [#50](https://github.com/jupyterlite/xeus/pull/50) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-23&to=2024-01-29&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2024-01-23..2024-01-29&type=Issues) | [@katotetsuro](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Akatotetsuro+updated%3A2024-01-23..2024-01-29&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-23..2024-01-29&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.3
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.2...f38a7ef494d43abba7c20a26a348bcb6521f8b43))
@@ -23,8 +48,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-15&to=2024-01-23&type=c))
 
 [@DerThorsten](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3ADerThorsten+updated%3A2024-01-15..2024-01-23&type=Issues) | [@IsabelParedes](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AIsabelParedes+updated%3A2024-01-15..2024-01-23&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-15..2024-01-23&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.2
 
