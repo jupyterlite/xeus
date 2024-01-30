@@ -211,6 +211,18 @@ jobs:
       matrix:
         # try the latest stable and potential pre-releases
         jupyterlite_version: ["jupyterlite-core -U", "jupyterlite-core --pre"]
+        os: [ubuntu-latest, windows-latest]
+        shell: ['bash -l {0}', 'powershell']
+        exclude:
+         - os: ubuntu-latest
+           shell: powershell
+         - os: windows-latest
+           shell: bash -l {0}
+    runs-on: ${{matrix.os}}
+
+    defaults:
+      run:
+        shell: ${{matrix.shell}}
 
     env:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/pw-browsers
@@ -218,9 +230,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-
-    - name: Base Setup
-      uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
     - name: Download extension package
       uses: actions/download-artifact@v3
@@ -231,14 +240,27 @@ jobs:
       uses: mamba-org/setup-micromamba@v1
       with:
         environment-name: test-env
+        init-shell: >-
+            bash
+            powershell
         create-args: >-
           pip
+          python-libarchive-c
 
     - name: Install the extension
+      if: matrix.os == 'ubuntu-latest'
       run: |
         set -eux
         python -m pip install "jupyterlab>=4.0.0,<5"  jupyterlite_xeus*.whl
         python -m pip install ${{ matrix.jupyterlite_version }}
+
+    - name: Install the extension
+      if: matrix.os == 'windows-latest'
+      run: |
+        micromamba info
+        where.exe python
+        python -m pip install "jupyterlab>=4.0.0,<5" jupyterlite
+        Get-ChildItem -Filter *.whl | ForEach-Object { python -m pip install $_.FullName } 
 
     - name: Install dependencies
       working-directory: ui-tests
