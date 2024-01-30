@@ -281,7 +281,7 @@ class XeusAddon(FederatedExtensionAddon):
             env_prefix=self.prefix,
             relocate_prefix="/",
             outdir=out_path,
-            use_cache=True,
+            use_cache=False,
             **pack_kwargs,
         )
 
