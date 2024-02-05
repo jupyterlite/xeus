@@ -316,7 +316,7 @@ class XeusAddon(FederatedExtensionAddon):
             elif host_path.is_file():
                 pack_file(
                     host_file=host_path,
-                    mount_file=mount_path,
+                    mount_dir=mount_path,
                     outname=outname,
                     outdir=out_path,
                 )

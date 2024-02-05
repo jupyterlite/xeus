@@ -87,7 +87,7 @@ def test_mount_point():
 
     addon = XeusAddon(manager)
     addon.environment_file = "environment-1.yml"
-    addon.mounts = ["environment-1.yml:/share/env-1.yml", "test-package:/share/test-package"]
+    addon.mounts = ["environment-1.yml:/share", "test-package:/share/test-package"]
 
     for step in addon.post_build(manager):
             pass
@@ -96,7 +96,7 @@ def test_mount_point():
 
     with tarfile.open(outpath / "mount_0.tar.gz", "r") as fobj:
         names = fobj.getnames()
-    assert "share/env-1.yml" in names
+    assert "share/environment-1.yml" in names
 
     with tarfile.open(outpath / "mount_1.tar.gz", "r") as fobj:
         names = fobj.getnames()
