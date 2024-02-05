@@ -3,6 +3,7 @@
 import os
 from tempfile import TemporaryDirectory
 from pathlib import Path
+import tarfile
 
 import pytest
 
@@ -77,3 +78,29 @@ def test_python_env_from_file_2():
     with pytest.raises(RuntimeError, match="Cannot install binary PyPI package"):
         for step in addon.post_build(manager):
             pass
+
+
+def test_mount_point():
+    app = LiteStatusApp(log_level="DEBUG")
+    app.initialize()
+    manager = app.lite_manager
+
+    addon = XeusAddon(manager)
+    addon.environment_file = "environment-1.yml"
+    addon.mounts = [
+        f"{(Path(__file__).parent / "environment-1.yml").resolve()}:/share",
+        f"{(Path(__file__).parent / "test_package").resolve()}:/share/test_package",
+    ]
+
+    for step in addon.post_build(manager):
+            pass
+
+    outpath = Path(addon.cwd.name) / "packed_env"
+
+    with tarfile.open(outpath / "mount_0.tar.gz", "r") as fobj:
+        names = fobj.getnames()
+    assert "share/environment-1.yml" in names
+
+    with tarfile.open(outpath / "mount_1.tar.gz", "r") as fobj:
+        names = fobj.getnames()
+    assert "share/test_package/environment-3.yml" in names
