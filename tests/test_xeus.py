@@ -77,3 +77,21 @@ def test_python_env_from_file_2():
     with pytest.raises(RuntimeError, match="Cannot install binary PyPI package"):
         for step in addon.post_build(manager):
             pass
+
+
+def test_mount_point():
+    app = LiteStatusApp(log_level="DEBUG")
+    app.initialize()
+    manager = app.lite_manager
+
+    addon = XeusAddon(manager)
+    addon.mounts = ["environment-1.yml:/share/env-1.yml", "test-package:/share/test-package", ]
+
+    assert os.path.isfile(
+        Path(addon.prefix)
+        / "share/env-1.yml"
+    )
+    assert os.path.isdir(
+        Path(addon.prefix)
+        / "share/test-package"
+    )
