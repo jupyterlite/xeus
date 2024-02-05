@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.7
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.6...4ea46b47362f2cbd3a1c2edb811bdbc045ed9d71))
+
+### Bugs fixed
+
+- Fix mount points [#59](https://github.com/jupyterlite/xeus/pull/59) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-30&to=2024-02-05&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-30..2024-02-05&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.6
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.5...b0dce2628f693232497804986abee16e611d9657))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-29&to=2024-01-30&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-29..2024-01-30&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.5
 
