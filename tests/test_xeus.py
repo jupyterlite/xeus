@@ -87,7 +87,10 @@ def test_mount_point():
 
     addon = XeusAddon(manager)
     addon.environment_file = "environment-1.yml"
-    addon.mounts = ["environment-1.yml:/share", "test-package:/share/test-package"]
+    addon.mounts = [
+        f"{(Path(__file__).parent / "environment-1.yml").resolve()}:/share",
+        f"{(Path(__file__).parent / "test_package").resolve()}:/share/test_package",
+    ]
 
     for step in addon.post_build(manager):
             pass
