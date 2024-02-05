@@ -293,6 +293,7 @@ class XeusAddon(FederatedExtensionAddon):
                 )
 
             host_path, mount_path = mount.split(":")
+            host_path = Path(host_path)
             mount_path = Path(mount_path)
 
             if not mount_path.is_absolute():
