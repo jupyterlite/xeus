@@ -103,4 +103,4 @@ def test_mount_point():
 
     with tarfile.open(outpath / "mount_1.tar.gz", "r") as fobj:
         names = fobj.getnames()
-    assert "share/test-package/environment-3.yml" in names
+    assert "share/test_package/environment-3.yml" in names
