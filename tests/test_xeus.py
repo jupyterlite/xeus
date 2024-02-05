@@ -3,6 +3,7 @@
 import os
 from tempfile import TemporaryDirectory
 from pathlib import Path
+import tarfile
 
 import pytest
 
@@ -85,13 +86,17 @@ def test_mount_point():
     manager = app.lite_manager
 
     addon = XeusAddon(manager)
-    addon.mounts = ["environment-1.yml:/share/env-1.yml", "test-package:/share/test-package", ]
+    addon.mounts = ["environment-1.yml:/share/env-1.yml", "test-package:/share/test-package"]
 
-    assert os.path.isfile(
-        Path(addon.prefix)
-        / "share/env-1.yml"
-    )
-    assert os.path.isdir(
-        Path(addon.prefix)
-        / "share/test-package"
-    )
+    for step in addon.post_build(manager):
+            pass
+
+    outpath = Path(addon.cwd.name) / "packed_env"
+
+    with tarfile.open(outpath / "mount_0.tar.gz", "r") as fobj:
+        names = fobj.getnames()
+    assert "share/env-1.yml" in names
+
+    with tarfile.open(outpath / "mount_1.tar.gz", "r") as fobj:
+        names = fobj.getnames()
+    assert "share/test-package/environment-3.yml" in names
