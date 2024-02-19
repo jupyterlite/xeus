@@ -210,7 +210,7 @@ jobs:
       fail-fast: false
       matrix:
         # try the latest stable and potential pre-releases
-        jupyterlite_version: ["jupyterlite -U", "jupyterlite --pre"]
+        jupyterlite_version: ["jupyterlite-core -U", "jupyterlite-core --pre"]
 
     env:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/pw-browsers
