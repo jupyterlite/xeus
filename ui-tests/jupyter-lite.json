@@ -3,6 +3,6 @@
   "jupyter-config-data": {
     "appName": "JupyterLite UI Tests",
     "exposeAppInBrowser": true,
-    "disabledExtensions": ["@jupyterlite/javascript-kernel"]
+    "disabledExtensions": ["@jupyterlite/javascript-kernel-extension"]
   }
 }
