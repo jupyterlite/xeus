@@ -269,7 +269,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: jupyterlite-xeus-playwright-tests (${{ matrix.jupyterlite_version }})
+        name: jupyterlite-xeus-playwright-tests (jupyterlite ${{ matrix.jupyterlite_version }})
         path: |
           ui-tests/test-results
           ui-tests/playwright-report
