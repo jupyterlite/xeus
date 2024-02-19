@@ -236,7 +236,7 @@ jobs:
     - name: Install the extension
       run: |
         set -eux
-        python -m pip install "jupyterlab>=4.0.0,<5" jupyterlite${{ matrix.jupyterlite_version }} jupyterlite_xeus*.whl
+        python -m pip install "jupyterlab>=4.0.0,<5" "jupyterlite${{ matrix.jupyterlite_version }}" jupyterlite_xeus*.whl
 
     - name: Install dependencies
       working-directory: ui-tests
