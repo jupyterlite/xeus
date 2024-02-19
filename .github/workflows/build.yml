@@ -206,6 +206,10 @@ jobs:
     name: Integration tests
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        jupyterlite_version: [">=0.2.0,<0.3.0", ">=0.3.0a0,<4"]
 
     env:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/pw-browsers
@@ -232,7 +236,7 @@ jobs:
     - name: Install the extension
       run: |
         set -eux
-        python -m pip install "jupyterlab>=4.0.0,<5" jupyterlite jupyterlite_xeus*.whl
+        python -m pip install "jupyterlab>=4.0.0,<5" jupyterlite${{ matrix.jupyterlite_version }} jupyterlite_xeus*.whl
 
     - name: Install dependencies
       working-directory: ui-tests
