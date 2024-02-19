@@ -461,7 +461,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlite/kernel@npm:^0.3.0-alpha.0":
+"@jupyterlite/kernel@npm:^0.2.0 || ^0.3.0-alpha.0, @jupyterlite/kernel@npm:^0.3.0-alpha.0":
   version: 0.3.0-alpha.0
   resolution: "@jupyterlite/kernel@npm:0.3.0-alpha.0"
   dependencies:
@@ -502,7 +502,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlite/server@npm:^0.3.0-alpha.0":
+"@jupyterlite/server@npm:^0.2.0 || ^0.3.0-alpha.0":
   version: 0.3.0-alpha.0
   resolution: "@jupyterlite/server@npm:0.3.0-alpha.0"
   dependencies:
@@ -570,8 +570,8 @@ __metadata:
     "@jupyterlab/coreutils": ^6
     "@jupyterlab/services": ^7
     "@jupyterlite/contents": ^0.2.0
-    "@jupyterlite/kernel": ^0.3.0-alpha.0
-    "@jupyterlite/server": ^0.3.0-alpha.0
+    "@jupyterlite/kernel": ^0.2.0 || ^0.3.0-alpha.0
+    "@jupyterlite/server": ^0.2.0 || ^0.3.0-alpha.0
     "@lumino/coreutils": ^2
     "@lumino/signaling": ^2
     "@types/json-schema": ^7.0.11
