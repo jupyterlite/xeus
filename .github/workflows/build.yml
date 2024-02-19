@@ -238,7 +238,7 @@ jobs:
       run: |
         set -eux
         python -m pip install "jupyterlab>=4.0.0,<5"  jupyterlite_xeus*.whl
-        pyton -m pip install jupyterlite ${{ matrix.jupyterlite_version }}
+        python -m pip install jupyterlite ${{ matrix.jupyterlite_version }}
 
     - name: Install dependencies
       working-directory: ui-tests
