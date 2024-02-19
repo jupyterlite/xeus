@@ -296,7 +296,9 @@ class XeusAddon(FederatedExtensionAddon):
             host_path = Path(host_path)
             mount_path = Path(mount_path)
 
-            if not mount_path.is_absolute():
+            if not mount_path.is_absolute() or (
+                os.name == "nt" and mount_path.anchor != "\\"
+            ):
                 raise ValueError(f"mount_path {mount_path} needs to be absolute")
 
             if str(mount_path).startswith("/files"):
