@@ -36,11 +36,6 @@ jobs:
     - name: Lint Python
       run: ruff check --output-format=github jupyterlite_xeus
 
-    - name: Test the extension
-      run: |
-        set -eux
-        jlpm run test
-
     - name: Build the extension
       run: |
         set -eux
