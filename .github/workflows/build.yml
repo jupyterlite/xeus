@@ -206,6 +206,11 @@ jobs:
     name: Integration tests
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # try the latest stable and potential pre-releases
+        jupyterlite_version: ["jupyterlite-core -U", "jupyterlite-core --pre"]
 
     env:
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/pw-browsers
@@ -232,7 +237,8 @@ jobs:
     - name: Install the extension
       run: |
         set -eux
-        python -m pip install "jupyterlab>=4.0.0,<5" jupyterlite jupyterlite_xeus*.whl
+        python -m pip install "jupyterlab>=4.0.0,<5"  jupyterlite_xeus*.whl
+        python -m pip install ${{ matrix.jupyterlite_version }}
 
     - name: Install dependencies
       working-directory: ui-tests
@@ -263,7 +269,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: jupyterlite_xeus-playwright-tests
+        name: jupyterlite-xeus-playwright-tests (${{ matrix.jupyterlite_version }})
         path: |
           ui-tests/test-results
           ui-tests/playwright-report
