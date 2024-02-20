@@ -2,6 +2,28 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.8
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.7...ff888aa84280ad7ab8905221c9537352c6447c29))
+
+### Enhancements made
+
+- JupyterLite-core 0.1.x support [#73](https://github.com/jupyterlite/xeus/pull/73) ([@martinRenou](https://github.com/martinRenou))
+- Support JupyterLite 0.3.0 [#71](https://github.com/jupyterlite/xeus/pull/71) ([@jtpio](https://github.com/jtpio))
+- Add check for windows absolute path [#51](https://github.com/jupyterlite/xeus/pull/51) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Clean up unused dependencies [#72](https://github.com/jupyterlite/xeus/pull/72) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-02-05&to=2024-02-20&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2024-02-05..2024-02-20&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-02-05..2024-02-20&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.7
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.6...4ea46b47362f2cbd3a1c2edb811bdbc045ed9d71))
@@ -15,8 +37,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-01-30&to=2024-02-05&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-01-30..2024-02-05&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.6
 
