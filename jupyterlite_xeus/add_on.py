@@ -143,7 +143,7 @@ class XeusAddon(FederatedExtensionAddon):
                 env_name=env_name,
                 root_prefix=root_prefix,
                 specs=["xeus-python"],
-                channels=["conda-forge", "https://repo.mamba.pm/emscripten-forge"],
+                channels=["https://repo.mamba.pm/emscripten-forge", "conda-forge"],
             )
 
     def copy_kernels_from_prefix(self):
