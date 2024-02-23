@@ -76,6 +76,7 @@ channels:
   - https://repo.mamba.pm/emscripten-forge
   - conda-forge
 dependencies:
+  - xeus-python
   - numpy
   - pillow
   - ipywidgets
@@ -92,6 +93,7 @@ channels:
   - https://repo.mamba.pm/emscripten-forge
   - conda-forge
 dependencies:
+  - xeus-python
   - pip:
       - ..
 ```
