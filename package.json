@@ -56,8 +56,8 @@
         "@jupyterlab/coreutils": "^6",
         "@jupyterlab/services": "^7",
         "@jupyterlite/contents": "^0.2.0",
-        "@jupyterlite/kernel": "^0.2.0 || ^0.3.0-alpha.0",
-        "@jupyterlite/server": "^0.2.0 || ^0.3.0-alpha.0",
+        "@jupyterlite/kernel": "^0.2.0 || ^0.3.0",
+        "@jupyterlite/server": "^0.2.0 || ^0.3.0",
         "@lumino/coreutils": "^2",
         "@lumino/signaling": "^2",
         "comlink": "^4.3.1"
