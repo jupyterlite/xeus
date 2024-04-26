@@ -566,7 +566,7 @@ __metadata:
     "@types/react-addons-linked-state-mixin": ^0.14.22
     "@typescript-eslint/eslint-plugin": ^6.1.0
     "@typescript-eslint/parser": ^6.1.0
-    comlink: ^4.3.1
+    coincident: ^1.2.3
     css-loader: ^6.7.1
     eslint: ^8.36.0
     eslint-config-prettier: ^8.8.0
@@ -1112,6 +1112,13 @@ __metadata:
   version: 1.2.0
   resolution: "@ungap/structured-clone@npm:1.2.0"
   checksum: 4f656b7b4672f2ce6e272f2427d8b0824ed11546a601d8d5412b9d7704e83db38a8d9f402ecdf2b9063fc164af842ad0ec4a55819f621ed7e7ea4d1efcc74524
+  languageName: node
+  linkType: hard
+
+"@ungap/with-resolvers@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@ungap/with-resolvers@npm:0.1.0"
+  checksum: ac0c6234414b87ec26e9603c5e57f6ae48477ccc901841e725e820bc026367987cc82dbdb8c702e058179dadbd16578c0fcc607d2122e72d9fe91373bade126c
   languageName: node
   linkType: hard
 
@@ -1663,6 +1670,22 @@ __metadata:
     kind-of: ^6.0.2
     shallow-clone: ^3.0.0
   checksum: 770f912fe4e6f21873c8e8fbb1e99134db3b93da32df271d00589ea4a29dbe83a9808a322c93f3bcaf8584b8b4fa6fc269fc8032efbaa6728e0c9886c74467d2
+  languageName: node
+  linkType: hard
+
+"coincident@npm:^1.2.3":
+  version: 1.2.3
+  resolution: "coincident@npm:1.2.3"
+  dependencies:
+    "@ungap/structured-clone": ^1.2.0
+    "@ungap/with-resolvers": ^0.1.0
+    gc-hook: ^0.3.1
+    proxy-target: ^3.0.2
+    ws: ^8.16.0
+  dependenciesMeta:
+    ws:
+      optional: true
+  checksum: 21c44d9d74be393b12d6f91c885c8b6c640dce570b01b5d5156327488390c858de8e40c0af08763e3cd7041bcf32bee70c058a1b24aa25b145376a92b1c520a3
   languageName: node
   linkType: hard
 
@@ -2489,6 +2512,13 @@ __metadata:
   version: 1.2.3
   resolution: "functions-have-names@npm:1.2.3"
   checksum: c3f1f5ba20f4e962efb71344ce0a40722163e85bee2101ce25f88214e78182d2d2476aa85ef37950c579eb6cf6ee811c17b3101bb84004bb75655f3e33f3fdb5
+  languageName: node
+  linkType: hard
+
+"gc-hook@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "gc-hook@npm:0.3.1"
+  checksum: bda26ab6493faf8593eb8e1ff636c91ba4b38f3d87867ede757b24c4677e4f55ec696977a2b884503e3e56243d5e38abf8cec52257b1fd0685622ec5a3d9c84b
   languageName: node
   linkType: hard
 
@@ -4038,6 +4068,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"proxy-target@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "proxy-target@npm:3.0.2"
+  checksum: 9d8aa207ce8d3d50273e6926a61bb0205848f2a9de7b6781feeb115072242d9803255351d4da2f2980c573fd2164609257d8c8feaa39b80147867805f2c5d101
+  languageName: node
+  linkType: hard
+
 "punycode@npm:^2.1.0, punycode@npm:^2.1.1":
   version: 2.3.1
   resolution: "punycode@npm:2.3.1"
@@ -5410,6 +5447,21 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: feb3eecd2bae82fa8a8beef800290ce437d8b8063bdc69712725f21aef77c49cb2ff45c6e5e7fce622248f9c7abaee506bae0a9064067ffd6935460c7357321b
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.16.0":
+  version: 8.17.0
+  resolution: "ws@npm:8.17.0"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ">=5.0.2"
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 147ef9eab0251364e1d2c55338ad0efb15e6913923ccbfdf20f7a8a6cb8f88432bcd7f4d8f66977135bfad35575644f9983201c1a361019594a4e53977bf6d4e
   languageName: node
   linkType: hard
 
