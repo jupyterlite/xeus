@@ -101,11 +101,6 @@ def _create_conda_env_from_specs_impl(env_name, root_prefix, specs, channels):
     for channel in channels:
         channels_args.extend(["-c", channel])
 
-    if MAMBA_COMMAND:
-        # Mamba needs the directory to exist already
-        prefix_path.mkdir(parents=True, exist_ok=True)
-        return _create_env_with_config(MAMBA_COMMAND, prefix_path, specs, channels_args)
-
     if MICROMAMBA_COMMAND:
         subprocess_run(
             [
@@ -124,6 +119,11 @@ def _create_conda_env_from_specs_impl(env_name, root_prefix, specs, channels):
             check=True,
         )
         return
+        
+    if MAMBA_COMMAND:
+        # Mamba needs the directory to exist already
+        prefix_path.mkdir(parents=True, exist_ok=True)
+        return _create_env_with_config(MAMBA_COMMAND, prefix_path, specs, channels_args)
 
     if CONDA_COMMAND:
         return _create_env_with_config(CONDA_COMMAND, prefix_path, specs, channels_args)
