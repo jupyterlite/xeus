@@ -5,7 +5,6 @@ channels:
   - conda-forge/label/jupyterlite_core_alpha
 
 dependencies:
-  - python=3.10
   - pip
   - mamba
   - nodejs=20
