@@ -7,6 +7,7 @@ channels:
 dependencies:
   - python=3.10
   - pip
+  - mamba
   - nodejs=20
   - click
   - typer
