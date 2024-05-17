@@ -152,6 +152,7 @@ def _create_env_with_config(conda, prefix_path, specs, channels_args):
             *specs,
         ],
         check=True,
+        env=os.environ.copy(),
     )
 
 
