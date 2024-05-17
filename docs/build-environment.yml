@@ -6,7 +6,6 @@ channels:
 
 dependencies:
   - pip
-  - mamba
   - nodejs=20
   - click
   - typer
