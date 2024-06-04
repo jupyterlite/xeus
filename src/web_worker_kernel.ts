@@ -47,9 +47,6 @@ export class WebWorkerKernel implements IKernel {
     this._location = location;
     this._kernelspec = kernelspec;
     this._contentsManager = contentsManager;
-    this._contentsProcessor = new DriveContentsProcessor({
-      contentsManager: this._contentsManager
-    });
     this._sendMessage = sendMessage;
     this._worker = new Worker(new URL('./worker.js', import.meta.url), {
       type: 'module'
@@ -183,6 +180,19 @@ export class WebWorkerKernel implements IKernel {
     this._remote.processDriveRequest = async <T extends TDriveMethod>(
       data: TDriveRequest<T>
     ) => {
+      if (!DriveContentsProcessor) {
+        console.error(
+          'File system calls over Atomics.wait is only supported with jupyterlite>=0.4.0a3'
+        );
+        return;
+      }
+
+      if (this._contentsProcessor === undefined) {
+        this._contentsProcessor = new DriveContentsProcessor({
+          contentsManager: this._contentsManager
+        });
+      }
+
       return await this._contentsProcessor.processDriveRequest(data);
     };
   }
@@ -216,7 +226,7 @@ export class WebWorkerKernel implements IKernel {
   private _name: string;
   private _location: string;
   private _contentsManager: Contents.IManager;
-  private _contentsProcessor: DriveContentsProcessor;
+  private _contentsProcessor: DriveContentsProcessor | undefined = undefined;
   private _remote: IXeusKernel;
   private _isDisposed = false;
   private _disposed = new Signal<this, void>(this);
