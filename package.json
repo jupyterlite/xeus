@@ -55,9 +55,9 @@
     "dependencies": {
         "@jupyterlab/coreutils": "^6",
         "@jupyterlab/services": "^7",
-        "@jupyterlite/contents": "^0.2.0 || ^0.3.0 || ^0.4.0-alpha.0",
-        "@jupyterlite/kernel": "^0.2.0 || ^0.3.0 || ^0.4.0-alpha.0",
-        "@jupyterlite/server": "^0.2.0 || ^0.3.0 || ^0.4.0-alpha.0",
+        "@jupyterlite/contents": "^0.2.0 || ^0.3.0 || ^0.4.0-alpha.3",
+        "@jupyterlite/kernel": "^0.2.0 || ^0.3.0 || ^0.4.0-alpha.3",
+        "@jupyterlite/server": "^0.2.0 || ^0.3.0 || ^0.4.0-alpha.3",
         "@lumino/coreutils": "^2",
         "@lumino/signaling": "^2",
         "coincident": "^1.2.3"

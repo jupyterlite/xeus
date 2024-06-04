@@ -11,7 +11,11 @@ import { PageConfig } from '@jupyterlab/coreutils';
 import { Contents, KernelMessage } from '@jupyterlab/services';
 
 import { IKernel } from '@jupyterlite/kernel';
-import { processDriveRequest } from '@jupyterlite/contents';
+import {
+  DriveContentsProcessor,
+  TDriveMethod,
+  TDriveRequest
+} from '@jupyterlite/contents';
 
 interface IXeusKernel {
   initialize(kernel_spec: any, base_url: string): Promise<void>;
@@ -43,6 +47,9 @@ export class WebWorkerKernel implements IKernel {
     this._location = location;
     this._kernelspec = kernelspec;
     this._contentsManager = contentsManager;
+    this._contentsProcessor = new DriveContentsProcessor({
+      contentsManager: this._contentsManager
+    });
     this._sendMessage = sendMessage;
     this._worker = new Worker(new URL('./worker.js', import.meta.url), {
       type: 'module'
@@ -173,8 +180,10 @@ export class WebWorkerKernel implements IKernel {
   }
 
   private setupFilesystemAPIs() {
-    this._remote.processDriveRequest = async (data: any) => {
-      return await processDriveRequest(this._contentsManager, data);
+    this._remote.processDriveRequest = async <T extends TDriveMethod>(
+      data: TDriveRequest<T>
+    ) => {
+      return await this._contentsProcessor.processDriveRequest(data);
     };
   }
 
@@ -207,6 +216,7 @@ export class WebWorkerKernel implements IKernel {
   private _name: string;
   private _location: string;
   private _contentsManager: Contents.IManager;
+  private _contentsProcessor: DriveContentsProcessor;
   private _remote: IXeusKernel;
   private _isDisposed = false;
   private _disposed = new Signal<this, void>(this);

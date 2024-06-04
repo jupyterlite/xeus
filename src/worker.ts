@@ -7,13 +7,10 @@ import coincident from 'coincident';
 import {
   ContentsAPI,
   DriveFS,
-  DriveFSEmscriptenNodeOps,
-  TDriveMethod,
   TDriveRequest,
+  TDriveMethod,
   TDriveResponse,
-  ServiceWorkerContentsAPI,
-  IEmscriptenFSNode,
-  IStats
+  ServiceWorkerContentsAPI
 } from '@jupyterlite/contents';
 
 import { URLExt } from '@jupyterlab/coreutils';
@@ -23,52 +20,6 @@ declare function createXeusModule(options: any): any;
 globalThis.Module = {};
 
 const workerAPI = coincident(self) as typeof globalThis;
-
-class StreamNodeOps extends DriveFSEmscriptenNodeOps {
-  private getNode(nodeOrStream: any) {
-    if (nodeOrStream['node']) {
-      return nodeOrStream['node'];
-    }
-    return nodeOrStream;
-  }
-
-  lookup(parent: IEmscriptenFSNode, name: string): IEmscriptenFSNode {
-    return super.lookup(this.getNode(parent), name);
-  }
-
-  getattr(node: IEmscriptenFSNode): IStats {
-    return super.getattr(this.getNode(node));
-  }
-
-  setattr(node: IEmscriptenFSNode, attr: IStats): void {
-    super.setattr(this.getNode(node), attr);
-  }
-
-  mknod(
-    parent: IEmscriptenFSNode,
-    name: string,
-    mode: number,
-    dev: any
-  ): IEmscriptenFSNode {
-    return super.mknod(this.getNode(parent), name, mode, dev);
-  }
-
-  rename(
-    oldNode: IEmscriptenFSNode,
-    newDir: IEmscriptenFSNode,
-    newName: string
-  ): void {
-    super.rename(this.getNode(oldNode), this.getNode(newDir), newName);
-  }
-
-  rmdir(parent: IEmscriptenFSNode, name: string): void {
-    super.rmdir(this.getNode(parent), name);
-  }
-
-  readdir(node: IEmscriptenFSNode): string[] {
-    return super.readdir(this.getNode(node));
-  }
-}
 
 /**
  * An Emscripten-compatible synchronous Contents API using shared array buffers.
@@ -80,19 +31,13 @@ export class SharedBufferContentsAPI extends ContentsAPI {
 }
 
 class XeusDriveFS extends DriveFS {
-  constructor(options: DriveFS.IOptions) {
-    super(options);
-
-    this.node_ops = new StreamNodeOps(this);
-  }
-
   createAPI(options: DriveFS.IOptions): ContentsAPI {
     if (crossOriginIsolated) {
       return new SharedBufferContentsAPI(
         options.driveName,
         options.mountpoint,
         options.FS,
-        options.ERRNO_CODES,
+        options.ERRNO_CODES
       );
     } else {
       return new ServiceWorkerContentsAPI(
@@ -100,7 +45,7 @@ class XeusDriveFS extends DriveFS {
         options.driveName,
         options.mountpoint,
         options.FS,
-        options.ERRNO_CODES,
+        options.ERRNO_CODES
       );
     }
   }
