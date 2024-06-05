@@ -2,6 +2,41 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.2.0a0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.8...a80ff1b3d7378bd20c11435aac7ba466d4d43cde))
+
+### Enhancements made
+
+- FileSystem calls over Atomics.wait instead of service worker [#87](https://github.com/jupyterlite/xeus/pull/87) ([@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- give micromamba priority [#88](https://github.com/jupyterlite/xeus/pull/88) ([@DerThorsten](https://github.com/DerThorsten))
+- Prevent failing when strict channel priority is set [#74](https://github.com/jupyterlite/xeus/pull/74) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Allow for JupyterLite 0.4.0 [#90](https://github.com/jupyterlite/xeus/pull/90) ([@jtpio](https://github.com/jtpio))
+- Fix order of kernels in UI tests [#85](https://github.com/jupyterlite/xeus/pull/85) ([@jtpio](https://github.com/jtpio))
+- Update release workflows [#82](https://github.com/jupyterlite/xeus/pull/82) ([@jtpio](https://github.com/jtpio))
+- Update `@jupyterlite` packages [#81](https://github.com/jupyterlite/xeus/pull/81) ([@jtpio](https://github.com/jtpio))
+
+### Documentation improvements
+
+- Update ipywidgets in docs [#91](https://github.com/jupyterlite/xeus/pull/91) ([@martinRenou](https://github.com/martinRenou))
+- Fix ReadTheDocs build [#89](https://github.com/jupyterlite/xeus/pull/89) ([@martinRenou](https://github.com/martinRenou))
+- Add custom CSS to override the navbar max width [#78](https://github.com/jupyterlite/xeus/pull/78) ([@jtpio](https://github.com/jtpio))
+- Add `xeus-python` to the example `environment.yml` in the docs [#77](https://github.com/jupyterlite/xeus/pull/77) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-02-20&to=2024-06-05&type=c))
+
+[@DerThorsten](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3ADerThorsten+updated%3A2024-02-20..2024-06-05&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2024-02-20..2024-06-05&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-02-20..2024-06-05&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.8
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.7...ff888aa84280ad7ab8905221c9537352c6447c29))
@@ -21,8 +56,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-02-05&to=2024-02-20&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2024-02-05..2024-02-20&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-02-05..2024-02-20&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.7
 
