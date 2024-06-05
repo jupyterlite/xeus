@@ -52,11 +52,14 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
         );
       }
 
+      const contentsManager = app.serviceManager.contents;
+
       kernelspecs.register({
         spec: kernelspec,
         create: async (options: IKernel.IOptions): Promise<IKernel> => {
           const mountDrive = !!(
-            serviceWorker?.enabled && broadcastChannel?.enabled
+            (serviceWorker?.enabled && broadcastChannel?.enabled) ||
+            crossOriginIsolated
           );
 
           if (mountDrive) {
@@ -71,6 +74,7 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
 
           return new WebWorkerKernel({
             ...options,
+            contentsManager,
             mountDrive,
             kernelspec
           });
