@@ -77,9 +77,10 @@ class XeusAddon(FederatedExtensionAddon):
     )
 
     environment_file = Unicode(
-        "environment.yml",
+        None,
+        allow_none=True,
         config=True,
-        description='The path to the environment file. Defaults to "environment.yml"',
+        description='The path to the environment file. Defaults to looking for "environment.yml" or "environment.yaml"',
     )
 
     prefix = Unicode(
@@ -107,6 +108,13 @@ class XeusAddon(FederatedExtensionAddon):
         self.cwd = TemporaryDirectory()
 
     def post_build(self, manager):
+        if self.environment_file is None:
+            if (Path(self.manager.lite_dir) / "environment.yml").exists():
+                self.environment_file = "environment.yml"
+
+            if (Path(self.manager.lite_dir) / "environment.yaml").exists():
+                self.environment_file = "environment.yaml"
+
         # check that either prefix or environment_file is set
         if not self.prefix and not self.environment_file:
             raise ValueError("Either prefix or environment_file must be set")
