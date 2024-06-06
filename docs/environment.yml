@@ -5,6 +5,7 @@ channels:
 dependencies:
   - xeus-python
   - xeus-lua
+  - xeus-javascript
   - xeus-nelson
   - numpy
   - matplotlib
