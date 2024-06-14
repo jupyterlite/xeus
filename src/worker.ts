@@ -182,6 +182,8 @@ workerAPI.initialize = async (kernel_spec: any, base_url: string) => {
 
   await waitRunDependency();
 
+  console.log('yo Imma starting');
+
   // each kernel can have a `async_init` function
   // which can do kernel specific **async** initialization
   // This function is usually implemented in the pre/post.js
