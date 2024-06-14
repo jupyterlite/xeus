@@ -179,45 +179,35 @@ workerAPI.initialize = async (kernel_spec: any, base_url: string) => {
       return file;
     }
   });
-  try {
-    await waitRunDependency();
 
-    // each kernel can have a `async_init` function
-    // which can do kernel specific **async** initialization
-    // This function is usually implemented in the pre/post.js
-    // in the emscripten build of that kernel
-    if (globalThis.Module['async_init'] !== undefined) {
-      const kernel_root_url = URLExt.join(
-        base_url,
-        `xeus/kernels/${kernel_spec.dir}`
-      );
-      const pkg_root_url = URLExt.join(base_url, 'xeus/kernel_packages');
-      const verbose = true;
-      await globalThis.Module['async_init'](
-        kernel_root_url,
-        pkg_root_url,
-        verbose
-      );
-    }
+  await waitRunDependency();
 
-    await waitRunDependency();
-
-    rawXKernel = new globalThis.Module.xkernel();
-    rawXServer = rawXKernel.get_server();
-    if (!rawXServer) {
-      console.error('Failed to start kernel!');
-    }
-    rawXKernel.start();
-  } catch (e) {
-    if (typeof e === 'number') {
-      const msg = globalThis.Module.get_exception_message(e);
-      console.error(msg);
-      throw new Error(msg);
-    } else {
-      console.error(e);
-      throw e;
-    }
+  // each kernel can have a `async_init` function
+  // which can do kernel specific **async** initialization
+  // This function is usually implemented in the pre/post.js
+  // in the emscripten build of that kernel
+  if (globalThis.Module['async_init'] !== undefined) {
+    const kernel_root_url = URLExt.join(
+      base_url,
+      `xeus/kernels/${kernel_spec.dir}`
+    );
+    const pkg_root_url = URLExt.join(base_url, 'xeus/kernel_packages');
+    const verbose = true;
+    await globalThis.Module['async_init'](
+      kernel_root_url,
+      pkg_root_url,
+      verbose
+    );
   }
+
+  await waitRunDependency();
+
+  rawXKernel = new globalThis.Module.xkernel();
+  rawXServer = rawXKernel.get_server();
+  if (!rawXServer) {
+    console.error('Failed to start kernel!');
+  }
+  rawXKernel.start();
 
   kernelReady(1);
 };
