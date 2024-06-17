@@ -18,11 +18,11 @@ pip install jupyterlite_xeus
 
 ## Usage
 
-### From environment.yaml
+### From environment.yml
 
 #### xeus-python kernel
 
-To load a `xeus-python` kernel with a custom environment, create an `environment.yaml` file with `xeus-python` and the desired dependencies. Here is an example with `numpy` as a additional dependency:
+To load a `xeus-python` kernel with a custom environment, create an `environment.yml` file with `xeus-python` and the desired dependencies. Here is an example with `numpy` as a additional dependency:
 
 ```yaml
 name: xeus-lite-wasm
@@ -34,10 +34,10 @@ dependencies:
   - numpy
 ```
 
-To build JupyterLite, run the following command where `environment.yaml` is the path to the file you just created
+To build JupyterLite, run the following command where `environment.yml` is the path to the file you just created
 
 ```bash
-jupyter lite build --XeusAddon.environment_file=some_path/to/environment.yaml
+jupyter lite build --XeusAddon.environment_file=some_path/to/environment.yml
 ```
 
 #### xeus-lua / xeus-sqlite / xeus-\<mylang\>
@@ -61,12 +61,12 @@ Note that `xeus-sqlite` and `xeus-lua` do not support additional dependencies ye
 To build JupyterLite, run again:
 
 ```bash
-jupyter lite build --XeusAddon.environment_file=environment.yaml
+jupyter lite build --XeusAddon.environment_file=environment.yml
 ```
 
 #### Multiple kernels
 
-To create a deployment with multiple kernels, you can simply add them to the `environment.yaml` file:
+To create a deployment with multiple kernels, you can simply add them to the `environment.yml` file:
 
 ```yaml
 name: xeus-lite-wasm
@@ -155,7 +155,7 @@ Each mount is specified as a pair of paths separated by a colon `:`. The first p
 
 ```bash
 jupyter lite build \
-    --XeusAddon.environment_file=environment.yaml \
+    --XeusAddon.environment_file=environment.yml \
     --XeusAddon.mounts=/some/path/on/host_machine:/some/path/in/virtual/filesystem
 ```
 
