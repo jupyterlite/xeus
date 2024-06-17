@@ -104,7 +104,6 @@ jobs:
         with:
           micromamba-version: '1.5.1-0'
           environment-file: environment-dev.yaml
-          cache-environment: true
 
       - name: Install mamba
         run: conda install -c conda-forge mamba
@@ -138,7 +137,6 @@ jobs:
         with:
           micromamba-version: '1.5.1-0'
           environment-file: environment-dev.yaml
-          cache-environment: true
 
       - name: Install mamba
         run: conda install -c conda-forge mamba
@@ -193,7 +191,6 @@ jobs:
         with:
           micromamba-version: '1.5.1-0'
           environment-file: environment-dev.yaml
-          cache-environment: true
 
       - name: Install
         run: pip install jupyterlite_xeus*.whl
@@ -211,9 +208,6 @@ jobs:
       matrix:
         # try the latest stable and potential pre-releases
         jupyterlite_version: ["jupyterlite-core -U", "jupyterlite-core --pre"]
-
-    env:
-      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/pw-browsers
 
     steps:
     - name: Checkout
@@ -248,13 +242,6 @@ jobs:
       run: |
         jlpm install
         jlpm run build
-
-    - name: Set up browser cache
-      uses: actions/cache@v3
-      with:
-        path: |
-          ${{ github.workspace }}/pw-browsers
-        key: ${{ runner.os }}-${{ hashFiles('ui-tests/yarn.lock') }}
 
     - name: Install browser
       run: jlpm playwright install chromium
