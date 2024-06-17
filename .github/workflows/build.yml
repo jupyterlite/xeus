@@ -212,9 +212,6 @@ jobs:
         # try the latest stable and potential pre-releases
         jupyterlite_version: ["jupyterlite-core -U", "jupyterlite-core --pre"]
 
-    env:
-      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/pw-browsers
-
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -248,13 +245,6 @@ jobs:
       run: |
         jlpm install
         jlpm run build
-
-    - name: Set up browser cache
-      uses: actions/cache@v3
-      with:
-        path: |
-          ${{ github.workspace }}/pw-browsers
-        key: ${{ runner.os }}-${{ hashFiles('ui-tests/yarn.lock') }}
 
     - name: Install browser
       run: jlpm playwright install chromium
