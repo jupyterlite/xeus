@@ -209,13 +209,7 @@ jobs:
         # try the latest stable and potential pre-releases
         jupyterlite_version: ["jupyterlite-core -U", "jupyterlite-core -U --pre"]
         project: ["default", "crossoriginisolated"]
-        include:
-          - jupyterlite_version: "jupyterlite-core -U --pre"
-            project: "default"
-          - jupyterlite_version: "jupyterlite-core -U --pre"
-            project: "crossoriginisolated"
-          - jupyterlite_version: "jupyterlite-core -U"
-            project: "default"
+        # the latest stable release is not compatible for now
         exclude:
           - jupyterlite_version: "jupyterlite-core -U"
             project: "crossoriginisolated"
