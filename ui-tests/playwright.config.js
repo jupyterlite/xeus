@@ -11,6 +11,20 @@ module.exports = {
     trace: 'on-first-retry',
     video: 'retain-on-failure'
   },
+  projects: [
+    {
+      name: 'default',
+      use: {
+        baseURL: 'http://localhost:8000'
+      }
+    },
+    {
+      name: 'crossoriginisolated',
+      use: {
+        baseURL: 'http://localhost:8080'
+      }
+    }
+  ],
   retries: 1,
   webServer: [
     {
