@@ -208,6 +208,14 @@ jobs:
       matrix:
         # try the latest stable and potential pre-releases
         jupyterlite_version: ["jupyterlite-core -U", "jupyterlite-core -U --pre"]
+        project: ["default", "crossoriginisolated"]
+        include:
+          - jupyterlite_version: "jupyterlite-core -U --pre"
+            project: "default"
+          - jupyterlite_version: "jupyterlite-core -U --pre"
+            project: "crossorigin"
+          - jupyterlite_version: "jupyterlite-core -U"
+            project: "default"
 
     steps:
     - name: Checkout
@@ -250,7 +258,7 @@ jobs:
     - name: Execute integration tests
       working-directory: ui-tests
       run: |
-        jlpm playwright test
+        jlpm playwright test --project ${{ matrix.project }}
 
     - name: Upload Playwright Test report
       if: always()
