@@ -216,6 +216,9 @@ jobs:
             project: "crossoriginisolated"
           - jupyterlite_version: "jupyterlite-core -U"
             project: "default"
+        exclude:
+          - jupyterlite_version: "jupyterlite-core -U"
+            project: "crossoriginisolated"
 
     steps:
     - name: Checkout
