@@ -213,7 +213,7 @@ jobs:
           - jupyterlite_version: "jupyterlite-core -U --pre"
             project: "default"
           - jupyterlite_version: "jupyterlite-core -U --pre"
-            project: "crossorigin"
+            project: "crossoriginisolated"
           - jupyterlite_version: "jupyterlite-core -U"
             project: "default"
 
