@@ -18,6 +18,12 @@ module.exports = {
       port: 8000,
       timeout: 120 * 1000,
       reuseExistingServer: true
+    },
+    {
+      command: 'yarn start:crossoriginisolated',
+      port: 8080,
+      timeout: 120 * 1000,
+      reuseExistingServer: true
     }
   ]
 };
