@@ -207,7 +207,7 @@ jobs:
       fail-fast: false
       matrix:
         # try the latest stable and potential pre-releases
-        jupyterlite_version: ["jupyterlite-core -U", "jupyterlite-core --pre"]
+        jupyterlite_version: ["jupyterlite-core -U", "jupyterlite-core -U --pre"]
 
     steps:
     - name: Checkout
