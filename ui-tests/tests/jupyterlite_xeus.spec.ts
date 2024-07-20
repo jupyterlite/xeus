@@ -53,9 +53,6 @@ test.describe('General Tests', () => {
     await page.notebook.setCell(0, 'code', 'import os; os.listdir()');
     await page.notebook.runCell(0);
 
-    // Wait for kernel to be idle
-    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
-
     const cell = await page.notebook.getCellOutput(0);
     const cellContent = await cell?.textContent();
     const name = 'Untitled.ipynb';
