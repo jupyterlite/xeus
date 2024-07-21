@@ -25,6 +25,9 @@ test.describe('General Tests', () => {
   test('xeus-python should execute some code', async ({ page }) => {
     await page.goto('lab/index.html');
 
+    const xpython = page.locator('[title="Python 3.11 (XPython)"]').first();
+    await xpython.click();
+
     // Wait for kernel to be idle
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
