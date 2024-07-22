@@ -11,11 +11,31 @@ module.exports = {
     trace: 'on-first-retry',
     video: 'retain-on-failure'
   },
+  projects: [
+    {
+      name: 'default',
+      use: {
+        baseURL: 'http://localhost:8000'
+      }
+    },
+    {
+      name: 'crossoriginisolated',
+      use: {
+        baseURL: 'http://localhost:8080'
+      }
+    }
+  ],
   retries: 1,
   webServer: [
     {
       command: 'yarn start',
       port: 8000,
+      timeout: 120 * 1000,
+      reuseExistingServer: true
+    },
+    {
+      command: 'yarn start:crossoriginisolated',
+      port: 8080,
       timeout: 120 * 1000,
       reuseExistingServer: true
     }
