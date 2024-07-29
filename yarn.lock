@@ -472,7 +472,7 @@ __metadata:
     "@types/react-addons-linked-state-mixin": ^0.14.22
     "@typescript-eslint/eslint-plugin": ^6.1.0
     "@typescript-eslint/parser": ^6.1.0
-    coincident: ^1.2.3
+    coincident: ^2.0.0
     css-loader: ^6.7.1
     eslint: ^8.36.0
     eslint-config-prettier: ^8.8.0
@@ -951,13 +951,6 @@ __metadata:
   version: 1.2.0
   resolution: "@ungap/structured-clone@npm:1.2.0"
   checksum: 4f656b7b4672f2ce6e272f2427d8b0824ed11546a601d8d5412b9d7704e83db38a8d9f402ecdf2b9063fc164af842ad0ec4a55819f621ed7e7ea4d1efcc74524
-  languageName: node
-  linkType: hard
-
-"@ungap/with-resolvers@npm:^0.1.0":
-  version: 0.1.0
-  resolution: "@ungap/with-resolvers@npm:0.1.0"
-  checksum: ac0c6234414b87ec26e9603c5e57f6ae48477ccc901841e725e820bc026367987cc82dbdb8c702e058179dadbd16578c0fcc607d2122e72d9fe91373bade126c
   languageName: node
   linkType: hard
 
@@ -1517,19 +1510,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"coincident@npm:^1.2.3":
-  version: 1.2.3
-  resolution: "coincident@npm:1.2.3"
+"coincident@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "coincident@npm:2.0.0"
   dependencies:
-    "@ungap/structured-clone": ^1.2.0
-    "@ungap/with-resolvers": ^0.1.0
     gc-hook: ^0.3.1
-    proxy-target: ^3.0.2
-    ws: ^8.16.0
-  dependenciesMeta:
-    ws:
-      optional: true
-  checksum: 21c44d9d74be393b12d6f91c885c8b6c640dce570b01b5d5156327488390c858de8e40c0af08763e3cd7041bcf32bee70c058a1b24aa25b145376a92b1c520a3
+    js-proxy: ^0.4.3
+    sabayon: ^0.5.0
+  checksum: 95c71cdb33787ab8737cd084eb984ce15076f71bc8590fb565e892e624a6f0e7aa7eef00e3edace31e5f5e12938e91631041aa0f3f9a7aef8f8b1a100527b9a7
   languageName: node
   linkType: hard
 
@@ -3067,6 +3055,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"js-proxy@npm:^0.4.3":
+  version: 0.4.3
+  resolution: "js-proxy@npm:0.4.3"
+  dependencies:
+    gc-hook: ^0.3.1
+    proxy-target: ^3.0.2
+  checksum: d97c54dcf725523090973d39741edb3154034b542dfb88f8374b729cd98fa7d1bb2e0e4f59e74ec64126be10a53601ea97517baddbdf566ecb744bfe99edb506
+  languageName: node
+  linkType: hard
+
 "js-tokens@npm:^4.0.0":
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
@@ -4222,6 +4220,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sabayon@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "sabayon@npm:0.5.0"
+  bin:
+    sabayon: cli.cjs
+  checksum: 2ca246ae483cbd49d147c55d32bde13fff370a713f3c00c122823ad9c395db1a5e8411a64f0807b9a8234ccd989750f7f428de7d08073fecc488d44dd038fe48
+  languageName: node
+  linkType: hard
+
 "safe-array-concat@npm:^1.1.2":
   version: 1.1.2
   resolution: "safe-array-concat@npm:1.1.2"
@@ -5373,7 +5380,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.11.0, ws@npm:^8.16.0":
+"ws@npm:^8.11.0":
   version: 8.17.0
   resolution: "ws@npm:8.17.0"
   peerDependencies:
