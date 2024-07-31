@@ -2,7 +2,8 @@
 // Copyright (c) JupyterLite Contributors
 // Distributed under the terms of the Modified BSD License.
 
-import coincident from 'coincident';
+// @ts-expect-error - no types available
+import coincident from 'coincident/worker';
 
 import {
   ContentsAPI,
@@ -19,7 +20,7 @@ declare function createXeusModule(options: any): any;
 
 globalThis.Module = {};
 
-const workerAPI = coincident(self) as typeof globalThis;
+const { proxy: workerAPI } = await coincident();
 
 /**
  * An Emscripten-compatible synchronous Contents API using shared array buffers.

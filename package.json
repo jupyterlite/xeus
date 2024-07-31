@@ -60,7 +60,7 @@
         "@jupyterlite/server": "^0.2.0 || ^0.3.0 || ^0.4.0",
         "@lumino/coreutils": "^2",
         "@lumino/signaling": "^2",
-        "coincident": "^1.2.3"
+        "coincident": "^2.0.0"
     },
     "devDependencies": {
         "@jupyterlab/builder": "^4.1.0",

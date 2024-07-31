@@ -130,3 +130,5 @@ env.yml
 
 # Jupyterlite cache
 .jupyterlite.doit.db
+_output
+

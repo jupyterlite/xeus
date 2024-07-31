@@ -2,7 +2,10 @@
 // Copyright (c) JupyterLite Contributors
 // Distributed under the terms of the Modified BSD License.
 
-import coincident from 'coincident';
+// @ts-expect-error - no types available
+import coincident from 'coincident/main';
+
+const { Worker: CoincidentWorker } = coincident();
 
 import { ISignal, Signal } from '@lumino/signaling';
 import { PromiseDelegate } from '@lumino/coreutils';
@@ -48,13 +51,16 @@ export class WebWorkerKernel implements IKernel {
     this._kernelspec = kernelspec;
     this._contentsManager = contentsManager;
     this._sendMessage = sendMessage;
-    this._worker = new Worker(new URL('./worker.js', import.meta.url), {
-      type: 'module'
-    });
 
+    const worker = new CoincidentWorker(
+      new URL('./worker.js', import.meta.url),
+      {
+        type: 'module'
+      }
+    );
+    this._worker = worker;
+    this._remote = worker.proxy;
     this._worker.onmessage = this._processWorkerMessage.bind(this);
-
-    this._remote = coincident(this._worker) as IXeusKernel;
 
     this.setupFilesystemAPIs();
 
