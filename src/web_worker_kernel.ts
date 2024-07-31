@@ -52,7 +52,12 @@ export class WebWorkerKernel implements IKernel {
     this._contentsManager = contentsManager;
     this._sendMessage = sendMessage;
 
-    const worker = new CoincidentWorker('./worker.js');
+    const worker = new CoincidentWorker(
+      new URL('./worker.js', import.meta.url),
+      {
+        type: 'module'
+      }
+    );
     this._worker = worker;
     this._remote = worker.proxy;
     this._worker.onmessage = this._processWorkerMessage.bind(this);
