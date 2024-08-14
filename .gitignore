@@ -128,5 +128,6 @@ dmypy.json
 experiment.sh
 env.yml
 
-# Jupyterlite cache
+# JupyterLite
 .jupyterlite.doit.db
+_output
