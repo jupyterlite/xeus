@@ -37,7 +37,7 @@ async function getJson(url: string) {
   return data;
 }
 
-const kernelPlugin = {
+const kernelPlugin: JupyterLiteServerPlugin<void> = {
   id: `@jupyterlite/xeus-kernel:register`,
   autoStart: true,
   requires: [IKernelSpecs],
