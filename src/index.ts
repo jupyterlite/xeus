@@ -2,16 +2,16 @@
 // Copyright (c) JupyterLite Contributors
 // Distributed under the terms of the Modified BSD License.
 
-import { PageConfig, URLExt } from "@jupyterlab/coreutils";
+import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 import {
   IServiceWorkerManager,
   JupyterLiteServer,
-  JupyterLiteServerPlugin,
-} from "@jupyterlite/server";
-import { IBroadcastChannelWrapper } from "@jupyterlite/contents";
-import { IKernel, IKernelSpecs } from "@jupyterlite/kernel";
+  JupyterLiteServerPlugin
+} from '@jupyterlite/server';
+import { IBroadcastChannelWrapper } from '@jupyterlite/contents';
+import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
 
-import { WebWorkerKernel } from "./web_worker_kernel";
+import { WebWorkerKernel } from './web_worker_kernel';
 
 /**
  * Fetches JSON data from the specified URL asynchronously.
@@ -27,7 +27,7 @@ import { WebWorkerKernel } from "./web_worker_kernel";
  */
 async function getJson(url: string) {
   const jsonUrl = URLExt.join(PageConfig.getBaseUrl(), url);
-  const response = await fetch(jsonUrl, { method: "GET" });
+  const response = await fetch(jsonUrl, { method: 'GET' });
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -38,7 +38,7 @@ async function getJson(url: string) {
 }
 
 const kernelPlugin: JupyterLiteServerPlugin<void> = {
-  id: `@jupyterlite/xeus-kernel:register`,
+  id: '@jupyterlite/xeus-kernel:register',
   autoStart: true,
   requires: [IKernelSpecs],
   optional: [IServiceWorkerManager, IBroadcastChannelWrapper],
@@ -51,7 +51,7 @@ const kernelPlugin: JupyterLiteServerPlugin<void> = {
     // Fetch kernel list
     let kernelList: string[] = [];
     try {
-      kernelList = await getJson("xeus/kernels.json");
+      kernelList = await getJson('xeus/kernels.json');
     } catch (err) {
       console.log(`Could not fetch xeus/kernels.json: ${err}`);
       throw err;
@@ -61,7 +61,7 @@ const kernelPlugin: JupyterLiteServerPlugin<void> = {
     for (const kernel of kernelList) {
       // Fetch kernel spec
       const kernelspec = await getJson(
-        "xeus/kernels/" + kernel + "/kernel.json"
+        'xeus/kernels/' + kernel + '/kernel.json'
       );
       kernelspec.name = kernel;
       kernelspec.dir = kernel;
@@ -93,12 +93,12 @@ const kernelPlugin: JupyterLiteServerPlugin<void> = {
             ...options,
             contentsManager,
             mountDrive,
-            kernelspec,
+            kernelspec
           });
-        },
+        }
       });
     }
-  },
+  }
 };
 
 export default kernelPlugin;
