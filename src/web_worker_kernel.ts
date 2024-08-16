@@ -93,11 +93,13 @@ export class WebWorkerKernel implements IKernel {
       remote = wrap(this._worker) as Remote<IXeusWorkerKernel>;
       remote.registerCallback(proxy(this._processWorkerMessage.bind(this)));
     }
-    remote.initialize({
-      kernelSpec: this._kernelSpec,
-      baseUrl: PageConfig.getBaseUrl(),
-      mountDrive: options.mountDrive
-    });
+    remote
+      .initialize({
+        kernelSpec: this._kernelSpec,
+        baseUrl: PageConfig.getBaseUrl(),
+        mountDrive: options.mountDrive
+      })
+      .then(this._ready.resolve.bind(this._ready));
 
     return remote;
   }
@@ -170,7 +172,7 @@ export class WebWorkerKernel implements IKernel {
    * A promise that is fulfilled when the kernel is ready.
    */
   get ready(): Promise<void> {
-    return Promise.resolve();
+    return this._ready.promise;
   }
 
   /**
@@ -259,6 +261,7 @@ export class WebWorkerKernel implements IKernel {
     | KernelMessage.IHeader<KernelMessage.MessageType>
     | undefined = undefined;
   private _parent: KernelMessage.IMessage | undefined = undefined;
+  private _ready = new PromiseDelegate<void>();
 }
 
 /**
