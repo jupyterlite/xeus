@@ -76,7 +76,7 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
             ...options,
             contentsManager,
             mountDrive,
-            kernelspec
+            kernelSpec: kernelspec
           });
         }
       });
