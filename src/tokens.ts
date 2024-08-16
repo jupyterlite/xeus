@@ -31,6 +31,12 @@ export interface IXeusWorkerKernel extends IWorkerKernel {
   ): TDriveResponse<T>;
 
   /**
+   * Process a message sent from the main thread to the worker.
+   * @param msg
+   */
+  processMessage(msg: any): void;
+
+  /**
    * Process worker message
    * @param msg
    */

@@ -116,7 +116,7 @@ export class WebWorkerKernel implements IKernel {
       this._executeDelegate = new PromiseDelegate<void>();
     }
 
-    this._remoteKernel.processWorkerMessage({ msg, parent: this.parent });
+    await this._remoteKernel.processMessage({ msg, parent: this.parent });
     if (msg.header.msg_type !== 'input_reply') {
       return await this._executeDelegate.promise;
     }
@@ -151,7 +151,7 @@ export class WebWorkerKernel implements IKernel {
    * @param msg The worker message to process.
    */
   private _processWorkerMessage(msg: any): void {
-    if (!msg.data.header) {
+    if (!msg.data?.header) {
       return;
     }
 
