@@ -2,7 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 
 /**
- * Definitions for the Pyodide kernel.
+ * Definitions for the Xeus kernel.
  */
 
 import {

@@ -64,7 +64,7 @@ export class WebWorkerKernel implements IKernel {
    * Use coincident if crossOriginIsolated, comlink otherwise
    * See the two following issues for more context:
    *  - https://github.com/jupyterlite/jupyterlite/issues/1424
-   *  - https://github.com/jupyterlite/pyodide-kernel/pull/126
+   *  - https://github.com/jupyterlite/xeus/issues/102
    */
   protected initRemote(options: WebWorkerKernel.IOptions): IXeusWorkerKernel {
     let remote: IXeusWorkerKernel;
