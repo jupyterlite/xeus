@@ -81,7 +81,7 @@ jobs:
         sudo rm -rf $(which node)
         sudo rm -rf $(which node)
 
-        pip install "jupyterlab>=4.0.0,<5" jupyterlite_xeus*.whl
+        pip install "jupyterlab>=4.0.0,<4.3" jupyterlite_xeus*.whl
 
         jupyter labextension list
         jupyter labextension list 2>&1 | grep -ie "@jupyterlite/xeus.*OK"
@@ -236,7 +236,7 @@ jobs:
     - name: Install the extension
       run: |
         set -eux
-        python -m pip install "jupyterlab>=4.0.0,<5"  jupyterlite_xeus*.whl
+        python -m pip install "jupyterlab>=4.0.0,<4.3"  jupyterlite_xeus*.whl
         python -m pip install ${{ matrix.jupyterlite_version }}
 
     - name: Install dependencies
