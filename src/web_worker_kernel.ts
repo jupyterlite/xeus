@@ -39,8 +39,6 @@ export class WebWorkerKernel implements IKernel {
     this._worker = this.initWorker(options);
     this._remoteKernel = this.initRemote(options);
 
-    this.setupFilesystemAPIs();
-
     this.initFileSystem(options);
   }
 
@@ -213,29 +211,6 @@ export class WebWorkerKernel implements IKernel {
    */
   get name(): string {
     return this._name;
-  }
-
-  private setupFilesystemAPIs() {
-    (this._remoteKernel as any).processDriveRequest = async <
-      T extends TDriveMethod
-    >(
-      data: TDriveRequest<T>
-    ) => {
-      if (!DriveContentsProcessor) {
-        console.error(
-          'File system calls over Atomics.wait is only supported with jupyterlite>=0.4.0a3'
-        );
-        return;
-      }
-
-      if (this._contentsProcessor === undefined) {
-        this._contentsProcessor = new DriveContentsProcessor({
-          contentsManager: this._contentsManager
-        });
-      }
-
-      return await this._contentsProcessor.processDriveRequest(data);
-    };
   }
 
   private async initFileSystem(options: WebWorkerKernel.IOptions) {
