@@ -64,8 +64,10 @@ export class WebWorkerKernel implements IKernel {
    *  - https://github.com/jupyterlite/jupyterlite/issues/1424
    *  - https://github.com/jupyterlite/xeus/issues/102
    */
-  protected initRemote(options: WebWorkerKernel.IOptions): IXeusWorkerKernel {
-    let remote: IXeusWorkerKernel;
+  protected initRemote(
+    options: WebWorkerKernel.IOptions
+  ): IXeusWorkerKernel | Remote<IXeusWorkerKernel> {
+    let remote: IXeusWorkerKernel | Remote<IXeusWorkerKernel>;
     if (crossOriginIsolated) {
       remote = coincident(this._worker) as IXeusWorkerKernel;
       remote.processWorkerMessage = this._processWorkerMessage.bind(this);
@@ -88,7 +90,7 @@ export class WebWorkerKernel implements IKernel {
         return await this._contentsProcessor.processDriveRequest(data);
       };
     } else {
-      remote = wrap(this._worker) as IXeusWorkerKernel;
+      remote = wrap(this._worker) as Remote<IXeusWorkerKernel>;
       remote.registerCallback(proxy(this._processWorkerMessage.bind(this)));
     }
     remote.initialize({
