@@ -49,6 +49,9 @@ def create_conda_env_from_env_file(root_prefix, env_file_content, env_file_locat
 
     # get the specs
     specs, pip_dependencies = _extract_specs(env_file_location, env_file_content)
+    # Force Python 3.11
+    if "python" in str(specs):
+        specs.append("python=3.11")
 
     create_conda_env_from_specs(
         env_name=env_name,
@@ -119,7 +122,7 @@ def _create_conda_env_from_specs_impl(env_name, root_prefix, specs, channels):
             check=True,
         )
         return
-        
+
     if MAMBA_COMMAND:
         # Mamba needs the directory to exist already
         prefix_path.mkdir(parents=True, exist_ok=True)
