@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - black
-  - build
+  - python-build
   - empack >=3.3
   - hatch-jupyter-builder
   - hatch-nodejs-version
