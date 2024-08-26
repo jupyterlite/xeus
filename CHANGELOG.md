@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.2.0a2
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.2.0a1...6730e2407b08e0634504dcce7c5e3aa7942147a5))
+
+### Bugs fixed
+
+- Pin emscripten abi [#114](https://github.com/jupyterlite/xeus/pull/114) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-08-23&to=2024-08-26&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-08-23..2024-08-26&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.2.0a1
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.2.0a0...170d2de926e990d1919855ded3d30aec4b08ba96))
@@ -30,8 +46,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-06-05&to=2024-08-23&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2024-06-05..2024-08-23&type=Issues) | [@lumberbot-app](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Alumberbot-app+updated%3A2024-06-05..2024-08-23&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-06-05..2024-08-23&type=Issues) | [@nthiery](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Anthiery+updated%3A2024-06-05..2024-08-23&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.2.0a0
 
