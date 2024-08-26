@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.11
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.10...cc29f65f6f1c9d81edc0b04284448ec08432ceb0))
+
+### Bugs fixed
+
+- \[0.1.x\]: Pin emscripten abi [#115](https://github.com/jupyterlite/xeus/pull/115) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-08-23&to=2024-08-26&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-08-23..2024-08-26&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.10
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.1.9...7e34d6baa0c10c7ecc663594616748257ce90da3))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-06-17&to=2024-08-23&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-06-17..2024-08-23&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.9
 
