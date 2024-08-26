@@ -52,6 +52,7 @@ def create_conda_env_from_env_file(root_prefix, env_file_content, env_file_locat
     # Force Python 3.11
     if "python" in str(specs):
         specs.append("python=3.11")
+        specs.append("pyjs=2.2.1=py311h37c3baf")
 
     create_conda_env_from_specs(
         env_name=env_name,
