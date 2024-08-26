@@ -49,10 +49,8 @@ def create_conda_env_from_env_file(root_prefix, env_file_content, env_file_locat
 
     # get the specs
     specs, pip_dependencies = _extract_specs(env_file_location, env_file_content)
-    # Force some build versions - This is a temporary watchdog for not pulling Python 3.12 packages that we don't support
-    if "python" in str(specs):
-        specs.append("python=3.11")
-        specs.append("pyjs=2.1.0")
+    # Force emscripten version
+    specs.append("emscripten-abi=3.1.45")
 
     create_conda_env_from_specs(
         env_name=env_name,
