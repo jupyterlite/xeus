@@ -157,36 +157,7 @@ export class XeusRemoteKernel {
       }
     }
 
-    await this.initFilesystem(options);
-
     kernelReady(1);
-  }
-
-  /**
-   * Setup custom Emscripten FileSystem
-   */
-  protected async initFilesystem(
-    options: IXeusWorkerKernel.IOptions
-  ): Promise<void> {
-    if (options.mountDrive) {
-      const mountpoint = '/drive';
-      const { FS, PATH, ERRNO_CODES } = globalThis.Module;
-      const { baseUrl } = options;
-      const { DriveFS } = await import('@jupyterlite/contents');
-
-      const driveFS = new DriveFS({
-        FS,
-        PATH,
-        ERRNO_CODES,
-        baseUrl,
-        driveName: this._driveName,
-        mountpoint
-      });
-      FS.mkdir(mountpoint);
-      FS.mount(driveFS, {}, mountpoint);
-      FS.chdir(mountpoint);
-      this._driveFS = driveFS;
-    }
   }
 
   /**

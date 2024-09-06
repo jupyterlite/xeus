@@ -4,7 +4,8 @@
 
 import coincident from 'coincident';
 
-import { Remote, proxy, wrap } from 'comlink';
+import { wrap } from 'comlink';
+import type { Remote } from 'comlink';
 
 import { ISignal, Signal } from '@lumino/signaling';
 import { PromiseDelegate } from '@lumino/coreutils';
@@ -90,8 +91,10 @@ export class WebWorkerKernel implements IKernel {
         return await this._contentsProcessor.processDriveRequest(data);
       };
     } else {
+      this._worker.onmessage = e => {
+        this._processWorkerMessage(e.data);
+      };
       remote = wrap(this._worker) as Remote<IXeusWorkerKernel>;
-      remote.registerCallback(proxy(this._processWorkerMessage.bind(this)));
     }
     remote
       .initialize({

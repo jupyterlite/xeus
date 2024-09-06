@@ -13,8 +13,6 @@ import {
   ServiceWorkerContentsAPI
 } from '@jupyterlite/contents';
 
-import { IXeusWorkerKernel } from './tokens';
-
 import { XeusRemoteKernel } from './worker';
 
 /**
@@ -36,27 +34,29 @@ export class XeusComlinkKernel extends XeusRemoteKernel {
   /**
    * Setup custom Emscripten FileSystem
    */
-  protected async initFilesystem(
-    options: IXeusWorkerKernel.IOptions
+  async mount(
+    driveName: string,
+    mountpoint: string,
+    baseUrl: string
   ): Promise<void> {
-    if (options.mountDrive) {
-      const mountpoint = '/drive';
-      const { FS, PATH, ERRNO_CODES } = globalThis.Module;
-      const { baseUrl } = options;
+    const { FS, PATH, ERRNO_CODES } = globalThis.Module;
 
-      const driveFS = new XeusDriveFS({
-        FS,
-        PATH,
-        ERRNO_CODES,
-        baseUrl,
-        driveName: this._driveName,
-        mountpoint
-      });
-      FS.mkdir(mountpoint);
-      FS.mount(driveFS, {}, mountpoint);
-      FS.chdir(mountpoint);
-      this._driveFS = driveFS;
+    if (!FS) {
+      return;
     }
+
+    const drive = new XeusDriveFS({
+      FS,
+      PATH,
+      ERRNO_CODES,
+      baseUrl,
+      driveName,
+      mountpoint
+    });
+
+    FS.mkdir(mountpoint);
+    FS.mount(drive, {}, mountpoint);
+    FS.chdir(mountpoint);
   }
 }
 
