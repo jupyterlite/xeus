@@ -71,7 +71,7 @@ export class WebWorkerKernel implements IKernel {
     let remote: IXeusWorkerKernel | Remote<IXeusWorkerKernel>;
     if (crossOriginIsolated) {
       remote = coincident(this._worker) as IXeusWorkerKernel;
-      remote.processWorkerMessage = this._processWorkerMessage.bind(this);
+      remote.processWorkerMessage = this._processCoincidentWorkerMessage.bind(this);
       // The coincident worker uses its own filesystem API:
       (remote.processDriveRequest as any) = async <T extends TDriveMethod>(
         data: TDriveRequest<T>
@@ -92,7 +92,7 @@ export class WebWorkerKernel implements IKernel {
       };
     } else {
       this._worker.onmessage = e => {
-        this._processWorkerMessage(e.data);
+        this._processComlinkWorkerMessage(e.data);
       };
       remote = wrap(this._worker) as Remote<IXeusWorkerKernel>;
     }
@@ -114,7 +114,6 @@ export class WebWorkerKernel implements IKernel {
   }
 
   private async _sendMessageToWorker(msg: any): Promise<void> {
-    // TODO Remove this??
     if (msg.header.msg_type !== 'input_reply') {
       this._executeDelegate = new PromiseDelegate<void>();
     }
@@ -149,11 +148,11 @@ export class WebWorkerKernel implements IKernel {
   }
 
   /**
-   * Process a message coming from the xeus web worker.
+   * Process a message coming from the coincident web worker.
    *
    * @param msg The worker message to process.
    */
-  private _processWorkerMessage(msg: any): void {
+  private _processCoincidentWorkerMessage(msg: any): void {
     if (!msg.data?.header) {
       return;
     }
@@ -166,6 +165,29 @@ export class WebWorkerKernel implements IKernel {
     if (
       msg.data.header.msg_type === 'status' &&
       msg.data.content.execution_state === 'idle'
+    ) {
+      this._executeDelegate.resolve();
+    }
+  }
+
+  /**
+   * Process a message coming from the comlink web worker.
+   *
+   * @param msg The worker message to process.
+   */
+  private _processComlinkWorkerMessage(msg: any): void {
+    if (!msg.header) {
+      return;
+    }
+
+    msg.header.session = this._parentHeader?.session ?? '';
+    msg.session = this._parentHeader?.session ?? '';
+    this._sendMessage(msg);
+
+    // resolve promise
+    if (
+      msg.header.msg_type === 'status' &&
+      msg.content.execution_state === 'idle'
     ) {
       this._executeDelegate.resolve();
     }
