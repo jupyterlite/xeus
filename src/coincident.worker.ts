@@ -72,9 +72,9 @@ export class XeusCoincidentKernel extends XeusRemoteKernel {
 
 const worker = new XeusCoincidentKernel();
 
-const sendWorkerMessage = workerAPI.processWorkerMessage.bind(workerAPI);
-worker.registerCallback(sendWorkerMessage);
-
 workerAPI.initialize = worker.initialize.bind(worker);
+workerAPI.mount = worker.mount.bind(worker);
+workerAPI.ready = worker.ready.bind(worker);
 workerAPI.cd = worker.cd.bind(worker);
 workerAPI.isDir = worker.isDir.bind(worker);
+workerAPI.processMessage = worker.processMessage.bind(worker);

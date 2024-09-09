@@ -70,9 +70,9 @@ export class WebWorkerKernel implements IKernel {
   ): IXeusWorkerKernel | Remote<IXeusWorkerKernel> {
     let remote: IXeusWorkerKernel | Remote<IXeusWorkerKernel>;
     if (crossOriginIsolated) {
+      this._worker.onmessage = this._processCoincidentWorkerMessage.bind(this);
+
       remote = coincident(this._worker) as IXeusWorkerKernel;
-      remote.processWorkerMessage =
-        this._processCoincidentWorkerMessage.bind(this);
       // The coincident worker uses its own filesystem API:
       (remote.processDriveRequest as any) = async <T extends TDriveMethod>(
         data: TDriveRequest<T>
