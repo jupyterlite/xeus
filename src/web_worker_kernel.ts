@@ -4,6 +4,9 @@
 
 import coincident from 'coincident';
 
+import { wrap } from 'comlink';
+import type { Remote } from 'comlink';
+
 import { ISignal, Signal } from '@lumino/signaling';
 import { PromiseDelegate } from '@lumino/coreutils';
 
@@ -17,21 +20,7 @@ import {
   TDriveRequest
 } from '@jupyterlite/contents';
 
-interface IXeusKernel {
-  initialize(kernel_spec: any, base_url: string): Promise<void>;
-
-  ready(): Promise<void>;
-
-  mount(driveName: string, mountpoint: string, baseUrl: string): Promise<void>;
-
-  cd(path: string): Promise<void>;
-
-  isDir(path: string): Promise<boolean>;
-
-  processMessage(msg: any): Promise<void>;
-
-  processDriveRequest(data: any): void;
-}
+import { IXeusWorkerKernel } from './tokens';
 
 export class WebWorkerKernel implements IKernel {
   /**
@@ -40,27 +29,85 @@ export class WebWorkerKernel implements IKernel {
    * @param options The instantiation options for a new WebWorkerKernel
    */
   constructor(options: WebWorkerKernel.IOptions) {
-    const { id, name, sendMessage, location, kernelspec, contentsManager } =
+    const { id, name, sendMessage, location, kernelSpec, contentsManager } =
       options;
     this._id = id;
     this._name = name;
     this._location = location;
-    this._kernelspec = kernelspec;
+    this._kernelSpec = kernelSpec;
     this._contentsManager = contentsManager;
     this._sendMessage = sendMessage;
-    this._worker = new Worker(new URL('./worker.js', import.meta.url), {
-      type: 'module'
-    });
-
-    this._worker.onmessage = this._processWorkerMessage.bind(this);
-
-    this._remote = coincident(this._worker) as IXeusKernel;
-
-    this.setupFilesystemAPIs();
-
-    this._remote.initialize(this._kernelspec, PageConfig.getBaseUrl());
+    this._worker = this.initWorker(options);
+    this._remoteKernel = this.initRemote(options);
 
     this.initFileSystem(options);
+  }
+
+  /**
+   * Load the worker.
+   */
+  protected initWorker(options: WebWorkerKernel.IOptions): Worker {
+    if (crossOriginIsolated) {
+      return new Worker(new URL('./coincident.worker.js', import.meta.url), {
+        type: 'module'
+      });
+    } else {
+      return new Worker(new URL('./comlink.worker.js', import.meta.url), {
+        type: 'module'
+      });
+    }
+  }
+
+  /**
+   * Initialize the remote kernel.
+   * Use coincident if crossOriginIsolated, comlink otherwise
+   * See the two following issues for more context:
+   *  - https://github.com/jupyterlite/jupyterlite/issues/1424
+   *  - https://github.com/jupyterlite/xeus/issues/102
+   */
+  protected initRemote(
+    options: WebWorkerKernel.IOptions
+  ): IXeusWorkerKernel | Remote<IXeusWorkerKernel> {
+    let remote: IXeusWorkerKernel | Remote<IXeusWorkerKernel>;
+    if (crossOriginIsolated) {
+      // We directly forward messages to xeus, which will dispatch them properly
+      // See discussion in https://github.com/jupyterlite/xeus/pull/108#discussion_r1750143661
+      this._worker.onmessage = this._processCoincidentWorkerMessage.bind(this);
+
+      remote = coincident(this._worker) as IXeusWorkerKernel;
+      // The coincident worker uses its own filesystem API:
+      (remote.processDriveRequest as any) = async <T extends TDriveMethod>(
+        data: TDriveRequest<T>
+      ) => {
+        if (!DriveContentsProcessor) {
+          throw new Error(
+            'File system calls over Atomics.wait is only supported with jupyterlite>=0.4.0a3'
+          );
+        }
+
+        if (this._contentsProcessor === undefined) {
+          this._contentsProcessor = new DriveContentsProcessor({
+            contentsManager: this._contentsManager
+          });
+        }
+
+        return await this._contentsProcessor.processDriveRequest(data);
+      };
+    } else {
+      this._worker.onmessage = e => {
+        this._processComlinkWorkerMessage(e.data);
+      };
+      remote = wrap(this._worker) as Remote<IXeusWorkerKernel>;
+    }
+    remote
+      .initialize({
+        kernelSpec: this._kernelSpec,
+        baseUrl: PageConfig.getBaseUrl(),
+        mountDrive: options.mountDrive
+      })
+      .then(this._ready.resolve.bind(this._ready));
+
+    return remote;
   }
 
   async handleMessage(msg: KernelMessage.IMessage): Promise<void> {
@@ -70,12 +117,11 @@ export class WebWorkerKernel implements IKernel {
   }
 
   private async _sendMessageToWorker(msg: any): Promise<void> {
-    // TODO Remove this??
     if (msg.header.msg_type !== 'input_reply') {
       this._executeDelegate = new PromiseDelegate<void>();
     }
 
-    await this._remote.processMessage({ msg, parent: this.parent });
+    await this._remoteKernel.processMessage({ msg, parent: this.parent });
     if (msg.header.msg_type !== 'input_reply') {
       return await this._executeDelegate.promise;
     }
@@ -105,12 +151,12 @@ export class WebWorkerKernel implements IKernel {
   }
 
   /**
-   * Process a message coming from the pyodide web worker.
+   * Process a message coming from the coincident web worker.
    *
    * @param msg The worker message to process.
    */
-  private _processWorkerMessage(msg: any): void {
-    if (!msg.data.header) {
+  private _processCoincidentWorkerMessage(msg: any): void {
+    if (!msg.data?.header) {
       return;
     }
 
@@ -128,10 +174,33 @@ export class WebWorkerKernel implements IKernel {
   }
 
   /**
+   * Process a message coming from the comlink web worker.
+   *
+   * @param msg The worker message to process.
+   */
+  private _processComlinkWorkerMessage(msg: any): void {
+    if (!msg.header) {
+      return;
+    }
+
+    msg.header.session = this._parentHeader?.session ?? '';
+    msg.session = this._parentHeader?.session ?? '';
+    this._sendMessage(msg);
+
+    // resolve promise
+    if (
+      msg.header.msg_type === 'status' &&
+      msg.content.execution_state === 'idle'
+    ) {
+      this._executeDelegate.resolve();
+    }
+  }
+
+  /**
    * A promise that is fulfilled when the kernel is ready.
    */
   get ready(): Promise<void> {
-    return Promise.resolve();
+    return this._ready.promise;
   }
 
   /**
@@ -157,7 +226,7 @@ export class WebWorkerKernel implements IKernel {
     }
     this._worker.terminate();
     (this._worker as any) = null;
-    (this._remote as any) = null;
+    (this._remoteKernel as any) = null;
     this._isDisposed = true;
     this._disposed.emit(void 0);
   }
@@ -176,27 +245,6 @@ export class WebWorkerKernel implements IKernel {
     return this._name;
   }
 
-  private setupFilesystemAPIs() {
-    this._remote.processDriveRequest = async <T extends TDriveMethod>(
-      data: TDriveRequest<T>
-    ) => {
-      if (!DriveContentsProcessor) {
-        console.error(
-          'File system calls over Atomics.wait is only supported with jupyterlite>=0.4.0a3'
-        );
-        return;
-      }
-
-      if (this._contentsProcessor === undefined) {
-        this._contentsProcessor = new DriveContentsProcessor({
-          contentsManager: this._contentsManager
-        });
-      }
-
-      return await this._contentsProcessor.processDriveRequest(data);
-    };
-  }
-
   private async initFileSystem(options: WebWorkerKernel.IOptions) {
     let driveName: string;
     let localPath: string;
@@ -210,24 +258,28 @@ export class WebWorkerKernel implements IKernel {
       localPath = options.location;
     }
 
-    await this._remote.ready();
+    await this._remoteKernel.ready();
 
-    await this._remote.mount(driveName, '/drive', PageConfig.getBaseUrl());
+    await this._remoteKernel.mount(
+      driveName,
+      '/drive',
+      PageConfig.getBaseUrl()
+    );
 
-    if (await this._remote.isDir('/files')) {
-      await this._remote.cd('/files');
+    if (await this._remoteKernel.isDir('/files')) {
+      await this._remoteKernel.cd('/files');
     } else {
-      await this._remote.cd(localPath);
+      await this._remoteKernel.cd(localPath);
     }
   }
 
-  private _kernelspec: any;
+  private _kernelSpec: any;
   private _id: string;
   private _name: string;
   private _location: string;
   private _contentsManager: Contents.IManager;
   private _contentsProcessor: DriveContentsProcessor | undefined = undefined;
-  private _remote: IXeusKernel;
+  private _remoteKernel: IXeusWorkerKernel | Remote<IXeusWorkerKernel>;
   private _isDisposed = false;
   private _disposed = new Signal<this, void>(this);
   private _worker: Worker;
@@ -237,6 +289,7 @@ export class WebWorkerKernel implements IKernel {
     | KernelMessage.IHeader<KernelMessage.MessageType>
     | undefined = undefined;
   private _parent: KernelMessage.IMessage | undefined = undefined;
+  private _ready = new PromiseDelegate<void>();
 }
 
 /**
@@ -249,6 +302,6 @@ export namespace WebWorkerKernel {
   export interface IOptions extends IKernel.IOptions {
     contentsManager: Contents.IManager;
     mountDrive: boolean;
-    kernelspec: any;
+    kernelSpec: any;
   }
 }

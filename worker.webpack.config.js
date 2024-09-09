@@ -18,9 +18,12 @@ const resolve = {
 
 module.exports = [
   {
-    entry: './lib/worker.js',
+    entry: {
+      ['coincident.worker']: './lib/coincident.worker.js',
+      ['comlink.worker']: './lib/comlink.worker.js'
+    },
     output: {
-      filename: 'worker.js',
+      filename: '[name].js',
       path: path.resolve(__dirname, 'lib'),
       libraryTarget: 'amd'
     },
