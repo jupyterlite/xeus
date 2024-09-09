@@ -70,6 +70,8 @@ export class WebWorkerKernel implements IKernel {
   ): IXeusWorkerKernel | Remote<IXeusWorkerKernel> {
     let remote: IXeusWorkerKernel | Remote<IXeusWorkerKernel>;
     if (crossOriginIsolated) {
+      // We directly forward messages to xeus, which will dispatch them properly
+      // See discussion in https://github.com/jupyterlite/xeus/pull/108#discussion_r1750143661
       this._worker.onmessage = this._processCoincidentWorkerMessage.bind(this);
 
       remote = coincident(this._worker) as IXeusWorkerKernel;
