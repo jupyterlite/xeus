@@ -1,6 +1,6 @@
 {
     "name": "@jupyterlite/xeus",
-    "version": "0.2.0-b0",
+    "version": "2.0.0",
     "description": "JupyterLite loader for Xeus kernels",
     "keywords": [
         "jupyter",
