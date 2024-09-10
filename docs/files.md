@@ -10,9 +10,11 @@ Using jupyterlite-xeus, you can mount files and directories into the kernel runt
 
 ⚠ This feature is very experimental and may fail in weird ways. ⚠
 
-xeus kernels will automatically have access to files served by JupyterLite. See [accessing files from a kernel](https://jupyterlite.readthedocs.io/en/stable/howto/content/python.html).
+xeus kernels will automatically have access to files served by JupyterLite.
 
-This feature depends on the service worker, [which may not be available in some browser setups](https://jupyterlite.readthedocs.io/en/stable/howto/configure/advanced/service-worker.html#limitations).
+This feature depends on either the service worker ([which may not be available in some browser setups](https://jupyterlite.readthedocs.io/en/stable/howto/configure/advanced/service-worker.html#limitations)) or SharedArrayBuffers if the proper flags are set.
+
+See [accessing files from a kernel](https://jupyterlite.readthedocs.io/en/stable/howto/content/python.html) for more information.
 
 ### Making it more robust
 
