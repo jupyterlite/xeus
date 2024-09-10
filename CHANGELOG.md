@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.2.0b0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.2.0a3...71621433a78571eac4ba23b54da9df924079255f))
+
+### Documentation improvements
+
+- Update docs for file access [#117](https://github.com/jupyterlite/xeus/pull/117) ([@martinRenou](https://github.com/martinRenou))
+- Update empack and docs [#116](https://github.com/jupyterlite/xeus/pull/116) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-09-10&to=2024-09-10&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-09-10..2024-09-10&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.2.0a3
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.2.0a2...44b9acbbbfaa3f230ad28cbe09b26af0fababf5c))
@@ -16,8 +33,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-08-26&to=2024-09-10&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2024-08-26..2024-09-10&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-08-26..2024-09-10&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.2.0a2
 
