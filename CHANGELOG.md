@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.2.0a3
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.2.0a2...44b9acbbbfaa3f230ad28cbe09b26af0fababf5c))
+
+### Maintenance and upkeep improvements
+
+- Align `jupyterlab` version range with the version used in JupyterLite [#109](https://github.com/jupyterlite/xeus/pull/109) ([@jtpio](https://github.com/jtpio))
+- Use `coincident` if `crossOriginIsolated`, `comlink` otherwise [#108](https://github.com/jupyterlite/xeus/pull/108) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-08-26&to=2024-09-10&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2024-08-26..2024-09-10&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-08-26..2024-09-10&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.2.0a2
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v0.2.0a1...6730e2407b08e0634504dcce7c5e3aa7942147a5))
@@ -15,8 +32,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-08-23&to=2024-08-26&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-08-23..2024-08-26&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.2.0a1
 
