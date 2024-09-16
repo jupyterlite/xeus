@@ -9,9 +9,10 @@ import {
   JupyterLiteServerPlugin
 } from '@jupyterlite/server';
 import { IBroadcastChannelWrapper } from '@jupyterlite/contents';
-import { IKernel, IKernelSpecs, IEmpackEnvMetaFile } from '@jupyterlite/kernel';
+import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
 
 import { WebWorkerKernel } from './web_worker_kernel';
+import { IEmpackEnvMetaFile } from './tokens';
 
 function getJson(url: string) {
   const json_url = URLExt.join(PageConfig.getBaseUrl(), url);
@@ -85,5 +86,26 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
     }
   };
 });
+
+const empackEnvMetaPlugin: JupyterLiteServerPlugin<void> = {
+  id: `@jupyterlite/xeus-python:empack-env-meta`,
+  autoStart: true,
+  provides: IEmpackEnvMetaFile,
+  activate: (): IEmpackEnvMetaFile => {
+    return {
+      getLink(){ 
+        let empackEnvMetaLink =''
+         const searchParams = new URL(location.href).searchParams;
+
+          if (searchParams && searchParams.get('empack_env_meta'))  {
+            empackEnvMetaLink = searchParams.get('empack_env_meta') as string;
+          }
+          return empackEnvMetaLink;
+      }
+    };
+  },
+};
+
+plugins.push(empackEnvMetaPlugin);
 
 export default plugins;
