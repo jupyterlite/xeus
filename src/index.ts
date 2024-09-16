@@ -9,7 +9,7 @@ import {
   JupyterLiteServerPlugin
 } from '@jupyterlite/server';
 import { IBroadcastChannelWrapper } from '@jupyterlite/contents';
-import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
+import { IKernel, IKernelSpecs, IEmpackEnvMetaFile } from '@jupyterlite/kernel';
 
 import { WebWorkerKernel } from './web_worker_kernel';
 
@@ -34,12 +34,13 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
     id: `@jupyterlite/xeus-${kernel}:register`,
     autoStart: true,
     requires: [IKernelSpecs],
-    optional: [IServiceWorkerManager, IBroadcastChannelWrapper],
+    optional: [IServiceWorkerManager, IBroadcastChannelWrapper, IEmpackEnvMetaFile],
     activate: (
       app: JupyterLiteServer,
       kernelspecs: IKernelSpecs,
       serviceWorker?: IServiceWorkerManager,
-      broadcastChannel?: IBroadcastChannelWrapper
+      broadcastChannel?: IBroadcastChannelWrapper,
+      empackEnvMetaFile?: IEmpackEnvMetaFile
     ) => {
       // Fetch kernel spec
       const kernelspec = getJson('xeus/kernels/' + kernel + '/kernel.json');
@@ -76,7 +77,8 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
             ...options,
             contentsManager,
             mountDrive,
-            kernelSpec: kernelspec
+            kernelSpec: kernelspec,
+            empackEnvMetaLink:empackEnvMetaFile? empackEnvMetaFile.getLink(): ''
           });
         }
       });

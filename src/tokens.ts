@@ -85,6 +85,6 @@ export namespace IXeusWorkerKernel {
     baseUrl: string;
     kernelSpec: any;
     mountDrive: boolean;
-    empack_env_meta_link: string;
+    empackEnvMetaLink?: string;
   }
 }
