@@ -4,7 +4,29 @@
 
 ## 2.0.0
 
-No merged PRs
+### Highlights
+
+Access to files served by JupyterLite can now be done via the use of `SharedArrayBuffer`.
+
+Previously accessing files solely depended on the use of a Service Worker ([which may not be available in some browser setups](https://jupyterlite.readthedocs.io/en/stable/howto/configure/advanced/service-worker.html#limitations)). Now `SharedArrayBuffer` if the proper COOP/COEP server headers are set.
+
+See [the documentation for accessing files from a kernel](https://jupyterlite.readthedocs.io/en/stable/howto/content/python.html) for more information.
+
+### What's Changed
+
+- FileSystem calls over Atomics.wait instead of service worker by @martinRenou in https://github.com/jupyterlite/xeus/pull/87
+- Add xeus-javascript to the documentation deployment by @martinRenou in https://github.com/jupyterlite/xeus/pull/94
+- Bump empack by @martinRenou in https://github.com/jupyterlite/xeus/pull/96
+- Support environment.yaml (previously documented but not supported) or… by @martinRenou in https://github.com/jupyterlite/xeus/pull/92
+- Bump empack (Backport #96) by @martinRenou in https://github.com/jupyterlite/xeus/pull/97
+- Run the UI tests with the COOP/COEP headers by @jtpio in https://github.com/jupyterlite/xeus/pull/103
+- Update to JupyterLite 0.4.0 final packages by @jtpio in https://github.com/jupyterlite/xeus/pull/105
+- Hot fix: Pin Python version (Backport #111) by @martinRenou in https://github.com/jupyterlite/xeus/pull/112
+- Pin emscripten abi by @martinRenou in https://github.com/jupyterlite/xeus/pull/114
+- Align `jupyterlab` version range with the version used in JupyterLite by @jtpio in https://github.com/jupyterlite/xeus/pull/109
+- Use `coincident` if `crossOriginIsolated`, `comlink` otherwise by @jtpio in https://github.com/jupyterlite/xeus/pull/108
+- Update empack and docs by @martinRenou in https://github.com/jupyterlite/xeus/pull/116
+- Update docs for file access by @martinRenou in https://github.com/jupyterlite/xeus/pull/117
 
 <!-- <END NEW CHANGELOG ENTRY> -->
 
