@@ -30,7 +30,7 @@ try {
   throw err;
 }
 
-const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
+const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void| IEmpackEnvMetaFile> => {
   return {
     id: `@jupyterlite/xeus-${kernel}:register`,
     autoStart: true,
@@ -73,13 +73,14 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
               `${kernelspec.name} contents will NOT be synced with Jupyter Contents`
             );
           }
+          const link = empackEnvMetaFile ? await empackEnvMetaFile.getLink(): '';
 
           return new WebWorkerKernel({
             ...options,
             contentsManager,
             mountDrive,
             kernelSpec: kernelspec,
-            empackEnvMetaLink:empackEnvMetaFile? empackEnvMetaFile.getLink(): ''
+            empackEnvMetaLink: link
           });
         }
       });
@@ -87,13 +88,13 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
   };
 });
 
-const empackEnvMetaPlugin: JupyterLiteServerPlugin<void> = {
+const empackEnvMetaPlugin: JupyterLiteServerPlugin<IEmpackEnvMetaFile> = {
   id: `@jupyterlite/xeus-python:empack-env-meta`,
   autoStart: true,
   provides: IEmpackEnvMetaFile,
   activate: (): IEmpackEnvMetaFile => {
     return {
-      getLink(){ 
+      getLink: async () => {
         let empackEnvMetaLink =''
          const searchParams = new URL(location.href).searchParams;
 
