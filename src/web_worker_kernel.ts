@@ -29,7 +29,7 @@ export class WebWorkerKernel implements IKernel {
    * @param options The instantiation options for a new WebWorkerKernel
    */
   constructor(options: WebWorkerKernel.IOptions) {
-    const { id, name, sendMessage, location, kernelSpec, contentsManager, empackEnvMetaLink = '' } =
+    const { id, name, sendMessage, location, kernelSpec, contentsManager, empackEnvMetaLink } =
       options;
     this._id = id;
     this._name = name;
@@ -100,6 +100,9 @@ export class WebWorkerKernel implements IKernel {
       };
       remote = wrap(this._worker) as Remote<IXeusWorkerKernel>;
     }
+    console.log('remote worker');
+    console.log('this._empackEnvMetaLink');
+    console.log(this._empackEnvMetaLink);
     remote
       .initialize({
         kernelSpec: this._kernelSpec,
@@ -292,7 +295,7 @@ export class WebWorkerKernel implements IKernel {
     | undefined = undefined;
   private _parent: KernelMessage.IMessage | undefined = undefined;
   private _ready = new PromiseDelegate<void>();
-  private _empackEnvMetaLink: string;
+  private _empackEnvMetaLink: string | undefined;
 }
 
 /**
@@ -306,6 +309,6 @@ export namespace WebWorkerKernel {
     contentsManager: Contents.IManager;
     mountDrive: boolean;
     kernelSpec: any;
-    empackEnvMetaLink?: string;
+    empackEnvMetaLink?: string | undefined;
   }
 }
