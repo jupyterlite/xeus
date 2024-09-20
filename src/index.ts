@@ -55,7 +55,6 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void| IEmpackE
       }
 
       const contentsManager = app.serviceManager.contents;
-
       kernelspecs.register({
         spec: kernelspec,
         create: async (options: IKernel.IOptions): Promise<IKernel> => {
@@ -74,7 +73,8 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void| IEmpackE
             );
           }
           const link = empackEnvMetaFile ? await empackEnvMetaFile.getLink(): '';
-
+          console.log('link');
+          console.log(link);
           return new WebWorkerKernel({
             ...options,
             contentsManager,
