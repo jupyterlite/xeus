@@ -100,8 +100,6 @@ export class WebWorkerKernel implements IKernel {
       remote = wrap(this._worker) as Remote<IXeusWorkerKernel>;
     }
 
-    console.log('this._empackEnvMetaLink');
-    console.log(this._empackEnvMetaLink);
     remote
       .initialize({
         kernelSpec: this._kernelSpec,

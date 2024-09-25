@@ -73,8 +73,7 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void| IEmpackE
             );
           }
           const link = empackEnvMetaFile ? await empackEnvMetaFile.getLink(): '';
-          console.log('link');
-          console.log(link);
+
           return new WebWorkerKernel({
             ...options,
             contentsManager,
