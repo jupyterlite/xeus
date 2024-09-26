@@ -94,7 +94,7 @@ export interface IEmpackEnvMetaFile {
   /**
    * Get empack_env_meta link.
    */
-  getLink: () => Promise<string>;
+  getLink: (kernel?: string) => Promise<string>;
 }
 
 export const IEmpackEnvMetaFile = new Token<IEmpackEnvMetaFile>('@jupyterlite/xeus-python:IEmpackEnvMetaFile');
