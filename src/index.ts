@@ -72,7 +72,7 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void| IEmpackE
               `${kernelspec.name} contents will NOT be synced with Jupyter Contents`
             );
           }
-          const link = empackEnvMetaFile ? await empackEnvMetaFile.getLink(): '';
+          const link = empackEnvMetaFile ? await empackEnvMetaFile.getLink(kernelspec.dir): '';
 
           return new WebWorkerKernel({
             ...options,
@@ -93,14 +93,12 @@ const empackEnvMetaPlugin: JupyterLiteServerPlugin<IEmpackEnvMetaFile> = {
   provides: IEmpackEnvMetaFile,
   activate: (): IEmpackEnvMetaFile => {
     return {
-      getLink: async () => {
-        let empackEnvMetaLink =''
-         const searchParams = new URL(location.href).searchParams;
-
-          if (searchParams && searchParams.get('empack_env_meta'))  {
-            empackEnvMetaLink = searchParams.get('empack_env_meta') as string;
-          }
-          return empackEnvMetaLink;
+      getLink: async (kernel?: string) => {
+         const kernel_root_url = URLExt.join(
+            PageConfig.getBaseUrl(),
+            `xeus/kernels/${kernel}`
+          );
+          return `${kernel_root_url}/empack_env_meta.json`;
       }
     };
   },
