@@ -12,6 +12,7 @@ import { IBroadcastChannelWrapper } from '@jupyterlite/contents';
 import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
 
 import { WebWorkerKernel } from './web_worker_kernel';
+import { IEmpackEnvMetaFile } from './tokens';
 
 function getJson(url: string) {
   const json_url = URLExt.join(PageConfig.getBaseUrl(), url);
@@ -29,17 +30,18 @@ try {
   throw err;
 }
 
-const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
+const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void| IEmpackEnvMetaFile> => {
   return {
     id: `@jupyterlite/xeus-${kernel}:register`,
     autoStart: true,
     requires: [IKernelSpecs],
-    optional: [IServiceWorkerManager, IBroadcastChannelWrapper],
+    optional: [IServiceWorkerManager, IBroadcastChannelWrapper, IEmpackEnvMetaFile],
     activate: (
       app: JupyterLiteServer,
       kernelspecs: IKernelSpecs,
       serviceWorker?: IServiceWorkerManager,
-      broadcastChannel?: IBroadcastChannelWrapper
+      broadcastChannel?: IBroadcastChannelWrapper,
+      empackEnvMetaFile?: IEmpackEnvMetaFile
     ) => {
       // Fetch kernel spec
       const kernelspec = getJson('xeus/kernels/' + kernel + '/kernel.json');
@@ -53,7 +55,6 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
       }
 
       const contentsManager = app.serviceManager.contents;
-
       kernelspecs.register({
         spec: kernelspec,
         create: async (options: IKernel.IOptions): Promise<IKernel> => {
@@ -71,17 +72,38 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
               `${kernelspec.name} contents will NOT be synced with Jupyter Contents`
             );
           }
+          const link = empackEnvMetaFile ? await empackEnvMetaFile.getLink(kernelspec.dir): '';
 
           return new WebWorkerKernel({
             ...options,
             contentsManager,
             mountDrive,
-            kernelSpec: kernelspec
+            kernelSpec: kernelspec,
+            empackEnvMetaLink: link
           });
         }
       });
     }
   };
 });
+
+const empackEnvMetaPlugin: JupyterLiteServerPlugin<IEmpackEnvMetaFile> = {
+  id: `@jupyterlite/xeus-python:empack-env-meta`,
+  autoStart: true,
+  provides: IEmpackEnvMetaFile,
+  activate: (): IEmpackEnvMetaFile => {
+    return {
+      getLink: async (kernel?: string) => {
+         const kernel_root_url = URLExt.join(
+            PageConfig.getBaseUrl(),
+            `xeus/kernels/${kernel}`
+          );
+          return `${kernel_root_url}`;
+      }
+    };
+  },
+};
+
+plugins.push(empackEnvMetaPlugin);
 
 export default plugins;

@@ -12,6 +12,7 @@ import {
 } from '@jupyterlite/contents';
 
 import { IWorkerKernel } from '@jupyterlite/kernel';
+import { Token } from '@lumino/coreutils';
 
 /**
  * An interface for Xeus workers.
@@ -85,5 +86,15 @@ export namespace IXeusWorkerKernel {
     baseUrl: string;
     kernelSpec: any;
     mountDrive: boolean;
+    empackEnvMetaLink?: string;
   }
 }
+
+export interface IEmpackEnvMetaFile {
+  /**
+   * Get empack_env_meta link.
+   */
+  getLink: (kernel?: string) => Promise<string>;
+}
+
+export const IEmpackEnvMetaFile = new Token<IEmpackEnvMetaFile>('@jupyterlite/xeus-python:IEmpackEnvMetaFile');
