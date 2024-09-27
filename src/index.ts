@@ -98,7 +98,7 @@ const empackEnvMetaPlugin: JupyterLiteServerPlugin<IEmpackEnvMetaFile> = {
             PageConfig.getBaseUrl(),
             `xeus/kernels/${kernel}`
           );
-          return `${kernel_root_url}/empack_env_meta.json`;
+          return `${kernel_root_url}`;
       }
     };
   },
