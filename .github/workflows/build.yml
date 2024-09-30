@@ -22,7 +22,7 @@ jobs:
       uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
     - name: Install Conda environment with Micromamba
-      uses: mamba-org/setup-micromamba@v1
+      uses: mamba-org/setup-micromamba@latest
       with:
         environment-name: xeus-lite-dev
         environment-file: environment-dev.yaml
@@ -161,7 +161,7 @@ jobs:
           name: extension-artifacts
 
       - name: Install mamba
-        uses: mamba-org/setup-micromamba@v1
+        uses: mamba-org/setup-micromamba@latest
         with:
           micromamba-version: '0.22.0'
           environment-file: environment-dev.yaml
