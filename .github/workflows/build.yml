@@ -102,7 +102,7 @@ jobs:
       - name: Install Conda environment with Micromamba
         uses: mamba-org/setup-micromamba@v1
         with:
-          micromamba-version: '1.5.1-0'
+          micromamba-version: '1.5.10-0'
           environment-file: environment-dev.yaml
 
       - name: Make sure the Mamba Python API is available
@@ -131,7 +131,7 @@ jobs:
       - name: Install Conda environment with Micromamba
         uses: mamba-org/setup-micromamba@v1
         with:
-          micromamba-version: '1.5.1-0'
+          micromamba-version: '1.5.10-0'
           environment-file: environment-dev.yaml
 
       - name: Install mamba
@@ -159,7 +159,7 @@ jobs:
       - name: Install mamba
         uses: mamba-org/setup-micromamba@v1
         with:
-          micromamba-version: '1.5.1-0'
+          micromamba-version: '1.5.10-0'
           environment-file: environment-dev.yaml
           environment-name: xeus-lite-dev
 
@@ -185,7 +185,7 @@ jobs:
       - name: Install Conda environment with Micromamba
         uses: mamba-org/setup-micromamba@v1
         with:
-          micromamba-version: '1.5.1-0'
+          micromamba-version: '1.5.10-0'
           environment-file: environment-dev.yaml
 
       - name: Install
