@@ -22,7 +22,7 @@ jobs:
       uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
     - name: Install Conda environment with Micromamba
-      uses: mamba-org/provision-with-micromamba@main
+      uses: mamba-org/setup-micromamba@v1
       with:
         environment-name: xeus-lite-dev
         environment-file: environment-dev.yaml
@@ -102,15 +102,11 @@ jobs:
       - name: Install Conda environment with Micromamba
         uses: mamba-org/setup-micromamba@v1
         with:
-          micromamba-version: '1.5.1-0'
+          micromamba-version: '1.5.10-0'
           environment-file: environment-dev.yaml
-
-      - name: Install mamba
-        run: conda install -c conda-forge mamba
 
       - name: Make sure the Mamba Python API is available
         run: |
-          mamba install mamba
           python -c "from mamba.api import create"
 
       - name: Install
@@ -135,7 +131,7 @@ jobs:
       - name: Install Conda environment with Micromamba
         uses: mamba-org/setup-micromamba@v1
         with:
-          micromamba-version: '1.5.1-0'
+          micromamba-version: '1.5.10-0'
           environment-file: environment-dev.yaml
 
       - name: Install mamba
@@ -161,9 +157,9 @@ jobs:
           name: extension-artifacts
 
       - name: Install mamba
-        uses: mamba-org/provision-with-micromamba@main
+        uses: mamba-org/setup-micromamba@v1
         with:
-          micromamba-version: '0.22.0'
+          micromamba-version: '1.5.10-0'
           environment-file: environment-dev.yaml
           environment-name: xeus-lite-dev
 
@@ -189,7 +185,7 @@ jobs:
       - name: Install Conda environment with Micromamba
         uses: mamba-org/setup-micromamba@v1
         with:
-          micromamba-version: '1.5.1-0'
+          micromamba-version: '1.5.10-0'
           environment-file: environment-dev.yaml
 
       - name: Install
