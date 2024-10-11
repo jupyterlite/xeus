@@ -9,10 +9,11 @@ dependencies:
   - hatch-nodejs-version
   - jupyterlab >=4.0
   - jupyterlite-core
+  - mamba
   - nodejs
   - pip
   - pytest
-  - python <3.13
+  - python
   - requests
   - ruff
   - traitlets
