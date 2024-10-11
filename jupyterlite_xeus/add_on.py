@@ -1,4 +1,5 @@
 """a JupyterLite addon for creating the env for xeus kernels"""
+
 import json
 import os
 from pathlib import Path
@@ -303,6 +304,7 @@ class XeusAddon(FederatedExtensionAddon):
             host_path, mount_path = mount.split(":")
             host_path = Path(host_path)
             mount_path = Path(mount_path)
+            host_path = Path(host_path)
 
             if not mount_path.is_absolute() or (
                 os.name == "nt" and mount_path.anchor != "\\"
