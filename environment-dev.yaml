@@ -12,7 +12,7 @@ dependencies:
   - nodejs
   - pip
   - pytest
-  - python
+  - python <3.13
   - requests
   - ruff
   - traitlets
