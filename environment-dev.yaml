@@ -9,7 +9,7 @@ dependencies:
   - hatch-nodejs-version
   - jupyterlab >=4.0
   - jupyterlite-core
-  - mamba
+  - mamba <2
   - nodejs
   - pip
   - pytest
