@@ -105,12 +105,8 @@ jobs:
           micromamba-version: '1.5.1-0'
           environment-file: environment-dev.yaml
 
-      - name: Install mamba
-        run: conda install -c conda-forge mamba
-
       - name: Make sure the Mamba Python API is available
         run: |
-          mamba install mamba
           python -c "from mamba.api import create"
 
       - name: Install
