@@ -13,36 +13,56 @@ import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
 
 import { WebWorkerKernel } from './web_worker_kernel';
 
-function getJson(url: string) {
-  const json_url = URLExt.join(PageConfig.getBaseUrl(), url);
-  const xhr = new XMLHttpRequest();
-  xhr.open('GET', json_url, false);
-  xhr.send(null);
-  return JSON.parse(xhr.responseText);
+/**
+ * Fetches JSON data from the specified URL asynchronously.
+ *
+ * This function constructs the full URL using the base URL from the PageConfig and
+ * the provided relative URL. It then performs a GET request using the Fetch API
+ * and returns the parsed JSON data.
+ *
+ * @param {string} url - The relative URL to fetch the JSON data from.
+ * @returns {Promise<any>} - A promise that resolves to the parsed JSON data.
+ * @throws {Error} - Throws an error if the HTTP request fails.
+ *
+ */
+async function getJson(url: string) {
+  const jsonUrl = URLExt.join(PageConfig.getBaseUrl(), url);
+  const response = await fetch(jsonUrl, { method: 'GET' });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data;
 }
 
-let kernel_list: string[] = [];
-try {
-  kernel_list = getJson('xeus/kernels.json');
-} catch (err) {
-  console.log(`Could not fetch xeus/kernels.json: ${err}`);
-  throw err;
-}
+const kernelPlugin: JupyterLiteServerPlugin<void> = {
+  id: '@jupyterlite/xeus-kernel:register',
+  autoStart: true,
+  requires: [IKernelSpecs],
+  optional: [IServiceWorkerManager, IBroadcastChannelWrapper],
+  activate: async (
+    app: JupyterLiteServer,
+    kernelspecs: IKernelSpecs,
+    serviceWorker?: IServiceWorkerManager,
+    broadcastChannel?: IBroadcastChannelWrapper
+  ) => {
+    // Fetch kernel list
+    let kernelList: string[] = [];
+    try {
+      kernelList = await getJson('xeus/kernels.json');
+    } catch (err) {
+      console.log(`Could not fetch xeus/kernels.json: ${err}`);
+      throw err;
+    }
+    const contentsManager = app.serviceManager.contents;
 
-const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
-  return {
-    id: `@jupyterlite/xeus-${kernel}:register`,
-    autoStart: true,
-    requires: [IKernelSpecs],
-    optional: [IServiceWorkerManager, IBroadcastChannelWrapper],
-    activate: (
-      app: JupyterLiteServer,
-      kernelspecs: IKernelSpecs,
-      serviceWorker?: IServiceWorkerManager,
-      broadcastChannel?: IBroadcastChannelWrapper
-    ) => {
+    for (const kernel of kernelList) {
       // Fetch kernel spec
-      const kernelspec = getJson('xeus/kernels/' + kernel + '/kernel.json');
+      const kernelspec = await getJson(
+        'xeus/kernels/' + kernel + '/kernel.json'
+      );
       kernelspec.name = kernel;
       kernelspec.dir = kernel;
       for (const [key, value] of Object.entries(kernelspec.resources)) {
@@ -51,9 +71,6 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
           value as string
         );
       }
-
-      const contentsManager = app.serviceManager.contents;
-
       kernelspecs.register({
         spec: kernelspec,
         create: async (options: IKernel.IOptions): Promise<IKernel> => {
@@ -81,7 +98,7 @@ const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void> => {
         }
       });
     }
-  };
-});
+  }
+};
 
-export default plugins;
+export default kernelPlugin;
