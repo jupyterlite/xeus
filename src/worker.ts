@@ -125,10 +125,9 @@ export class XeusRemoteKernel {
       // This function is usually implemented in the pre/post.js
       // in the emscripten build of that kernel
       if (globalThis.Module['async_init'] !== undefined) {
-        const kernel_root_url = empackEnvMetaLink ? empackEnvMetaLink : URLExt.join(
-          baseUrl,
-          `xeus/kernels/${kernelSpec.dir}`
-        );
+        const kernel_root_url = empackEnvMetaLink
+          ? empackEnvMetaLink
+          : URLExt.join(baseUrl, `xeus/kernels/${kernelSpec.dir}`);
         const pkg_root_url = URLExt.join(baseUrl, 'xeus/kernel_packages');
         const verbose = true;
         await globalThis.Module['async_init'](

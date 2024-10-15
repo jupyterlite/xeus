@@ -29,8 +29,15 @@ export class WebWorkerKernel implements IKernel {
    * @param options The instantiation options for a new WebWorkerKernel
    */
   constructor(options: WebWorkerKernel.IOptions) {
-    const { id, name, sendMessage, location, kernelSpec, contentsManager, empackEnvMetaLink } =
-      options;
+    const {
+      id,
+      name,
+      sendMessage,
+      location,
+      kernelSpec,
+      contentsManager,
+      empackEnvMetaLink
+    } = options;
     this._id = id;
     this._name = name;
     this._location = location;
@@ -105,7 +112,7 @@ export class WebWorkerKernel implements IKernel {
         kernelSpec: this._kernelSpec,
         baseUrl: PageConfig.getBaseUrl(),
         mountDrive: options.mountDrive,
-        empackEnvMetaLink: this._empackEnvMetaLink,
+        empackEnvMetaLink: this._empackEnvMetaLink
       })
       .then(this._ready.resolve.bind(this._ready));
 

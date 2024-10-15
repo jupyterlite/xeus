@@ -30,78 +30,86 @@ try {
   throw err;
 }
 
-const plugins = kernel_list.map((kernel): JupyterLiteServerPlugin<void| IEmpackEnvMetaFile> => {
-  return {
-    id: `@jupyterlite/xeus-${kernel}:register`,
-    autoStart: true,
-    requires: [IKernelSpecs],
-    optional: [IServiceWorkerManager, IBroadcastChannelWrapper, IEmpackEnvMetaFile],
-    activate: (
-      app: JupyterLiteServer,
-      kernelspecs: IKernelSpecs,
-      serviceWorker?: IServiceWorkerManager,
-      broadcastChannel?: IBroadcastChannelWrapper,
-      empackEnvMetaFile?: IEmpackEnvMetaFile
-    ) => {
-      // Fetch kernel spec
-      const kernelspec = getJson('xeus/kernels/' + kernel + '/kernel.json');
-      kernelspec.name = kernel;
-      kernelspec.dir = kernel;
-      for (const [key, value] of Object.entries(kernelspec.resources)) {
-        kernelspec.resources[key] = URLExt.join(
-          PageConfig.getBaseUrl(),
-          value as string
-        );
-      }
-
-      const contentsManager = app.serviceManager.contents;
-      kernelspecs.register({
-        spec: kernelspec,
-        create: async (options: IKernel.IOptions): Promise<IKernel> => {
-          const mountDrive = !!(
-            (serviceWorker?.enabled && broadcastChannel?.enabled) ||
-            crossOriginIsolated
+const plugins = kernel_list.map(
+  (kernel): JupyterLiteServerPlugin<void | IEmpackEnvMetaFile> => {
+    return {
+      id: `@jupyterlite/xeus-${kernel}:register`,
+      autoStart: true,
+      requires: [IKernelSpecs],
+      optional: [
+        IServiceWorkerManager,
+        IBroadcastChannelWrapper,
+        IEmpackEnvMetaFile
+      ],
+      activate: (
+        app: JupyterLiteServer,
+        kernelspecs: IKernelSpecs,
+        serviceWorker?: IServiceWorkerManager,
+        broadcastChannel?: IBroadcastChannelWrapper,
+        empackEnvMetaFile?: IEmpackEnvMetaFile
+      ) => {
+        // Fetch kernel spec
+        const kernelspec = getJson('xeus/kernels/' + kernel + '/kernel.json');
+        kernelspec.name = kernel;
+        kernelspec.dir = kernel;
+        for (const [key, value] of Object.entries(kernelspec.resources)) {
+          kernelspec.resources[key] = URLExt.join(
+            PageConfig.getBaseUrl(),
+            value as string
           );
-
-          if (mountDrive) {
-            console.info(
-              `${kernelspec.name} contents will be synced with Jupyter Contents`
-            );
-          } else {
-            console.warn(
-              `${kernelspec.name} contents will NOT be synced with Jupyter Contents`
-            );
-          }
-          const link = empackEnvMetaFile ? await empackEnvMetaFile.getLink(kernelspec.dir): '';
-
-          return new WebWorkerKernel({
-            ...options,
-            contentsManager,
-            mountDrive,
-            kernelSpec: kernelspec,
-            empackEnvMetaLink: link
-          });
         }
-      });
-    }
-  };
-});
+
+        const contentsManager = app.serviceManager.contents;
+        kernelspecs.register({
+          spec: kernelspec,
+          create: async (options: IKernel.IOptions): Promise<IKernel> => {
+            const mountDrive = !!(
+              (serviceWorker?.enabled && broadcastChannel?.enabled) ||
+              crossOriginIsolated
+            );
+
+            if (mountDrive) {
+              console.info(
+                `${kernelspec.name} contents will be synced with Jupyter Contents`
+              );
+            } else {
+              console.warn(
+                `${kernelspec.name} contents will NOT be synced with Jupyter Contents`
+              );
+            }
+            const link = empackEnvMetaFile
+              ? await empackEnvMetaFile.getLink(kernelspec.dir)
+              : '';
+
+            return new WebWorkerKernel({
+              ...options,
+              contentsManager,
+              mountDrive,
+              kernelSpec: kernelspec,
+              empackEnvMetaLink: link
+            });
+          }
+        });
+      }
+    };
+  }
+);
 
 const empackEnvMetaPlugin: JupyterLiteServerPlugin<IEmpackEnvMetaFile> = {
-  id: `@jupyterlite/xeus-python:empack-env-meta`,
+  id: '@jupyterlite/xeus-python:empack-env-meta',
   autoStart: true,
   provides: IEmpackEnvMetaFile,
   activate: (): IEmpackEnvMetaFile => {
     return {
       getLink: async (kernel?: string) => {
-         const kernel_root_url = URLExt.join(
-            PageConfig.getBaseUrl(),
-            `xeus/kernels/${kernel}`
-          );
-          return `${kernel_root_url}`;
+        const kernel_root_url = URLExt.join(
+          PageConfig.getBaseUrl(),
+          `xeus/kernels/${kernel}`
+        );
+        return `${kernel_root_url}`;
       }
     };
-  },
+  }
 };
 
 plugins.push(empackEnvMetaPlugin);

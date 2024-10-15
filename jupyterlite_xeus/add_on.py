@@ -1,4 +1,5 @@
 """a JupyterLite addon for creating the env for xeus kernels"""
+
 import json
 import os
 from pathlib import Path
@@ -18,7 +19,7 @@ from jupyterlite_core.constants import (
     SHARE_LABEXTENSIONS,
     UTF8,
 )
-from traitlets import Bool, List, Unicode
+from traitlets import Bool, Callable, List, Unicode
 
 from .create_conda_env import (
     create_conda_env_from_env_file,
@@ -100,6 +101,13 @@ class XeusAddon(FederatedExtensionAddon):
         [],
         config=True,
         description="A comma-separated list of mount points, in the form <host_path>:<mount_path> to mount in the wasm prefix",
+    )
+
+    package_url_factory = Callable(
+        None,
+        allow_none=True,
+        config=True,
+        description="Factory to generate package download URL from package metadata. This is used to load python packages from external host",
     )
 
     def __init__(self, *args, **kwargs):
@@ -290,6 +298,7 @@ class XeusAddon(FederatedExtensionAddon):
             relocate_prefix="/",
             outdir=out_path,
             use_cache=False,
+            package_url_factory=self.package_url_factory,
             **pack_kwargs,
         )
 
