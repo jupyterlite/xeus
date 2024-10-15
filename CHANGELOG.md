@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 2.1.0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v2.0.0...d0369ff65cea926be186d0df70902bcb050df513))
+
+### Enhancements made
+
+- Passing the link of empack_env_meta.json file [#120](https://github.com/jupyterlite/xeus/pull/120) ([@AnastasiaSliusar](https://github.com/AnastasiaSliusar))
+
+### Maintenance and upkeep improvements
+
+- Fix job installation of micromamba [#121](https://github.com/jupyterlite/xeus/pull/121) ([@AnastasiaSliusar](https://github.com/AnastasiaSliusar))
+
+### Documentation improvements
+
+- Add changelog for `2.0.0` [#119](https://github.com/jupyterlite/xeus/pull/119) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-09-10&to=2024-10-15&type=c))
+
+[@AnastasiaSliusar](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AAnastasiaSliusar+updated%3A2024-09-10..2024-10-15&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2024-09-10..2024-10-15&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.0.0
 
 ### Highlights
@@ -27,8 +51,6 @@ See [the documentation for accessing files from a kernel](https://jupyterlite.re
 - Use `coincident` if `crossOriginIsolated`, `comlink` otherwise by @jtpio in https://github.com/jupyterlite/xeus/pull/108
 - Update empack and docs by @martinRenou in https://github.com/jupyterlite/xeus/pull/116
 - Update docs for file access by @martinRenou in https://github.com/jupyterlite/xeus/pull/117
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.2.0b0
 
