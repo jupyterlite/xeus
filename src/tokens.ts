@@ -98,5 +98,5 @@ export interface IEmpackEnvMetaFile {
 }
 
 export const IEmpackEnvMetaFile = new Token<IEmpackEnvMetaFile>(
-  '@jupyterlite/xeus-python:IEmpackEnvMetaFile'
+  '@jupyterlite/xeus:IEmpackEnvMetaFile'
 );

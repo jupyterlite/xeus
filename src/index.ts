@@ -96,7 +96,7 @@ const plugins = kernel_list.map(
 );
 
 const empackEnvMetaPlugin: JupyterLiteServerPlugin<IEmpackEnvMetaFile> = {
-  id: '@jupyterlite/xeus-python:empack-env-meta',
+  id: '@jupyterlite/xeus:empack-env-meta',
   autoStart: true,
   provides: IEmpackEnvMetaFile,
   activate: (): IEmpackEnvMetaFile => {
