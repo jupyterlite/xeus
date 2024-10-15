@@ -29,17 +29,24 @@ export class WebWorkerKernel implements IKernel {
    * @param options The instantiation options for a new WebWorkerKernel
    */
   constructor(options: WebWorkerKernel.IOptions) {
-    const { id, name, sendMessage, location, kernelSpec, contentsManager } =
-      options;
+    const {
+      id,
+      name,
+      sendMessage,
+      location,
+      kernelSpec,
+      contentsManager,
+      empackEnvMetaLink
+    } = options;
     this._id = id;
     this._name = name;
     this._location = location;
     this._kernelSpec = kernelSpec;
     this._contentsManager = contentsManager;
     this._sendMessage = sendMessage;
+    this._empackEnvMetaLink = empackEnvMetaLink;
     this._worker = this.initWorker(options);
     this._remoteKernel = this.initRemote(options);
-
     this.initFileSystem(options);
   }
 
@@ -99,11 +106,13 @@ export class WebWorkerKernel implements IKernel {
       };
       remote = wrap(this._worker) as Remote<IXeusWorkerKernel>;
     }
+
     remote
       .initialize({
         kernelSpec: this._kernelSpec,
         baseUrl: PageConfig.getBaseUrl(),
-        mountDrive: options.mountDrive
+        mountDrive: options.mountDrive,
+        empackEnvMetaLink: this._empackEnvMetaLink
       })
       .then(this._ready.resolve.bind(this._ready));
 
@@ -290,6 +299,7 @@ export class WebWorkerKernel implements IKernel {
     | undefined = undefined;
   private _parent: KernelMessage.IMessage | undefined = undefined;
   private _ready = new PromiseDelegate<void>();
+  private _empackEnvMetaLink: string | undefined;
 }
 
 /**
@@ -303,5 +313,6 @@ export namespace WebWorkerKernel {
     contentsManager: Contents.IManager;
     mountDrive: boolean;
     kernelSpec: any;
+    empackEnvMetaLink?: string | undefined;
   }
 }

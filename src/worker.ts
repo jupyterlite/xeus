@@ -103,7 +103,7 @@ export class XeusRemoteKernel {
   }
 
   async initialize(options: IXeusWorkerKernel.IOptions): Promise<void> {
-    const { baseUrl, kernelSpec } = options;
+    const { baseUrl, kernelSpec, empackEnvMetaLink } = options;
     // location of the kernel binary on the server
     const binary_js = URLExt.join(baseUrl, kernelSpec.argv[0]);
     const binary_wasm = binary_js.replace('.js', '.wasm');
@@ -125,10 +125,9 @@ export class XeusRemoteKernel {
       // This function is usually implemented in the pre/post.js
       // in the emscripten build of that kernel
       if (globalThis.Module['async_init'] !== undefined) {
-        const kernel_root_url = URLExt.join(
-          baseUrl,
-          `xeus/kernels/${kernelSpec.dir}`
-        );
+        const kernel_root_url = empackEnvMetaLink
+          ? empackEnvMetaLink
+          : URLExt.join(baseUrl, `xeus/kernels/${kernelSpec.dir}`);
         const pkg_root_url = URLExt.join(baseUrl, 'xeus/kernel_packages');
         const verbose = true;
         await globalThis.Module['async_init'](

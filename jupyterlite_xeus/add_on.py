@@ -1,4 +1,5 @@
 """a JupyterLite addon for creating the env for xeus kernels"""
+
 import json
 import os
 from pathlib import Path
@@ -18,7 +19,7 @@ from jupyterlite_core.constants import (
     SHARE_LABEXTENSIONS,
     UTF8,
 )
-from traitlets import Bool, List, Unicode
+from traitlets import Bool, Callable, List, Unicode
 
 from .create_conda_env import (
     create_conda_env_from_env_file,
@@ -100,6 +101,13 @@ class XeusAddon(FederatedExtensionAddon):
         [],
         config=True,
         description="A comma-separated list of mount points, in the form <host_path>:<mount_path> to mount in the wasm prefix",
+    )
+
+    package_url_factory = Callable(
+        None,
+        allow_none=True,
+        config=True,
+        description="Factory to generate package download URL from package metadata. This is used to load python packages from external host",
     )
 
     def __init__(self, *args, **kwargs):
@@ -285,6 +293,9 @@ class XeusAddon(FederatedExtensionAddon):
         else:
             pack_kwargs["file_filters"] = pkg_file_filter_from_yaml(DEFAULT_CONFIG_PATH)
 
+        if self.package_url_factory is not None:
+            pack_kwargs["package_url_factory"] = self.package_url_factory
+
         pack_env(
             env_prefix=self.prefix,
             relocate_prefix="/",
@@ -342,7 +353,8 @@ class XeusAddon(FederatedExtensionAddon):
         # Pack JupyterLite content if enabled
         # If we only build a voici output, mount jupyterlite content into the kernel by default
         if self.mount_jupyterlite_content or (
-            list(self.manager.apps) == ["voici"] and self.mount_jupyterlite_content is None
+            list(self.manager.apps) == ["voici"]
+            and self.mount_jupyterlite_content is None
         ):
             contents_dir = self.manager.output_dir / "files"
 
