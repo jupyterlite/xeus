@@ -94,7 +94,7 @@ export interface IEmpackEnvMetaFile {
   /**
    * Get empack_env_meta link.
    */
-  getLink: (kernel?: string) => Promise<string>;
+  getLink: (kernelspec: Record<string, any>) => Promise<string>;
 }
 
 export const IEmpackEnvMetaFile = new Token<IEmpackEnvMetaFile>(

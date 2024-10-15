@@ -293,12 +293,14 @@ class XeusAddon(FederatedExtensionAddon):
         else:
             pack_kwargs["file_filters"] = pkg_file_filter_from_yaml(DEFAULT_CONFIG_PATH)
 
+        if self.package_url_factory is not None:
+            pack_kwargs["package_url_factory"] = self.package_url_factory
+
         pack_env(
             env_prefix=self.prefix,
             relocate_prefix="/",
             outdir=out_path,
             use_cache=False,
-            package_url_factory=self.package_url_factory,
             **pack_kwargs,
         )
 
@@ -351,7 +353,8 @@ class XeusAddon(FederatedExtensionAddon):
         # Pack JupyterLite content if enabled
         # If we only build a voici output, mount jupyterlite content into the kernel by default
         if self.mount_jupyterlite_content or (
-            list(self.manager.apps) == ["voici"] and self.mount_jupyterlite_content is None
+            list(self.manager.apps) == ["voici"]
+            and self.mount_jupyterlite_content is None
         ):
             contents_dir = self.manager.output_dir / "files"
 

@@ -78,7 +78,7 @@ const plugins = kernel_list.map(
               );
             }
             const link = empackEnvMetaFile
-              ? await empackEnvMetaFile.getLink(kernelspec.dir)
+              ? await empackEnvMetaFile.getLink(kernelspec)
               : '';
 
             return new WebWorkerKernel({
@@ -101,10 +101,11 @@ const empackEnvMetaPlugin: JupyterLiteServerPlugin<IEmpackEnvMetaFile> = {
   provides: IEmpackEnvMetaFile,
   activate: (): IEmpackEnvMetaFile => {
     return {
-      getLink: async (kernel?: string) => {
+      getLink: async (kernelspec: Record<string, any>) => {
+        const kernelName = kernelspec.name;
         const kernel_root_url = URLExt.join(
           PageConfig.getBaseUrl(),
-          `xeus/kernels/${kernel}`
+          `xeus/kernels/${kernelName}`
         );
         return `${kernel_root_url}`;
       }
