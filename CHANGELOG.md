@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 2.1.1
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v2.1.0...473ab8be5735c267ea01dd2e17da77e50f6fda3a))
+
+### Maintenance and upkeep improvements
+
+- Bump empack [#126](https://github.com/jupyterlite/xeus/pull/126) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-10-15&to=2024-10-23&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-10-15..2024-10-23&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Atrungleduc+updated%3A2024-10-15..2024-10-23&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.1.0
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v2.0.0...d0369ff65cea926be186d0df70902bcb050df513))
@@ -23,8 +39,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-09-10&to=2024-10-15&type=c))
 
 [@AnastasiaSliusar](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AAnastasiaSliusar+updated%3A2024-09-10..2024-10-15&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2024-09-10..2024-10-15&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.0.0
 
