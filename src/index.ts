@@ -108,6 +108,7 @@ const kernelPlugin: JupyterLiteServerPlugin<void> = {
         }
       });
     }
+    await app.serviceManager.kernelspecs.refreshSpecs();
   }
 };
 
