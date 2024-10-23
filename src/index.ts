@@ -131,3 +131,4 @@ const empackEnvMetaPlugin: JupyterLiteServerPlugin<IEmpackEnvMetaFile> = {
 };
 
 export default [empackEnvMetaPlugin, kernelPlugin];
+export { IEmpackEnvMetaFile };
