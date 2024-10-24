@@ -116,3 +116,4 @@ const empackEnvMetaPlugin: JupyterLiteServerPlugin<IEmpackEnvMetaFile> = {
 plugins.push(empackEnvMetaPlugin);
 
 export default plugins;
+export { IEmpackEnvMetaFile };
