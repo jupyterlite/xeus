@@ -25,6 +25,7 @@ html_css_files = [
 ]
 
 jupyterlite_dir = "."
+jupyterlite_silence = False
 
 html_theme_options = {
     "logo": {
