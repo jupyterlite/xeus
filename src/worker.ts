@@ -6,6 +6,7 @@ import { URLExt } from '@jupyterlab/coreutils';
 
 import type { DriveFS } from '@jupyterlite/contents';
 import { IXeusWorkerKernel } from './tokens';
+import { bootstrapFromEmpackPackedEnvironment, IPackagesInfo} from "@emscripten-forge/mambajs"
 
 globalThis.Module = {};
 
@@ -119,23 +120,36 @@ export class XeusRemoteKernel {
     });
     try {
       await waitRunDependency();
-
+      if (globalThis.Module['async_init'] !== undefined) {
       // each kernel can have a `async_init` function
       // which can do kernel specific **async** initialization
       // This function is usually implemented in the pre/post.js
       // in the emscripten build of that kernel
-      if (globalThis.Module['async_init'] !== undefined) {
-        const kernel_root_url = empackEnvMetaLink
+
+      const kernel_root_url = empackEnvMetaLink
           ? empackEnvMetaLink
           : URLExt.join(baseUrl, `xeus/kernels/${kernelSpec.dir}`);
-        const pkg_root_url = URLExt.join(baseUrl, 'xeus/kernel_packages');
-        const verbose = true;
-        await globalThis.Module['async_init'](
-          kernel_root_url,
-          pkg_root_url,
-          verbose
-        );
-      }
+          const verbose = true;
+
+      //if the kernel is not xeus-python than we have to avoid using pyjs
+     
+        const packagesJsonUrl = `${kernel_root_url}/empack_env_meta.json`;
+        let packageData: IPackagesInfo = {};
+        try{ 
+          packageData = await bootstrapFromEmpackPackedEnvironment(packagesJsonUrl, verbose, false, globalThis.Module);
+        } catch(error: any) {
+          
+          throw new Error(error.message);
+        }
+        if (kernelSpec.name === 'xpython') {
+          if (Object.keys(packageData).length) { 
+            let {pythonVersion, prefix} = packageData;
+            if (pythonVersion) {
+              await globalThis.Module['init_python_phases']( pythonVersion, prefix, verbose);
+            }
+        }
+        }
+    }
 
       await waitRunDependency();
 
