@@ -113,6 +113,7 @@
     },
     "jupyterlab": {
         "extension": true,
+        "webpackConfig": "lab.webpack.config.js",
         "outputDir": "jupyterlite_xeus/labextension",
         "sharedPackages": {
             "@jupyterlite/kernel": {
