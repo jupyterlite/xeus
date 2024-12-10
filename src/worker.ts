@@ -82,6 +82,7 @@ export class XeusRemoteKernel {
   }
 
   async processMessage(event: any): Promise<void> {
+    console.log('???processMessage??');
     const msg_type = event.msg.header.msg_type;
 
     await globalThis.ready;
@@ -97,8 +98,10 @@ export class XeusRemoteKernel {
     }
 
     if (msg_type === 'input_reply') {
+      console.log('msg_type',msg_type)
       resolveInputReply(event.msg);
     } else {
+      console.log('notify_listener');
       rawXServer.notify_listener(event.msg);
     }
   }
@@ -156,7 +159,9 @@ export class XeusRemoteKernel {
       await waitRunDependency();
 
       rawXKernel = new globalThis.Module.xkernel();
+      console.log('rawXKernel',rawXKernel);
       rawXServer = rawXKernel.get_server();
+      console.log('rawXServer',rawXServer);
       if (!rawXServer) {
         console.error('Failed to start kernel!');
       }
@@ -180,6 +185,7 @@ export class XeusRemoteKernel {
    * @param callback the callback to register
    */
   registerCallback(callback: (msg: any) => void): void {
+    console.log('registerCallback');
     this._sendWorkerMessage = callback;
   }
 
