@@ -120,18 +120,21 @@ export class WebWorkerKernel implements IKernel {
   }
 
   async handleMessage(msg: KernelMessage.IMessage): Promise<void> {
+    console.log('handleMessage');
     this._parent = msg;
     this._parentHeader = msg.header;
     await this._sendMessageToWorker(msg);
   }
 
   private async _sendMessageToWorker(msg: any): Promise<void> {
+    console.log('_sendMessageToWorker');
     if (msg.header.msg_type !== 'input_reply') {
       this._executeDelegate = new PromiseDelegate<void>();
     }
 
     await this._remoteKernel.processMessage({ msg, parent: this.parent });
     if (msg.header.msg_type !== 'input_reply') {
+      console.log('processMessage');
       return await this._executeDelegate.promise;
     }
   }
@@ -165,6 +168,7 @@ export class WebWorkerKernel implements IKernel {
    * @param msg The worker message to process.
    */
   private _processCoincidentWorkerMessage(msg: any): void {
+    console.log('_processCoincidentWorkerMessage');
     if (!msg.data?.header) {
       return;
     }
@@ -188,6 +192,7 @@ export class WebWorkerKernel implements IKernel {
    * @param msg The worker message to process.
    */
   private _processComlinkWorkerMessage(msg: any): void {
+    console.log('_processComlinkWorkerMessage');
     if (!msg.header) {
       return;
     }
@@ -255,6 +260,7 @@ export class WebWorkerKernel implements IKernel {
   }
 
   private async initFileSystem(options: WebWorkerKernel.IOptions) {
+    console.log('initFileSystem');
     let driveName: string;
     let localPath: string;
 
@@ -268,7 +274,7 @@ export class WebWorkerKernel implements IKernel {
     }
 
     await this._remoteKernel.ready();
-
+    console.log('driveName',driveName);
     await this._remoteKernel.mount(
       driveName,
       '/drive',

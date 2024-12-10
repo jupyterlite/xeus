@@ -29,7 +29,7 @@ try {
   console.log(`Could not fetch xeus/kernels.json: ${err}`);
   throw err;
 }
-
+console.log('kernel_list', kernel_list);
 const plugins = kernel_list.map(
   (kernel): JupyterLiteServerPlugin<void | IEmpackEnvMetaFile> => {
     return {

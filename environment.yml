@@ -1,0 +1,8 @@
+name: xeus-python-kernel-test-2-12-17-44
+channels:
+  - conda-forge
+  - https://repo.mamba.pm/emscripten-forge
+dependencies:
+  - ipywidgets
+  - xeus-lua
+  - xeus-nelson
