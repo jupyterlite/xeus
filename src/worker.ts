@@ -141,7 +141,7 @@ export class XeusRemoteKernel {
 
         let packageData: IPackagesInfo = {};
         try{ 
-          packageData = await bootstrapFromEmpackPackedEnvironment(packagesJsonUrl, verbose, false, globalThis.Module, pkgRootUrl);
+          packageData = await bootstrapFromEmpackPackedEnvironment(packagesJsonUrl, verbose, false, globalThis.Module, pkgRootUrl, kernelSpec.name);
         } catch(error: any) {
           
           throw new Error(error.message);
