@@ -134,9 +134,11 @@ export class XeusRemoteKernel {
       //if the kernel is not xeus-python than we have to avoid using pyjs
      
         const packagesJsonUrl = `${kernel_root_url}/empack_env_meta.json`;
+        const pkgRootUrl = URLExt.join(baseUrl, 'xeus/kernel_packages');
+
         let packageData: IPackagesInfo = {};
         try{ 
-          packageData = await bootstrapFromEmpackPackedEnvironment(packagesJsonUrl, verbose, false, globalThis.Module);
+          packageData = await bootstrapFromEmpackPackedEnvironment(packagesJsonUrl, verbose, false, globalThis.Module, pkgRootUrl);
         } catch(error: any) {
           
           throw new Error(error.message);
