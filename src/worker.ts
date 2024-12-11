@@ -4,7 +4,6 @@
 
 import { URLExt } from '@jupyterlab/coreutils';
 
-import type { DriveFS } from '@jupyterlite/contents';
 import { IXeusWorkerKernel } from './tokens';
 
 globalThis.Module = {};
@@ -167,8 +166,6 @@ export class XeusRemoteKernel {
     this._sendWorkerMessage = callback;
   }
 
-  protected _driveName = '';
-  protected _driveFS: DriveFS | null = null;
   protected _sendWorkerMessage: (msg: any) => void = () => {};
 }
 
