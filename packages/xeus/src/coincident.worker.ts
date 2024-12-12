@@ -12,7 +12,7 @@ import {
   TDriveResponse
 } from '@jupyterlite/contents';
 
-import { IXeusWorkerKernel } from './tokens';
+import { IXeusWorkerKernel } from './interfaces';
 import { XeusRemoteKernel } from './worker';
 
 const workerAPI = coincident(self) as IXeusWorkerKernel;

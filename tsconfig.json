@@ -13,11 +13,8 @@
     "noUnusedLocals": true,
     "preserveWatchOutput": true,
     "resolveJsonModule": true,
-    "outDir": "lib",
-    "rootDir": "src",
     "strict": true,
     "strictNullChecks": true,
     "target": "ES2019"
-  },
-  "include": ["src/*"]
+  }
 }
