@@ -23,7 +23,7 @@ def main():
 
     package_json = json.loads(package_file.read_text())
     package_json["version"] = version
-    package_file.write_text(json.dumps(package_json, indent=2))
+    package_file.write_text(json.dumps(package_json, indent=4))
 
 
 if __name__ == "__main__":
