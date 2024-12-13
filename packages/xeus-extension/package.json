@@ -42,7 +42,7 @@
         "@jupyterlite/contents": "^0.2.0 || ^0.3.0 || ^0.4.5",
         "@jupyterlite/kernel": "^0.2.0 || ^0.3.0 || ^0.4.5",
         "@jupyterlite/server": "^0.2.0 || ^0.3.0 || ^0.4.5",
-        "@jupyterlite/xeus": "^2.1.2",
+        "@jupyterlite/xeus": "^3.0.0-a0",
         "@lumino/coreutils": "^2"
     },
     "devDependencies": {
