@@ -2,6 +2,32 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.0.0a0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v2.1.2...e5309712444f04c21cc6e45cd6fd1aec61689f6e))
+
+### Enhancements made
+
+- Split package in two: extension and library [#132](https://github.com/jupyterlite/xeus/pull/132) ([@martinRenou](https://github.com/martinRenou))
+- Register all kernels in one plugin [#107](https://github.com/jupyterlite/xeus/pull/107) ([@trungleduc](https://github.com/trungleduc))
+
+### Maintenance and upkeep improvements
+
+- Remove unused attributes [#131](https://github.com/jupyterlite/xeus/pull/131) ([@martinRenou](https://github.com/martinRenou))
+- Docs: more verbose build [#129](https://github.com/jupyterlite/xeus/pull/129) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Docs: more verbose build [#129](https://github.com/jupyterlite/xeus/pull/129) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-10-24&to=2024-12-13&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-10-24..2024-12-13&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Atrungleduc+updated%3A2024-10-24..2024-12-13&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.1.2
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v2.1.1...ea918a0cb1c5a59fc64e72f399effb0bdf66acd1))
@@ -15,8 +41,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-10-23&to=2024-10-24&type=c))
 
 [@trungleduc](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Atrungleduc+updated%3A2024-10-23..2024-10-24&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.1.1
 
