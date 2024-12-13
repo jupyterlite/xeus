@@ -6,6 +6,8 @@
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/v2.1.2...e5309712444f04c21cc6e45cd6fd1aec61689f6e))
 
+This release introduces a new package `@jupyterlite/xeus-extension` providing the JupyterLite plugins for loading xeus kernels. The old `@jupyterlite/xeus` package now only contains the TypeScript library providing worker kernels implementations, it does not contain the plugins anymore.
+
 ### Enhancements made
 
 - Split package in two: extension and library [#132](https://github.com/jupyterlite/xeus/pull/132) ([@martinRenou](https://github.com/martinRenou))
