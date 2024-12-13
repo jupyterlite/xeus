@@ -4,7 +4,7 @@
 
 import { URLExt } from '@jupyterlab/coreutils';
 
-import { IXeusWorkerKernel } from './tokens';
+import { IXeusWorkerKernel } from './interfaces';
 
 globalThis.Module = {};
 

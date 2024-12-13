@@ -11,7 +11,7 @@ import {
 import { IBroadcastChannelWrapper } from '@jupyterlite/contents';
 import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
 
-import { WebWorkerKernel } from './web_worker_kernel';
+import { WebWorkerKernel } from '@jupyterlite/xeus';
 import { IEmpackEnvMetaFile } from './tokens';
 
 /**
