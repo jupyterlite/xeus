@@ -5,7 +5,7 @@
 import { URLExt } from '@jupyterlab/coreutils';
 
 import { IXeusWorkerKernel } from './interfaces';
-
+import { bootstrapFromEmpackPackedEnvironment, IPackagesInfo} from "@emscripten-forge/mambajs"
 globalThis.Module = {};
 
 // when a toplevel cell uses an await, the cell is implicitly
@@ -80,6 +80,7 @@ export class XeusRemoteKernel {
   }
 
   async processMessage(event: any): Promise<void> {
+    console.log('???processMessage??');
     const msg_type = event.msg.header.msg_type;
 
     await globalThis.ready;
@@ -95,8 +96,10 @@ export class XeusRemoteKernel {
     }
 
     if (msg_type === 'input_reply') {
+      console.log('msg_type',msg_type)
       resolveInputReply(event.msg);
     } else {
+      console.log('notify_listener');
       rawXServer.notify_listener(event.msg);
     }
   }
@@ -118,28 +121,45 @@ export class XeusRemoteKernel {
     });
     try {
       await waitRunDependency();
-
+      if (globalThis.Module.FS !== undefined) {
       // each kernel can have a `async_init` function
       // which can do kernel specific **async** initialization
       // This function is usually implemented in the pre/post.js
       // in the emscripten build of that kernel
-      if (globalThis.Module['async_init'] !== undefined) {
-        const kernel_root_url = empackEnvMetaLink
+
+      const kernel_root_url = empackEnvMetaLink
           ? empackEnvMetaLink
           : URLExt.join(baseUrl, `xeus/kernels/${kernelSpec.dir}`);
-        const pkg_root_url = URLExt.join(baseUrl, 'xeus/kernel_packages');
-        const verbose = true;
-        await globalThis.Module['async_init'](
-          kernel_root_url,
-          pkg_root_url,
-          verbose
-        );
-      }
+          const verbose = true;
+
+      //if the kernel is not xeus-python than we have to avoid using pyjs
+     
+        const packagesJsonUrl = `${kernel_root_url}/empack_env_meta.json`;
+        const pkgRootUrl = URLExt.join(baseUrl, 'xeus/kernel_packages');
+
+        let packageData: IPackagesInfo = {};
+        try{ 
+          packageData = await bootstrapFromEmpackPackedEnvironment(packagesJsonUrl, verbose, false, globalThis.Module, pkgRootUrl);
+        } catch(error: any) {
+          
+          throw new Error(error.message);
+        }
+        if (kernelSpec.name === 'xpython') {
+          if (Object.keys(packageData).length) { 
+            let {pythonVersion, prefix} = packageData;
+            if (pythonVersion) {
+              globalThis.Module.init_phase_2(prefix, pythonVersion, verbose);
+            }
+        }
+        }
+    }
 
       await waitRunDependency();
 
       rawXKernel = new globalThis.Module.xkernel();
+      console.log('rawXKernel',rawXKernel);
       rawXServer = rawXKernel.get_server();
+      console.log('rawXServer',rawXServer);
       if (!rawXServer) {
         console.error('Failed to start kernel!');
       }
@@ -163,6 +183,7 @@ export class XeusRemoteKernel {
    * @param callback the callback to register
    */
   registerCallback(callback: (msg: any) => void): void {
+    console.log('registerCallback');
     this._sendWorkerMessage = callback;
   }
 
