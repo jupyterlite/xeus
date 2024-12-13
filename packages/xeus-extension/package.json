@@ -39,10 +39,10 @@
     },
     "dependencies": {
         "@jupyterlab/coreutils": "^6",
-        "@jupyterlite/contents": "^0.2.0 || ^0.3.0 || ^0.4.0",
-        "@jupyterlite/kernel": "^0.2.0 || ^0.3.0 || ^0.4.0",
-        "@jupyterlite/server": "^0.2.0 || ^0.3.0 || ^0.4.0",
-        "@jupyterlite/xeus": "^3.0.0-a0",
+        "@jupyterlite/contents": "^0.2.0 || ^0.3.0 || ^0.4.5",
+        "@jupyterlite/kernel": "^0.2.0 || ^0.3.0 || ^0.4.5",
+        "@jupyterlite/server": "^0.2.0 || ^0.3.0 || ^0.4.5",
+        "@jupyterlite/xeus": "^2.1.2",
         "@lumino/coreutils": "^2"
     },
     "devDependencies": {
