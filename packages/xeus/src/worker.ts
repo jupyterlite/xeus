@@ -125,10 +125,6 @@ export class XeusRemoteKernel {
         globalThis.Module.FS !== undefined &&
         globalThis.Module.loadDynamicLibrary !== undefined
       ) {
-        // each kernel can have a `async_init` function
-        // which can do kernel specific **async** initialization
-        // This function is usually implemented in the pre/post.js
-        // in the emscripten build of that kernel
 
         const kernel_root_url = empackEnvMetaLink
           ? empackEnvMetaLink
