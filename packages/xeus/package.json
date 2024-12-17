@@ -1,6 +1,6 @@
 {
     "name": "@jupyterlite/xeus",
-    "version": "3.0.0-a0",
+    "version": "3.0.0-a1",
     "description": "JupyterLite Xeus kernels",
     "keywords": [
         "jupyter",
@@ -38,10 +38,10 @@
     "dependencies": {
         "@emscripten-forge/mambajs": "^0.1.0",
         "@jupyterlab/coreutils": "^6",
-        "@jupyterlab/services": "^7",
-        "@jupyterlite/contents": "^0.2.0 || ^0.3.0 || ^0.4.0",
-        "@jupyterlite/kernel": "^0.2.0 || ^0.3.0 || ^0.4.0",
-        "@jupyterlite/server": "^0.2.0 || ^0.3.0 || ^0.4.0",
+        "@jupyterlab/services": "~7.2.5",
+        "@jupyterlite/contents": "^0.2.0 || ^0.3.0 || ^0.4.5",
+        "@jupyterlite/kernel": "^0.2.0 || ^0.3.0 || ^0.4.5",
+        "@jupyterlite/server": "^0.2.0 || ^0.3.0 || ^0.4.5",
         "@lumino/coreutils": "^2",
         "@lumino/signaling": "^2",
         "coincident": "^1.2.3",

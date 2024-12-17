@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.0.0a1
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.0.0-a0...de6e331c7143a3a0e71a15038e4bab75d74b6561))
+
+### Enhancements made
+
+- Update JupyterLite packages [#134](https://github.com/jupyterlite/xeus/pull/134) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-12-13&to=2024-12-17&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-12-13..2024-12-17&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.0.0a0
 
 The main change is on the packaging.
@@ -35,8 +51,6 @@ The new version of the JS package `@jupyterlite/xeus` now only contains the kern
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-10-24&to=2024-12-13&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-10-24..2024-12-13&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Atrungleduc+updated%3A2024-10-24..2024-12-13&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.1.2
 
