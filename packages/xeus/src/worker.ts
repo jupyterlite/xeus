@@ -138,17 +138,14 @@ export class XeusRemoteKernel {
         const pkgRootUrl = URLExt.join(baseUrl, 'xeus/kernel_packages');
 
         let packageData: IPackagesInfo = {};
-        try {
-          packageData = await bootstrapFromEmpackPackedEnvironment(
-            packagesJsonUrl,
-            verbose,
-            false,
-            globalThis.Module,
-            pkgRootUrl
-          );
-        } catch (error: any) {
-          throw new Error(error.message);
-        }
+        packageData = await bootstrapFromEmpackPackedEnvironment(
+          packagesJsonUrl,
+          verbose,
+          false,
+          globalThis.Module,
+          pkgRootUrl
+        );
+
         if (kernelSpec.name === 'xpython') {
           if (Object.keys(packageData).length) {
             const { pythonVersion, prefix } = packageData;
