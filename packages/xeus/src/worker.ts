@@ -125,7 +125,6 @@ export class XeusRemoteKernel {
         globalThis.Module.FS !== undefined &&
         globalThis.Module.loadDynamicLibrary !== undefined
       ) {
-
         const kernel_root_url = empackEnvMetaLink
           ? empackEnvMetaLink
           : URLExt.join(baseUrl, `xeus/kernels/${kernelSpec.dir}`);
