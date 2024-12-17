@@ -5,7 +5,10 @@
 import { URLExt } from '@jupyterlab/coreutils';
 
 import { IXeusWorkerKernel } from './interfaces';
-
+import {
+  bootstrapFromEmpackPackedEnvironment,
+  IPackagesInfo
+} from '@emscripten-forge/mambajs';
 globalThis.Module = {};
 
 // when a toplevel cell uses an await, the cell is implicitly
@@ -118,22 +121,34 @@ export class XeusRemoteKernel {
     });
     try {
       await waitRunDependency();
-
-      // each kernel can have a `async_init` function
-      // which can do kernel specific **async** initialization
-      // This function is usually implemented in the pre/post.js
-      // in the emscripten build of that kernel
-      if (globalThis.Module['async_init'] !== undefined) {
+      if (
+        globalThis.Module.FS !== undefined &&
+        globalThis.Module.loadDynamicLibrary !== undefined
+      ) {
         const kernel_root_url = empackEnvMetaLink
           ? empackEnvMetaLink
           : URLExt.join(baseUrl, `xeus/kernels/${kernelSpec.dir}`);
-        const pkg_root_url = URLExt.join(baseUrl, 'xeus/kernel_packages');
         const verbose = true;
-        await globalThis.Module['async_init'](
-          kernel_root_url,
-          pkg_root_url,
-          verbose
+        const packagesJsonUrl = `${kernel_root_url}/empack_env_meta.json`;
+        const pkgRootUrl = URLExt.join(baseUrl, 'xeus/kernel_packages');
+
+        let packageData: IPackagesInfo = {};
+        packageData = await bootstrapFromEmpackPackedEnvironment(
+          packagesJsonUrl,
+          verbose,
+          false,
+          globalThis.Module,
+          pkgRootUrl
         );
+
+        if (kernelSpec.name === 'xpython') {
+          if (Object.keys(packageData).length) {
+            const { pythonVersion, prefix } = packageData;
+            if (pythonVersion) {
+              globalThis.Module.init_phase_2(prefix, pythonVersion, verbose);
+            }
+          }
+        }
       }
 
       await waitRunDependency();
@@ -147,10 +162,8 @@ export class XeusRemoteKernel {
     } catch (e) {
       if (typeof e === 'number') {
         const msg = globalThis.Module.get_exception_message(e);
-        console.error(msg);
         throw new Error(msg);
       } else {
-        console.error(e);
         throw e;
       }
     }
