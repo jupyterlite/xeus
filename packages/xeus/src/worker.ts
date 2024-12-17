@@ -5,7 +5,10 @@
 import { URLExt } from '@jupyterlab/coreutils';
 
 import { IXeusWorkerKernel } from './interfaces';
-import { bootstrapFromEmpackPackedEnvironment, IPackagesInfo} from "@emscripten-forge/mambajs"
+import {
+  bootstrapFromEmpackPackedEnvironment,
+  IPackagesInfo
+} from '@emscripten-forge/mambajs';
 globalThis.Module = {};
 
 // when a toplevel cell uses an await, the cell is implicitly
@@ -118,38 +121,43 @@ export class XeusRemoteKernel {
     });
     try {
       await waitRunDependency();
-      if (globalThis.Module.FS !== undefined) {
-      // each kernel can have a `async_init` function
-      // which can do kernel specific **async** initialization
-      // This function is usually implemented in the pre/post.js
-      // in the emscripten build of that kernel
+      if (
+        globalThis.Module.FS !== undefined &&
+        globalThis.Module.loadDynamicLibrary !== undefined
+      ) {
+        // each kernel can have a `async_init` function
+        // which can do kernel specific **async** initialization
+        // This function is usually implemented in the pre/post.js
+        // in the emscripten build of that kernel
 
-      const kernel_root_url = empackEnvMetaLink
+        const kernel_root_url = empackEnvMetaLink
           ? empackEnvMetaLink
           : URLExt.join(baseUrl, `xeus/kernels/${kernelSpec.dir}`);
-          const verbose = true;
-
-      //if the kernel is not xeus-python than we have to avoid using pyjs
-     
+        const verbose = true;
         const packagesJsonUrl = `${kernel_root_url}/empack_env_meta.json`;
         const pkgRootUrl = URLExt.join(baseUrl, 'xeus/kernel_packages');
 
         let packageData: IPackagesInfo = {};
-        try{ 
-          packageData = await bootstrapFromEmpackPackedEnvironment(packagesJsonUrl, verbose, false, globalThis.Module, pkgRootUrl);
-        } catch(error: any) {
-          
+        try {
+          packageData = await bootstrapFromEmpackPackedEnvironment(
+            packagesJsonUrl,
+            verbose,
+            false,
+            globalThis.Module,
+            pkgRootUrl
+          );
+        } catch (error: any) {
           throw new Error(error.message);
         }
         if (kernelSpec.name === 'xpython') {
-          if (Object.keys(packageData).length) { 
-            let {pythonVersion, prefix} = packageData;
+          if (Object.keys(packageData).length) {
+            const { pythonVersion, prefix } = packageData;
             if (pythonVersion) {
               globalThis.Module.init_phase_2(prefix, pythonVersion, verbose);
             }
+          }
         }
-        }
-    }
+      }
 
       await waitRunDependency();
 

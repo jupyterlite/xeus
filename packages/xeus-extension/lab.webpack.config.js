@@ -22,14 +22,14 @@ const staticPath = [
 ];
 
 module.exports = {
-    plugins: [
-        new CopyPlugin({
-            patterns: [
-            {
-                from: path.resolve(...wasmPath),
-                to: path.join(...staticPath)
-            }
-            ]
-        })
-        ]
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(...wasmPath),
+          to: path.join(...staticPath)
+        }
+      ]
+    })
+  ]
 };
