@@ -2,14 +2,39 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.0.0a1
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.0.0-a0...de6e331c7143a3a0e71a15038e4bab75d74b6561))
+
+### Enhancements made
+
+- Update JupyterLite packages [#134](https://github.com/jupyterlite/xeus/pull/134) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-12-13&to=2024-12-17&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-12-13..2024-12-17&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.0.0a0
 
-([Full Changelog](https://github.com/jupyterlite/xeus/compare/v2.1.2...e5309712444f04c21cc6e45cd6fd1aec61689f6e))
+The main change is on the packaging.
+
+We have a new JS package `@jupyterlite/xeus-extension` which provides the JupyterLite plugin.
+The new version of the JS package `@jupyterlite/xeus` now only contains the kernels implementation, no plugin.
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/v2.1.2...8b774d7d18f166501d9770321c31dc79d3c40bd7))
 
 ### Enhancements made
 
 - Split package in two: extension and library [#132](https://github.com/jupyterlite/xeus/pull/132) ([@martinRenou](https://github.com/martinRenou))
 - Register all kernels in one plugin [#107](https://github.com/jupyterlite/xeus/pull/107) ([@trungleduc](https://github.com/trungleduc))
+
+### Bugs fixed
+
+- Fixing lerna setup [#136](https://github.com/jupyterlite/xeus/pull/136) ([@martinRenou](https://github.com/martinRenou))
 
 ### Maintenance and upkeep improvements
 
@@ -18,6 +43,7 @@
 
 ### Documentation improvements
 
+- Update CHANGELOG and mention the split [#133](https://github.com/jupyterlite/xeus/pull/133) ([@martinRenou](https://github.com/martinRenou))
 - Docs: more verbose build [#129](https://github.com/jupyterlite/xeus/pull/129) ([@martinRenou](https://github.com/martinRenou))
 
 ### Contributors to this release
@@ -25,8 +51,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-10-24&to=2024-12-13&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-10-24..2024-12-13&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Atrungleduc+updated%3A2024-10-24..2024-12-13&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 2.1.2
 
