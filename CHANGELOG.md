@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.0.0a2
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.0.0-a1...a3cc7e43c721ff9f344b366cdf44d803be8da192))
+
+### Enhancements made
+
+- Bootstrap environments using mambajs, allowing libraries handling for other kernels than xeus-python [#130](https://github.com/jupyterlite/xeus/pull/130) ([@AnastasiaSliusar](https://github.com/AnastasiaSliusar))
+
+### Maintenance and upkeep improvements
+
+- Allow for JupyterLite 0.5.0 [#137](https://github.com/jupyterlite/xeus/pull/137) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-12-17&to=2024-12-18&type=c))
+
+[@AnastasiaSliusar](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AAnastasiaSliusar+updated%3A2024-12-17..2024-12-18&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2024-12-17..2024-12-18&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-12-17..2024-12-18&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.0.0a1
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.0.0-a0...de6e331c7143a3a0e71a15038e4bab75d74b6561))
@@ -15,8 +35,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-12-13&to=2024-12-17&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-12-13..2024-12-17&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.0.0a0
 

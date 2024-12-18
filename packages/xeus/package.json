@@ -1,6 +1,6 @@
 {
     "name": "@jupyterlite/xeus",
-    "version": "3.0.0-a1",
+    "version": "3.0.0-a2",
     "description": "JupyterLite Xeus kernels",
     "keywords": [
         "jupyter",
