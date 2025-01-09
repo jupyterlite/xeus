@@ -285,8 +285,8 @@ class XeusAddon(FederatedExtensionAddon):
             empack_config_is_url = urlparse(empack_config).scheme in ("http", "https")
             if empack_config_is_url:
                 empack_config_content = requests.get(empack_config).content
-                pack_kwargs["file_filters"] = PkgFileFilter.parse_obj(
-                    yaml.safe_load(empack_config_content)
+                pack_kwargs["file_filters"] = PkgFileFilter(
+                    **yaml.safe_load(empack_config_content)
                 )
             else:
                 pack_kwargs["file_filters"] = pkg_file_filter_from_yaml(empack_config)
