@@ -99,6 +99,12 @@ micromamba create -n xeus-python-dev \
     xeus xeus-lite
 ```
 
+Now activate the environment
+
+```bash
+micromamba activate xeus-python-dev 
+```
+
 #### Build the kernel
 
 This depends on your kernel, but it will look something like this:
@@ -107,13 +113,10 @@ This depends on your kernel, but it will look something like this:
 # path to your emscripten emsdk
 source $EMSDK_DIR/emsdk_env.sh
 
-WASM_ENV_NAME=xeus-python-dev
-WASM_ENV_PREFIX=$MAMBA_ROOT_PREFIX/envs/$WASM_ENV_NAME
-
 # let cmake know where the env is
-export PREFIX=$WASM_ENV_PREFIX
-export CMAKE_PREFIX_PATH=$PREFIX
-export CMAKE_SYSTEM_PREFIX_PATH=$PREFIX
+export WASM_ENV_PREFIX=$CONDA_PREFIX
+export CMAKE_PREFIX_PATH=$CONDA_PREFIX
+export CMAKE_SYSTEM_PREFIX_PATH=$CONDA_PREFIX
 
 cd /path/to/your/kernel/src
 mkdir build_wasm
@@ -121,7 +124,7 @@ cd build_wasm
 emcmake cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ON \
-    -DCMAKE_INSTALL_PREFIX=$PREFIX \
+    -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
     ..
 emmake make -j8 install
 ```
