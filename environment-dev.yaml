@@ -18,4 +18,4 @@ dependencies:
   - ruff
   - traitlets
   - typer
-  - yarn
+  - yarn=3
