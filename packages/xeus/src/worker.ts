@@ -5,10 +5,7 @@
 import { URLExt } from '@jupyterlab/coreutils';
 
 import { IXeusWorkerKernel } from './interfaces';
-import {
-  bootstrapFromEmpackPackedEnvironment,
-  IPackagesInfo
-} from '@emscripten-forge/mambajs';
+import { bootstrapFromEmpackPackedEnvironment } from '@emscripten-forge/mambajs';
 globalThis.Module = {};
 
 // when a toplevel cell uses an await, the cell is implicitly
@@ -131,24 +128,16 @@ export class XeusRemoteKernel {
         const verbose = true;
         const packagesJsonUrl = `${kernel_root_url}/empack_env_meta.json`;
         const pkgRootUrl = URLExt.join(baseUrl, 'xeus/kernel_packages');
+        const bootstrapPython = kernelSpec.name === 'xpython';
 
-        let packageData: IPackagesInfo = {};
-        packageData = await bootstrapFromEmpackPackedEnvironment(
+        await bootstrapFromEmpackPackedEnvironment(
           packagesJsonUrl,
           verbose,
           false,
           globalThis.Module,
-          pkgRootUrl
+          pkgRootUrl,
+          bootstrapPython
         );
-
-        if (kernelSpec.name === 'xpython') {
-          if (Object.keys(packageData).length) {
-            const { pythonVersion, prefix } = packageData;
-            if (pythonVersion) {
-              globalThis.Module.init_phase_2(prefix, pythonVersion, verbose);
-            }
-          }
-        }
       }
 
       await waitRunDependency();
