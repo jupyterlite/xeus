@@ -5,9 +5,7 @@
 import { URLExt } from '@jupyterlab/coreutils';
 
 import { IXeusWorkerKernel } from './interfaces';
-import {
-  bootstrapFromEmpackPackedEnvironment
-} from '@emscripten-forge/mambajs';
+import { bootstrapFromEmpackPackedEnvironment } from '@emscripten-forge/mambajs';
 globalThis.Module = {};
 
 // when a toplevel cell uses an await, the cell is implicitly
