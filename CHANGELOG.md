@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.0.0a3
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.0.0-a2...d2cd7fe684fb35a43bdeaa8f8b477738c14a8ee3))
+
+### Bugs fixed
+
+- Fix empack custom config support [#139](https://github.com/jupyterlite/xeus/pull/139) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Update mambajs [#144](https://github.com/jupyterlite/xeus/pull/144) ([@martinRenou](https://github.com/martinRenou))
+- Update bot triggering logic [#140](https://github.com/jupyterlite/xeus/pull/140) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-12-18&to=2025-01-13&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-12-18..2025-01-13&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.0.0a2
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.0.0-a1...a3cc7e43c721ff9f344b366cdf44d803be8da192))
@@ -19,8 +40,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2024-12-17&to=2024-12-18&type=c))
 
 [@AnastasiaSliusar](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AAnastasiaSliusar+updated%3A2024-12-17..2024-12-18&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2024-12-17..2024-12-18&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2024-12-17..2024-12-18&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.0.0a1
 
