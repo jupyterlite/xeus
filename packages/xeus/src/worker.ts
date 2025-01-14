@@ -110,7 +110,7 @@ export class XeusRemoteKernel {
     console.log('THIS IS MY CODE FOR SURE SURE');
     const kernel_root_url = URLExt.join(baseUrl, 'xeus', 'kernels', kernelSpec.dir);
 
-    const sharedLibs = kernelSpec.metadata && kernelSpec.shared ? kernelSpec.shared : {};
+    const sharedLibs = kernelSpec.metadata && kernelSpec.metadata.shared ? kernelSpec.metadata.shared : {};
 
     importScripts(binary_js);
     globalThis.Module = await createXeusModule({
