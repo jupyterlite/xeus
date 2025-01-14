@@ -236,7 +236,7 @@ class XeusAddon(FederatedExtensionAddon):
                 ],
             )
 
-        if kernel_spec["metadata"] and kernel_spec["metadata"]["shared"]:
+        if kernel_spec.get("metadata", {}).get("shared", None) is not None:
             for filename, location in kernel_spec["metadata"]["shared"].items():
                 # Copy shared lib file in the output
                 yield dict(
