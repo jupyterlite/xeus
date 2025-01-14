@@ -107,7 +107,6 @@ export class XeusRemoteKernel {
     const binary_js = URLExt.join(baseUrl, kernelSpec.argv[0]);
     const binary_wasm = binary_js.replace('.js', '.wasm');
     const binary_data = binary_js.replace('.js', '.data');
-    console.log('THIS IS MY CODE FOR SURE SURE');
     const kernel_root_url = URLExt.join(baseUrl, 'xeus', 'kernels', kernelSpec.dir);
 
     const sharedLibs = kernelSpec.metadata && kernelSpec.metadata.shared ? kernelSpec.metadata.shared : {};
