@@ -106,12 +106,16 @@ export class XeusRemoteKernel {
     // location of the kernel binary on the server
     const binary_js = URLExt.join(baseUrl, kernelSpec.argv[0]);
     const binary_wasm = binary_js.replace('.js', '.wasm');
+    const binary_data = binary_js.replace('.js', '.data');
 
     importScripts(binary_js);
     globalThis.Module = await createXeusModule({
       locateFile: (file: string) => {
         if (file.endsWith('.wasm')) {
           return binary_wasm;
+        } else if (file.endsWith('.data')) {
+          // Handle the .data file if it exists
+          return binary_data;
         }
         return file;
       }

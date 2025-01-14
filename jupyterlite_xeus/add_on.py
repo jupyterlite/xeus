@@ -41,7 +41,7 @@ EMPACK_ENV_META = "empack_env_meta.json"
 
 
 def get_kernel_binaries(path):
-    """return path to the kernel binary (js and wasm) if they exist, else None"""
+    """Return paths to the kernel binaries (js, wasm, and optionally data) if they exist, else None."""
     json_file = path / "kernel.json"
     if json_file.exists():
         kernel_spec = json.loads(json_file.read_text(**UTF8))
@@ -50,9 +50,16 @@ def get_kernel_binaries(path):
 
         kernel_binary_js = Path(kernel_binary + ".js")
         kernel_binary_wasm = Path(kernel_binary + ".wasm")
+        kernel_binary_data = Path(kernel_binary + ".data")
 
         if kernel_binary_js.exists() and kernel_binary_wasm.exists():
-            return kernel_binary_js, kernel_binary_wasm
+            # Return all three, with None for .data if it doesn't exist
+            # as this might not be neccessary for all kernels.
+            return (
+                kernel_binary_js,
+                kernel_binary_wasm,
+                kernel_binary_data if kernel_binary_data.exists() else None,
+            )
         else:
             warnings.warn(f"kernel binaries not found for {path.name}")
 
@@ -60,7 +67,6 @@ def get_kernel_binaries(path):
         warnings.warn(f"kernel.json not found for {path.name}")
 
     return None
-
 
 class MountPoints(List):
     def from_string(self, s):
@@ -181,10 +187,10 @@ class XeusAddon(FederatedExtensionAddon):
         for kernel_dir in kernel_spec_path.iterdir():
             kernel_binaries = get_kernel_binaries(kernel_dir)
             if kernel_binaries:
-                kernel_js, kernel_wasm = kernel_binaries
+                kernel_js, kernel_wasm, kernel_data = kernel_binaries
                 all_kernels.append(kernel_dir.name)
                 # take care of each kernel
-                yield from self.copy_kernel(kernel_dir, kernel_wasm, kernel_js)
+                yield from self.copy_kernel(kernel_dir, kernel_wasm, kernel_js, kernel_data)
 
         # write the kernels.json file
         kernel_file = Path(self.cwd.name) / "kernels.json"
@@ -196,7 +202,7 @@ class XeusAddon(FederatedExtensionAddon):
             ],
         )
 
-    def copy_kernel(self, kernel_dir, kernel_wasm, kernel_js):
+    def copy_kernel(self, kernel_dir, kernel_wasm, kernel_js, kernel_data):
         kernel_spec = json.loads((kernel_dir / "kernel.json").read_text(**UTF8))
 
         # update kernel_executable path in kernel.json
@@ -248,6 +254,18 @@ class XeusAddon(FederatedExtensionAddon):
                 ),
             ],
         )
+
+        # copy the kernel.data file to the bin dir if present
+        if kernel_data:
+            yield dict(
+                name=f"copy:{kernel_dir.name}:data",
+                actions=[
+                    (
+                        self.copy_one,
+                        [kernel_data, self.xeus_output_dir / "bin" / kernel_data.name],
+                    ),
+                ],
+            )
 
         # copy the kernel.json file
         yield dict(
