@@ -107,16 +107,32 @@ export class XeusRemoteKernel {
     const binary_js = URLExt.join(baseUrl, kernelSpec.argv[0]);
     const binary_wasm = binary_js.replace('.js', '.wasm');
     const binary_data = binary_js.replace('.js', '.data');
+    const kernel_root_url = URLExt.join(
+      baseUrl,
+      'xeus',
+      'kernels',
+      kernelSpec.dir
+    );
+
+    const sharedLibs =
+      kernelSpec.metadata && kernelSpec.metadata.shared
+        ? kernelSpec.metadata.shared
+        : {};
 
     importScripts(binary_js);
     globalThis.Module = await createXeusModule({
       locateFile: (file: string) => {
+        if (file in sharedLibs) {
+          return URLExt.join(kernel_root_url, file);
+        }
+
         if (file.endsWith('.wasm')) {
           return binary_wasm;
         } else if (file.endsWith('.data')) {
           // Handle the .data file if it exists
           return binary_data;
         }
+
         return file;
       }
     });
@@ -126,11 +142,9 @@ export class XeusRemoteKernel {
         globalThis.Module.FS !== undefined &&
         globalThis.Module.loadDynamicLibrary !== undefined
       ) {
-        const kernel_root_url = empackEnvMetaLink
-          ? empackEnvMetaLink
-          : URLExt.join(baseUrl, `xeus/kernels/${kernelSpec.dir}`);
+        const empackEnvMetaLocation = empackEnvMetaLink || kernel_root_url;
         const verbose = true;
-        const packagesJsonUrl = `${kernel_root_url}/empack_env_meta.json`;
+        const packagesJsonUrl = `${empackEnvMetaLocation}/empack_env_meta.json`;
         const pkgRootUrl = URLExt.join(baseUrl, 'xeus/kernel_packages');
         const bootstrapPython = kernelSpec.name === 'xpython';
 
