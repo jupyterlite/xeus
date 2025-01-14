@@ -236,6 +236,22 @@ class XeusAddon(FederatedExtensionAddon):
                 ],
             )
 
+        if kernel_spec["metadata"] and kernel_spec["metadata"]["shared"]:
+            for filename, location in kernel_spec["metadata"]["shared"].items():
+                # Copy shared lib file in the output
+                yield dict(
+                    name=f"copy:{kernel_dir.name}:{filename}",
+                    actions=[
+                        (
+                            self.copy_one,
+                            [
+                                Path(self.prefix) / location,
+                                self.xeus_output_dir / "kernels" / kernel_dir.name / filename,
+                            ],
+                        ),
+                    ],
+                )
+
         # write to temp file
         kernel_json = Path(self.cwd.name) / f"{kernel_dir.name}_kernel.json"
         kernel_json.write_text(json.dumps(kernel_spec), **UTF8)
