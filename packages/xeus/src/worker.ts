@@ -107,9 +107,17 @@ export class XeusRemoteKernel {
     const binary_js = URLExt.join(baseUrl, kernelSpec.argv[0]);
     const binary_wasm = binary_js.replace('.js', '.wasm');
     const binary_data = binary_js.replace('.js', '.data');
-    const kernel_root_url = URLExt.join(baseUrl, 'xeus', 'kernels', kernelSpec.dir);
+    const kernel_root_url = URLExt.join(
+      baseUrl,
+      'xeus',
+      'kernels',
+      kernelSpec.dir
+    );
 
-    const sharedLibs = kernelSpec.metadata && kernelSpec.metadata.shared ? kernelSpec.metadata.shared : {};
+    const sharedLibs =
+      kernelSpec.metadata && kernelSpec.metadata.shared
+        ? kernelSpec.metadata.shared
+        : {};
 
     importScripts(binary_js);
     globalThis.Module = await createXeusModule({
