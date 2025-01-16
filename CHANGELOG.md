@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.0.2
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.0.1...5002e6e6bf33c74300124605a4b2441cff24e19a))
+
+### Bugs fixed
+
+- Update mambajs 0.2.2 [#150](https://github.com/jupyterlite/xeus/pull/150) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-15&to=2025-01-16&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-15..2025-01-16&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.0.1
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.0.0...529dfb55e604677d556a7daf7ae076c7fbf188a5))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-14&to=2025-01-15&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-14..2025-01-15&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.0.0
 
