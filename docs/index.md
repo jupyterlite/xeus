@@ -8,6 +8,7 @@ Currently supported kernels are:
 
 - [xeus-python](https://github.com/jupyter-xeus/xeus-python)
 - [xeus-lua](https://github.com/jupyter-xeus/xeus-lua)
+- [xeus-r](https://github.com/jupyter-xeus/xeus-r)
 - [xeus-nelson](https://github.com/jupyter-xeus/xeus-nelson)
 - [xeus-javascript](https://github.com/jupyter-xeus/xeus-javascript)
 
