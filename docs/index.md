@@ -48,6 +48,15 @@ Try it here!
    :height: 600px
 
    print("Hello from R!")
+
+   A <- matrix(c(4, 1, 1, 3), nrow = 2, byrow = TRUE)
+
+   # Eigen decomposition
+   eigen_result <- eigen(A)
+
+   print(eigen_result$values)
+
+   print(eigen_result$vectors)
 ```
 
 ## Installation
