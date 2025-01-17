@@ -195,8 +195,6 @@ export class XeusRemoteKernel {
         });
       }
 
-      await waitRunDependency();
-
       rawXKernel = new globalThis.Module.xkernel();
       rawXServer = rawXKernel.get_server();
       if (!rawXServer) {
