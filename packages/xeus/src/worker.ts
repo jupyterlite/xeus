@@ -6,12 +6,12 @@ import { URLExt } from '@jupyterlab/coreutils';
 
 import { IXeusWorkerKernel } from './interfaces';
 import {
+  IEmpackEnvMeta,
   bootstrapEmpackPackedEnvironment,
   bootstrapPython,
   getPythonVersion,
   loadShareLibs
 } from '@emscripten-forge/mambajs';
-import { IEmpackEnvMeta } from '@emscripten-forge/mambajs/lib/helper';
 globalThis.Module = {};
 
 // when a toplevel cell uses an await, the cell is implicitly
