@@ -5,7 +5,13 @@
 import { URLExt } from '@jupyterlab/coreutils';
 
 import { IXeusWorkerKernel } from './interfaces';
-import { bootstrapFromEmpackPackedEnvironment } from '@emscripten-forge/mambajs';
+import {
+  IEmpackEnvMeta,
+  bootstrapEmpackPackedEnvironment,
+  bootstrapPython,
+  getPythonVersion,
+  loadShareLibs
+} from '@emscripten-forge/mambajs';
 globalThis.Module = {};
 
 // when a toplevel cell uses an await, the cell is implicitly
@@ -31,6 +37,15 @@ async function get_stdin() {
     resolveInputReply = resolve;
   });
   return replyPromise;
+}
+
+async function fetchJson(url: string): Promise<any> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const json = await response.json();
+  return json;
 }
 
 (self as any).get_stdin = get_stdin;
@@ -143,19 +158,41 @@ export class XeusRemoteKernel {
         globalThis.Module.loadDynamicLibrary !== undefined
       ) {
         const empackEnvMetaLocation = empackEnvMetaLink || kernel_root_url;
-        const verbose = true;
         const packagesJsonUrl = `${empackEnvMetaLocation}/empack_env_meta.json`;
         const pkgRootUrl = URLExt.join(baseUrl, 'xeus/kernel_packages');
-        const bootstrapPython = kernelSpec.name === 'xpython';
 
-        await bootstrapFromEmpackPackedEnvironment(
-          packagesJsonUrl,
-          verbose,
-          false,
-          globalThis.Module,
+        const empackEnvMeta = (await fetchJson(
+          packagesJsonUrl
+        )) as IEmpackEnvMeta;
+
+        const sharedLibs = await bootstrapEmpackPackedEnvironment({
+          empackEnvMeta,
           pkgRootUrl,
-          bootstrapPython
-        );
+          Module: globalThis.Module,
+          verbose: true
+        });
+
+        // Bootstrap Python, if it's xeus-python
+        if (kernelSpec.name === 'xpython') {
+          const pythonVersion = getPythonVersion(empackEnvMeta.packages);
+
+          if (!pythonVersion) {
+            throw new Error('Failed to load Python!');
+          }
+
+          await bootstrapPython({
+            prefix: empackEnvMeta.prefix,
+            pythonVersion: pythonVersion,
+            Module: globalThis.Module
+          });
+        }
+
+        // Load shared libs
+        await loadShareLibs({
+          sharedLibs,
+          prefix: empackEnvMeta.prefix,
+          Module: globalThis.Module
+        });
       }
 
       await waitRunDependency();
