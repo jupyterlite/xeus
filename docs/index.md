@@ -42,6 +42,14 @@ Try it here!
    print("Hello from xeus-lua!")
 ```
 
+```{eval-rst}
+.. replite::
+   :kernel: xr
+   :height: 600px
+
+   print("Hello from R!")
+```
+
 ## Installation
 
 You can install `jupyterlite-xeus` with conda/mamba
