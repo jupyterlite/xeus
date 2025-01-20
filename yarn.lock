@@ -58,23 +58,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@emscripten-forge/mambajs@npm:0.3.0"
+"@emscripten-forge/mambajs@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@emscripten-forge/mambajs@npm:0.3.1"
   dependencies:
-    "@emscripten-forge/untarjs": ^5.0.0
-  checksum: 1fecd2181706323b3ee9244444d1a1015452657746e3c8ca8a3431ec93193868533f111a877a654073cd54a6c7d8a5d72113fb338dbf58464bb4096edd7e6d89
+    "@emscripten-forge/untarjs": ^5.1.0
+  checksum: bb051759a544051e599b95f997d1d644e34b0d86c24b2747fe057123c4f48688b673640d1fade53c2f29b825034e7acccdffdd51070b710cefcf06929843d625
   languageName: node
   linkType: hard
 
-"@emscripten-forge/untarjs@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "@emscripten-forge/untarjs@npm:5.0.0"
+"@emscripten-forge/untarjs@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@emscripten-forge/untarjs@npm:5.1.0"
   dependencies:
     assert: ^2.1.0
     process: ^0.11.10
     url: ^0.11.4
-  checksum: 9d11e24023097614fe1707cf4e4c10705e2d5cec00be840fd22b68b9d132d76e33760f5bedd0c1735f940801138aaed8a3167457e3e9dd2e7113911b255938fa
+  checksum: da92ff14f0dd521aa5bbceaa1b19aafa9656f8f607125bc9c5cfb40bf822315659e9e33900e02dc2fea2852343a58e0e93daab0bd71c7b18ab2be637e040c0dc
   languageName: node
   linkType: hard
 
@@ -526,7 +526,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.3.0
+    "@emscripten-forge/mambajs": ^0.3.1
     "@jupyterlab/builder": ^4.1.0
     "@jupyterlab/coreutils": ^6
     "@jupyterlab/services": ^7.3.4
@@ -8312,11 +8312,11 @@ __metadata:
 
 "typescript@patch:typescript@>=3 < 6#~builtin<compat/typescript>, typescript@patch:typescript@~5.0.2#~builtin<compat/typescript>":
   version: 5.0.4
-  resolution: "typescript@patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=85af82"
+  resolution: "typescript@patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=b5f058"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: bb309d320c59a26565fb3793dba550576ab861018ff3fd1b7fccabbe46ae4a35546bc45f342c0a0b6f265c801ccdf64ffd68f548f117ceb7f0eac4b805cd52a9
+  checksum: d26b6ba97b6d163c55dbdffd9bbb4c211667ebebc743accfeb2c8c0154aace7afd097b51165a72a5bad2cf65a4612259344ff60f8e642362aa1695c760d303ac
   languageName: node
   linkType: hard
 
