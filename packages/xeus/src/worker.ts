@@ -10,7 +10,8 @@ import {
   bootstrapEmpackPackedEnvironment,
   bootstrapPython,
   getPythonVersion,
-  loadShareLibs
+  loadShareLibs,
+  waitRunDependencies
 } from '@emscripten-forge/mambajs';
 globalThis.Module = {};
 
@@ -49,22 +50,6 @@ async function fetchJson(url: string): Promise<any> {
 }
 
 (self as any).get_stdin = get_stdin;
-
-async function waitRunDependency() {
-  const promise = new Promise<void>(resolve => {
-    globalThis.Module.monitorRunDependencies = (n: number) => {
-      if (n === 0) {
-        resolve();
-      }
-    };
-  });
-  // If there are no pending dependencies left, monitorRunDependencies will
-  // never be called. Since we can't check the number of dependencies,
-  // manually trigger a call.
-  globalThis.Module.addRunDependency('dummy');
-  globalThis.Module.removeRunDependency('dummy');
-  return promise;
-}
 
 globalThis.ready = new Promise(resolve => {
   kernelReady = resolve;
@@ -152,7 +137,7 @@ export class XeusRemoteKernel {
       }
     });
     try {
-      await waitRunDependency();
+      await waitRunDependencies(globalThis.Module);
       if (
         globalThis.Module.FS !== undefined &&
         globalThis.Module.loadDynamicLibrary !== undefined
