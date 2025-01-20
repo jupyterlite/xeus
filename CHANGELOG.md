@@ -2,6 +2,35 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.0.3
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.0.2...c49850af08fc3259efac63b0f9613be483302b5b))
+
+### Enhancements made
+
+- Update mambajs and untarjs [#159](https://github.com/jupyterlite/xeus/pull/159) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Update ui-tests screenshots [#157](https://github.com/jupyterlite/xeus/pull/157) ([@martinRenou](https://github.com/martinRenou))
+- Use new mambajs splitted API [#154](https://github.com/jupyterlite/xeus/pull/154) ([@martinRenou](https://github.com/martinRenou))
+- Update actions [#153](https://github.com/jupyterlite/xeus/pull/153) ([@IsabelParedes](https://github.com/IsabelParedes))
+- Add 0.5.0 version specifier [#151](https://github.com/jupyterlite/xeus/pull/151) ([@jtpio](https://github.com/jtpio))
+
+### Documentation improvements
+
+- Remove xeus-r from docs for now [#156](https://github.com/jupyterlite/xeus/pull/156) ([@martinRenou](https://github.com/martinRenou))
+- Adding back xeus-r in docs [#155](https://github.com/jupyterlite/xeus/pull/155) ([@martinRenou](https://github.com/martinRenou))
+- Add xeus-r [#152](https://github.com/jupyterlite/xeus/pull/152) ([@IsabelParedes](https://github.com/IsabelParedes))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-16&to=2025-01-20&type=c))
+
+[@IsabelParedes](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AIsabelParedes+updated%3A2025-01-16..2025-01-20&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2025-01-16..2025-01-20&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-16..2025-01-20&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.0.2
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.0.1...5002e6e6bf33c74300124605a4b2441cff24e19a))
@@ -15,8 +44,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-15&to=2025-01-16&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-15..2025-01-16&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.0.1
 
