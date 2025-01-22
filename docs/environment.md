@@ -58,7 +58,7 @@ Then those packages are usable directly:
 
 ### Python 3.13 support
 
-If you specify the emscripten-forge mirror published on [prefix.dev](prefix.dev), you will be able to use Python 3.13 in your deployment.
+If you specify the emscripten-forge mirror published on [prefix.dev](https://prefix.dev), you will be able to use Python 3.13 in your deployment.
 
 ⚠ This is still a work-in-progress feature and some packages may be missing ⚠
 
