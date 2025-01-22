@@ -49,8 +49,6 @@ def create_conda_env_from_env_file(root_prefix, env_file_content, env_file_locat
 
     # get the specs
     specs, pip_dependencies = _extract_specs(env_file_location, env_file_content)
-    # Force emscripten version
-    specs.append("emscripten-abi=3.1.45")
 
     create_conda_env_from_specs(
         env_name=env_name,

@@ -56,6 +56,22 @@ Then those packages are usable directly:
    plt.show();
 ```
 
+### Python 3.13 support
+
+If you specify the emscripten-forge mirror published on [prefix.dev](https://prefix.dev), you will be able to use Python 3.13 in your deployment.
+
+⚠ This is still a work-in-progress feature and some packages may be missing ⚠
+
+```yaml
+name: xeus-python-kernel
+channels:
+  - https://repo.prefix.dev/emscripten-forge-dev
+  - conda-forge
+dependencies:
+  - xeus-python
+  - numpy
+```
+
 ### pip packages
 
 ⚠ This feature is experimental. You won't have the same user-experience as when using conda/mamba in a "normal" setup ⚠
