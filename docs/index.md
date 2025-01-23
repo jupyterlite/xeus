@@ -75,7 +75,7 @@ Try it here!
 
 ```{eval-rst}
 .. replite::
-   :kernel: xcpp
+   :kernel: xcpp20
    :height: 600px
 
    #include <stdio.h>
@@ -95,7 +95,7 @@ Try it here!
       }
    }
 
-   funky_sin_wave(100);
+   funky_sin_wave(80);
 ```
 
 :::
