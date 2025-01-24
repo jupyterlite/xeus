@@ -146,23 +146,12 @@ class XeusAddon(FederatedExtensionAddon):
         else:
             self.prefixes = self.prefix
 
-        lab_extensions = []
         for prefix in self.prefixes:
             # copy the kernels from the prefix
             yield from self.copy_kernels_from_prefix(prefix)
 
             # copy the jupyterlab extensions
-            lab_extensions.extend(
-                yield from self.copy_jupyterlab_extensions_from_prefix(prefix)
-            )
-
-        jupyterlite_json = self.manager.output_dir / JUPYTERLITE_JSON
-        yield dict(
-            name="patch:xeus",
-            doc=f"ensure {JUPYTERLITE_JSON} includes the federated_extensions",
-            file_dep=[*lab_extensions, jupyterlite_json],
-            actions=[(self.patch_jupyterlite_json, [jupyterlite_json])],
-        )
+            yield from self.copy_jupyterlab_extensions_from_prefix(prefix)
 
     def create_prefix(self, env_file: Path):
         # read the environment file
@@ -441,7 +430,15 @@ class XeusAddon(FederatedExtensionAddon):
             yield from self.safe_copy_jupyterlab_extension(pkg_json)
 
         lab_extensions_root = self.manager.output_dir / LAB_EXTENSIONS
-        return self.env_extensions(lab_extensions_root)
+        lab_extensions = self.env_extensions(lab_extensions_root)
+        jupyterlite_json = self.manager.output_dir / JUPYTERLITE_JSON
+
+        yield dict(
+            name=f"patch:xeus:{prefix}",
+            doc=f"ensure {JUPYTERLITE_JSON} includes the federated_extensions",
+            file_dep=[*lab_extensions, jupyterlite_json],
+            actions=[(self.patch_jupyterlite_json, [jupyterlite_json])],
+        )
 
     def safe_copy_jupyterlab_extension(self, pkg_json):
         """Copy a labextension, and overwrite it
