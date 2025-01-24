@@ -146,16 +146,28 @@ class XeusAddon(FederatedExtensionAddon):
         else:
             self.prefixes = self.prefix
 
+        all_kernels = []
         for prefix in self.prefixes:
             # copy the kernels from the prefix
-            yield from self.copy_kernels_from_prefix(prefix)
+            kernels = yield from self.copy_kernels_from_prefix(prefix)
+            all_kernels.extend(kernels)
 
             # copy the jupyterlab extensions
             yield from self.copy_jupyterlab_extensions_from_prefix(prefix)
 
+        # write the kernels.json file
+        kernel_file = Path(self.cwd.name) / "kernels.json"
+        kernel_file.write_text(json.dumps(all_kernels), **UTF8)
+        yield dict(
+            name=f"copy:{kernel_file}",
+            actions=[
+                (self.copy_one, [kernel_file, self.xeus_output_dir / "kernels.json"])
+            ],
+        )
+
     def create_prefix(self, env_file: Path):
         # read the environment file
-        root_prefix = Path(self.cwd.name) / "env"
+        root_prefix = Path(self.cwd.name) / "_env"
 
         with open(env_file, "r") as file:
             yaml_content = yaml.safe_load(file)
@@ -185,15 +197,7 @@ class XeusAddon(FederatedExtensionAddon):
                 # take care of each kernel
                 yield from self.copy_kernel(prefix, kernel_dir, kernel_wasm, kernel_js, kernel_data)
 
-        # write the kernels.json file
-        kernel_file = Path(self.cwd.name) / "kernels.json"
-        kernel_file.write_text(json.dumps(all_kernels), **UTF8)
-        yield dict(
-            name=f"copy:{kernel_file}",
-            actions=[
-                (self.copy_one, [kernel_file, self.xeus_output_dir / "kernels.json"])
-            ],
-        )
+        return all_kernels
 
     def copy_kernel(self, prefix, kernel_dir, kernel_wasm, kernel_js, kernel_data):
         kernel_spec = json.loads((kernel_dir / "kernel.json").read_text(**UTF8))
