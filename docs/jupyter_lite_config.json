@@ -1,0 +1,9 @@
+{
+    "XeusAddon": {
+        "environment_file": [
+            "environment-python.yml",
+            "environment-other.yml",
+            "environment-r.yml"
+        ]
+    }
+}

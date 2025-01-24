@@ -1,0 +1,8 @@
+name: xeus-kernel-docs
+channels:
+  - https://repo.mamba.pm/emscripten-forge
+  - conda-forge
+dependencies:
+  - xeus-lua
+  - xeus-javascript
+  - xeus-nelson
