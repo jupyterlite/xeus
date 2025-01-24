@@ -303,8 +303,8 @@ class XeusAddon(FederatedExtensionAddon):
 
     def pack_prefix(self, prefix, kernel_dir):
         kernel_name = kernel_dir.name
-        packages_dir = self.xeus_output_dir / "kernel_packages"
         full_kernel_dir = self.xeus_output_dir / "kernels" / kernel_name
+        packages_dir = full_kernel_dir / "kernel_packages"
 
         out_path = Path(self.cwd.name) / "packed_env"
         out_path.mkdir(parents=True, exist_ok=True)

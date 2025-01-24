@@ -144,7 +144,7 @@ export class XeusRemoteKernel {
       ) {
         const empackEnvMetaLocation = empackEnvMetaLink || kernel_root_url;
         const packagesJsonUrl = `${empackEnvMetaLocation}/empack_env_meta.json`;
-        const pkgRootUrl = URLExt.join(baseUrl, 'xeus/kernel_packages');
+        const pkgRootUrl = URLExt.join(baseUrl, `xeus/kernels/${kernelSpec.name}/kernel_packages`);
 
         const empackEnvMeta = (await fetchJson(
           packagesJsonUrl
