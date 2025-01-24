@@ -139,14 +139,14 @@ class XeusAddon(FederatedExtensionAddon):
 
         # create the prefixes if it does not exist
         if not self.prefix:
-            prefixes = [
+            self.prefixes = [
                 self.create_prefix(Path(self.manager.lite_dir) / environment_file)
                 for environment_file in self.environment_file
             ]
         else:
-            prefixes = self.prefix
+            self.prefixes = self.prefix
 
-        for prefix in prefixes:
+        for prefix in self.prefixes:
             # copy the kernels from the prefix
             yield from self.copy_kernels_from_prefix(prefix)
 
