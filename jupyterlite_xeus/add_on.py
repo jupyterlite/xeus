@@ -73,6 +73,11 @@ class MountPoints(List):
         return s.split(",")
 
 
+class ListLike(List):
+    def from_string(self, s):
+        return [s]
+
+
 class XeusAddon(FederatedExtensionAddon):
     __all__ = ["post_build"]
 
@@ -83,13 +88,13 @@ class XeusAddon(FederatedExtensionAddon):
         description="The path or URL to the empack config file",
     )
 
-    environment_file = List(
+    environment_file = ListLike(
         [],
         config=True,
         description='The path to the environment file. Defaults to looking for "environment.yml" or "environment.yaml"',
     )
 
-    prefix = List(
+    prefix = ListLike(
         [],
         config=True,
         description="The path to the wasm prefix",
