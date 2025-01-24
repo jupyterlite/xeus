@@ -16,6 +16,9 @@ We are also working on bringing [xeus-cpp](https://github.com/compiler-research/
 
 Try it here!
 
+::::{tab-set}
+:::{tab-item} Python
+
 ```{eval-rst}
 .. replite::
    :kernel: xpython
@@ -35,18 +38,26 @@ Try it here!
    m
 ```
 
+:::
+:::{tab-item} Lua
+
 ```{eval-rst}
 .. replite::
    :kernel: xlua
    :height: 600px
+   :prompt: Try Lua!
 
    print("Hello from xeus-lua!")
 ```
+
+:::
+:::{tab-item} R
 
 ```{eval-rst}
 .. replite::
    :kernel: xr
    :height: 600px
+   :prompt: Try R!
 
    print("Hello from R!")
 
@@ -59,6 +70,9 @@ Try it here!
 
    print(eigen_result$vectors)
 ```
+
+:::
+::::
 
 ## Installation
 

@@ -1,10 +1,12 @@
 extensions = [
     "jupyterlite_sphinx",
     "myst_parser",
+    "sphinx_design",
 ]
 
 myst_enable_extensions = [
     "linkify",
+    "colon_fence",
 ]
 
 master_doc = "index"
