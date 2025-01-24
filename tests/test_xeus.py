@@ -95,7 +95,7 @@ def test_mount_point():
     for step in addon.post_build(manager):
             pass
 
-    outpath = Path(addon.cwd.name) / "packed_env"
+    outpath = Path(addon.cwd_name) / "packed_env" / "xpython"
 
     with tarfile.open(outpath / "mount_0.tar.gz", "r") as fobj:
         names = fobj.getnames()
