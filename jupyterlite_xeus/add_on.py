@@ -289,9 +289,10 @@ class XeusAddon(FederatedExtensionAddon):
         )
 
         # pack prefix packages
-        yield from self.pack_prefix(prefix)
+        # TODO Prevent duplication of the env pack for each kernel in it
+        yield from self.pack_prefix(prefix, kernel_dir)
 
-    def pack_prefix(self, prefix):
+    def pack_prefix(self, prefix, kernel_dir):
         kernel_name = kernel_dir.name
         packages_dir = self.xeus_output_dir / "kernel_packages"
         full_kernel_dir = self.xeus_output_dir / "kernels" / kernel_name
