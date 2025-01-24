@@ -83,6 +83,8 @@ def _create_conda_env_from_specs_impl(env_name, root_prefix, specs, channels):
     """Create the emscripten environment with the given specs."""
     prefix_path = Path(root_prefix) / "envs" / env_name
 
+    Path(root_prefix).mkdir(parents=True, exist_ok=True)
+
     if MAMBA_PYTHON_AVAILABLE:
         mamba_create(
             env_name=env_name,

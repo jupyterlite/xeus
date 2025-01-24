@@ -3,6 +3,7 @@
 import json
 import os
 from pathlib import Path
+import shutil
 from tempfile import TemporaryDirectory
 from urllib.parse import urlparse
 import warnings
@@ -123,7 +124,7 @@ class XeusAddon(FederatedExtensionAddon):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.xeus_output_dir = Path(self.manager.output_dir) / "xeus"
-        self.cwd = TemporaryDirectory()
+        self.cwd_name = "xeus_cache"
 
     def post_build(self, manager):
         if not self.environment_file:
@@ -156,7 +157,7 @@ class XeusAddon(FederatedExtensionAddon):
             yield from self.copy_jupyterlab_extensions_from_prefix(prefix)
 
         # write the kernels.json file
-        kernel_file = Path(self.cwd.name) / "kernels.json"
+        kernel_file = Path(self.cwd_name) / "kernels.json"
         kernel_file.write_text(json.dumps(all_kernels), **UTF8)
         yield dict(
             name=f"copy:{kernel_file}",
@@ -167,7 +168,7 @@ class XeusAddon(FederatedExtensionAddon):
 
     def create_prefix(self, env_file: Path):
         # read the environment file
-        root_prefix = Path(self.cwd.name) / "_env"
+        root_prefix = Path(self.cwd_name) / "_env"
 
         with open(env_file, "r") as file:
             yaml_content = yaml.safe_load(file)
@@ -250,7 +251,7 @@ class XeusAddon(FederatedExtensionAddon):
                 )
 
         # write to temp file
-        kernel_json = Path(self.cwd.name) / f"{kernel_dir.name}_kernel.json"
+        kernel_json = Path(self.cwd_name) / f"{kernel_dir.name}_kernel.json"
         kernel_json.write_text(json.dumps(kernel_spec), **UTF8)
 
         # copy the kernel binary files to the bin dir
@@ -306,7 +307,7 @@ class XeusAddon(FederatedExtensionAddon):
         full_kernel_dir = self.xeus_output_dir / "kernels" / kernel_name
         packages_dir = full_kernel_dir / "kernel_packages"
 
-        out_path = Path(self.cwd.name) / "packed_env"
+        out_path = Path(self.cwd_name) / "packed_env" / kernel_name
         out_path.mkdir(parents=True, exist_ok=True)
 
         pack_kwargs = {}
