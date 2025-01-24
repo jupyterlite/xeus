@@ -83,15 +83,14 @@ class XeusAddon(FederatedExtensionAddon):
         description="The path or URL to the empack config file",
     )
 
-    environment_file = Unicode(
-        None,
-        allow_none=True,
+    environment_file = List(
+        [],
         config=True,
         description='The path to the environment file. Defaults to looking for "environment.yml" or "environment.yaml"',
     )
 
-    prefix = Unicode(
-        "",
+    prefix = List(
+        [],
         config=True,
         description="The path to the wasm prefix",
     )
@@ -122,59 +121,48 @@ class XeusAddon(FederatedExtensionAddon):
         self.cwd = TemporaryDirectory()
 
     def post_build(self, manager):
-        if self.environment_file is None:
+        if not self.environment_file:
             if (Path(self.manager.lite_dir) / "environment.yml").exists():
-                self.environment_file = "environment.yml"
+                self.environment_file = ["environment.yml"]
 
             if (Path(self.manager.lite_dir) / "environment.yaml").exists():
-                self.environment_file = "environment.yaml"
+                self.environment_file = ["environment.yaml"]
 
         # check that either prefix or environment_file is set
         if not self.prefix and not self.environment_file:
             raise ValueError("Either prefix or environment_file must be set")
 
-        # create the prefix if it does not exist
+        # create the prefixes if it does not exist
         if not self.prefix:
-            self.create_prefix()
-
-        # copy the kernels from the prefix
-        yield from self.copy_kernels_from_prefix()
-
-        # copy the jupyterlab extensions
-        yield from self.copy_jupyterlab_extensions_from_prefix(manager)
-
-    def create_prefix(self):
-        # read the environment file
-        env_name = "xeus-env"
-        root_prefix = Path(self.cwd.name) / "env"
-        env_file = Path(self.manager.lite_dir) / self.environment_file
-
-        # open the env yaml file if it's provided
-        if env_file.exists():
-            with open(env_file, "r") as file:
-                yaml_content = yaml.safe_load(file)
-
-            env_name = yaml_content.get("name", "xeus-env")
-
-            env_prefix = root_prefix / "envs" / env_name
-            self.prefix = str(env_prefix)
-
-            create_conda_env_from_env_file(root_prefix, yaml_content, env_file.parent)
+            prefixes = [
+                self.create_prefix(Path(self.manager.lite_dir) / environment_file)
+                for environment_file in self.environment_file
+            ]
         else:
-            create_conda_env_from_specs(
-                env_name=env_name,
-                root_prefix=root_prefix,
-                specs=["xeus-python"],
-                channels=["https://repo.mamba.pm/emscripten-forge", "conda-forge"],
-            )
+            prefixes = self.prefix
 
-    def copy_kernels_from_prefix(self):
-        if not os.path.exists(self.prefix) or not os.path.isdir(self.prefix):
-            raise ValueError(
-                f"Prefix {self.prefix} does not exist or is not a directory"
-            )
+        for prefix in prefixes:
+            # copy the kernels from the prefix
+            yield from self.copy_kernels_from_prefix(prefix)
 
-        kernel_spec_path = Path(self.prefix) / "share" / "jupyter" / "kernels"
+            # copy the jupyterlab extensions
+            yield from self.copy_jupyterlab_extensions_from_prefix(prefix)
+
+    def create_prefix(self, env_file: Path):
+        # read the environment file
+        root_prefix = Path(self.cwd.name) / "env"
+
+        with open(env_file, "r") as file:
+            yaml_content = yaml.safe_load(file)
+
+        env_prefix = root_prefix / "envs" / yaml_content["name"]
+
+        create_conda_env_from_env_file(root_prefix, yaml_content, env_file.parent)
+
+        return env_prefix
+
+    def copy_kernels_from_prefix(self, prefix):
+        kernel_spec_path = Path(prefix) / "share" / "jupyter" / "kernels"
 
         if not kernel_spec_path.exists():
             warnings.warn(
@@ -190,7 +178,7 @@ class XeusAddon(FederatedExtensionAddon):
                 kernel_js, kernel_wasm, kernel_data = kernel_binaries
                 all_kernels.append(kernel_dir.name)
                 # take care of each kernel
-                yield from self.copy_kernel(kernel_dir, kernel_wasm, kernel_js, kernel_data)
+                yield from self.copy_kernel(prefix, kernel_dir, kernel_wasm, kernel_js, kernel_data)
 
         # write the kernels.json file
         kernel_file = Path(self.cwd.name) / "kernels.json"
@@ -202,7 +190,7 @@ class XeusAddon(FederatedExtensionAddon):
             ],
         )
 
-    def copy_kernel(self, kernel_dir, kernel_wasm, kernel_js, kernel_data):
+    def copy_kernel(self, prefix, kernel_dir, kernel_wasm, kernel_js, kernel_data):
         kernel_spec = json.loads((kernel_dir / "kernel.json").read_text(**UTF8))
 
         # update kernel_executable path in kernel.json
@@ -245,7 +233,7 @@ class XeusAddon(FederatedExtensionAddon):
                         (
                             self.copy_one,
                             [
-                                Path(self.prefix) / location,
+                                Path(prefix) / location,
                                 self.xeus_output_dir / "kernels" / kernel_dir.name / filename,
                             ],
                         ),
@@ -300,9 +288,10 @@ class XeusAddon(FederatedExtensionAddon):
             ],
         )
 
-        yield from self.pack_prefix(kernel_dir=kernel_dir)
+        # pack prefix packages
+        yield from self.pack_prefix(prefix)
 
-    def pack_prefix(self, kernel_dir):
+    def pack_prefix(self, prefix):
         kernel_name = kernel_dir.name
         packages_dir = self.xeus_output_dir / "kernel_packages"
         full_kernel_dir = self.xeus_output_dir / "kernels" / kernel_name
@@ -331,7 +320,7 @@ class XeusAddon(FederatedExtensionAddon):
             pack_kwargs["package_url_factory"] = self.package_url_factory
 
         pack_env(
-            env_prefix=self.prefix,
+            env_prefix=prefix,
             relocate_prefix="/",
             outdir=out_path,
             use_cache=False,
@@ -429,14 +418,13 @@ class XeusAddon(FederatedExtensionAddon):
             ],
         )
 
-    def copy_jupyterlab_extensions_from_prefix(self, manager):
+    def copy_jupyterlab_extensions_from_prefix(self, prefix):
         # Find the federated extensions in the emscripten-env and install them
-        prefix = Path(self.prefix)
-        for pkg_json in self.env_extensions(prefix / SHARE_LABEXTENSIONS):
+        for pkg_json in self.env_extensions(Path(prefix) / SHARE_LABEXTENSIONS):
             yield from self.safe_copy_jupyterlab_extension(pkg_json)
 
-        jupyterlite_json = manager.output_dir / JUPYTERLITE_JSON
-        lab_extensions_root = manager.output_dir / LAB_EXTENSIONS
+        jupyterlite_json = self.manager.output_dir / JUPYTERLITE_JSON
+        lab_extensions_root = self.manager.output_dir / LAB_EXTENSIONS
         lab_extensions = self.env_extensions(lab_extensions_root)
 
         yield dict(
