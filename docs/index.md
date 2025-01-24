@@ -18,6 +18,7 @@ Try it here!
 
 ::::{tab-set}
 :::{tab-item} Python
+
 ```{eval-rst}
 .. replite::
    :kernel: xpython
@@ -36,8 +37,10 @@ Try it here!
 
    m
 ```
+
 :::
 :::{tab-item} Lua
+
 ```{eval-rst}
 .. replite::
    :kernel: xlua
@@ -46,8 +49,10 @@ Try it here!
 
    print("Hello from xeus-lua!")
 ```
+
 :::
 :::{tab-item} R
+
 ```{eval-rst}
 .. replite::
    :kernel: xr
@@ -65,6 +70,7 @@ Try it here!
 
    print(eigen_result$vectors)
 ```
+
 :::
 ::::
 
