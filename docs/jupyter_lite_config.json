@@ -3,7 +3,8 @@
     "environment_file": [
       "environment-python.yml",
       "environment-other.yml",
-      "environment-r.yml"
+      "environment-r.yml",
+      "environment-cpp.yml"
     ]
   }
 }
