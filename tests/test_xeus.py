@@ -24,27 +24,27 @@ def test_python_env_from_file_1():
         pass
 
     # Check env
-    assert os.path.isdir(addon.prefix)
+    assert os.path.isdir(addon.prefixes[0])
 
-    assert os.path.isfile(Path(addon.prefix) / "bin/xpython.js")
-    assert os.path.isfile(Path(addon.prefix) / "bin/xpython.wasm")
+    assert os.path.isfile(Path(addon.prefixes[0]) / "bin/xpython.js")
+    assert os.path.isfile(Path(addon.prefixes[0]) / "bin/xpython.wasm")
 
-    assert os.path.isfile(Path(addon.prefix) / "bin/xlua.js")
-    assert os.path.isfile(Path(addon.prefix) / "bin/xlua.wasm")
+    assert os.path.isfile(Path(addon.prefixes[0]) / "bin/xlua.js")
+    assert os.path.isfile(Path(addon.prefixes[0]) / "bin/xlua.wasm")
 
     # Checking pip packages
-    assert os.path.isdir(Path(addon.prefix) / "lib/python3.11")
-    assert os.path.isdir(Path(addon.prefix) / "lib/python3.11/site-packages")
-    assert os.path.isdir(Path(addon.prefix) / "lib/python3.11/site-packages/ipywidgets")
-    assert os.path.isdir(Path(addon.prefix) / "lib/python3.11/site-packages/ipycanvas")
-    assert os.path.isdir(Path(addon.prefix) / "lib/python3.11/site-packages/py2vega")
+    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.11")
+    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.11/site-packages")
+    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.11/site-packages/ipywidgets")
+    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.11/site-packages/ipycanvas")
+    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.11/site-packages/py2vega")
 
     # Checking labextensions
     assert os.path.isdir(
-        Path(addon.prefix)
+        Path(addon.prefixes[0])
         / "share/jupyter/labextensions/@jupyter-widgets/jupyterlab-manager"
     )
-    assert os.path.isdir(Path(addon.prefix) / "share/jupyter/labextensions/ipycanvas")
+    assert os.path.isdir(Path(addon.prefixes[0]) / "share/jupyter/labextensions/ipycanvas")
 
 
 def test_python_env_from_file_3():
@@ -60,10 +60,10 @@ def test_python_env_from_file_3():
 
     # Test
     assert os.path.isdir(
-        Path(addon.prefix) / "lib/python3.11/site-packages/test_package"
+        Path(addon.prefixes[0]) / "lib/python3.11/site-packages/test_package"
     )
     assert os.path.isfile(
-        Path(addon.prefix) / "lib/python3.11/site-packages/test_package/hey.py"
+        Path(addon.prefixes[0]) / "lib/python3.11/site-packages/test_package/hey.py"
     )
 
 
@@ -95,7 +95,7 @@ def test_mount_point():
     for step in addon.post_build(manager):
             pass
 
-    outpath = Path(addon.cwd.name) / "packed_env"
+    outpath = Path(addon.cwd_name) / "packed_env" / "xpython"
 
     with tarfile.open(outpath / "mount_0.tar.gz", "r") as fobj:
         names = fobj.getnames()

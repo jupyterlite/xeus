@@ -83,8 +83,6 @@ def _create_conda_env_from_specs_impl(env_name, root_prefix, specs, channels):
     """Create the emscripten environment with the given specs."""
     prefix_path = Path(root_prefix) / "envs" / env_name
 
-    # Cleanup tmp dir in case it's not empty
-    shutil.rmtree(Path(root_prefix) / "envs", ignore_errors=True)
     Path(root_prefix).mkdir(parents=True, exist_ok=True)
 
     if MAMBA_PYTHON_AVAILABLE:
