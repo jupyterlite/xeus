@@ -154,7 +154,7 @@ export class XeusRemoteKernel {
           empackEnvMeta,
           pkgRootUrl,
           Module: globalThis.Module,
-          verbose: true
+          verbose: false
         });
 
         // Bootstrap Python, if it's xeus-python
