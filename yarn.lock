@@ -68,13 +68,13 @@ __metadata:
   linkType: hard
 
 "@emscripten-forge/untarjs@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "@emscripten-forge/untarjs@npm:5.1.0"
+  version: 5.2.1
+  resolution: "@emscripten-forge/untarjs@npm:5.2.1"
   dependencies:
     assert: ^2.1.0
     process: ^0.11.10
     url: ^0.11.4
-  checksum: da92ff14f0dd521aa5bbceaa1b19aafa9656f8f607125bc9c5cfb40bf822315659e9e33900e02dc2fea2852343a58e0e93daab0bd71c7b18ab2be637e040c0dc
+  checksum: 982c28aa6bc40d39ce23aa01a70461eba974f117466e7f59fe05652b3144fe825e8e5bbfcecdee69269e33c179dd69e529603ae904a2155967ab17398435ccde
   languageName: node
   linkType: hard
 
