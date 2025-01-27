@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.1.1
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.1.0...762fd659abe3026603bfa0c1ed7c089e57e75419))
+
+### Enhancements made
+
+- Rebuild with untarjs 5.2.1 [#166](https://github.com/jupyterlite/xeus/pull/166) ([@martinRenou](https://github.com/martinRenou))
+- Non verbose env bootstrap in production [#165](https://github.com/jupyterlite/xeus/pull/165) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Improve docs landing page [#163](https://github.com/jupyterlite/xeus/pull/163) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-22&to=2025-01-27&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-22..2025-01-27&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.1.0
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.0.3...00bf9ef6c335e109ee8254edff22e2271c04f8cf))
@@ -15,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-20&to=2025-01-22&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-20..2025-01-22&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.0.3
 
