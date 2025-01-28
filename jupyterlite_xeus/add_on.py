@@ -124,7 +124,10 @@ class XeusAddon(FederatedExtensionAddon):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.xeus_output_dir = Path(self.manager.output_dir) / "xeus"
-        self.cwd_name = "xeus_cache"
+        self.cwd = TemporaryDirectory()
+        # TODO Make this configurable
+        # You can provide another cwd_name if you want
+        self.cwd_name = self.cwd.name
 
     def post_build(self, manager):
         if not self.environment_file:
