@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.1.2
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.1.1...4b298b1b2c69b025cd2f9f2fc778503807f1e713))
+
+### Maintenance and upkeep improvements
+
+- Backport https://github.com/jupyterlite/xeus/pull/171: rebuild with latest jupyterlite [#173](https://github.com/jupyterlite/xeus/pull/173) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-27&to=2025-01-29&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-27..2025-01-29&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.1.1
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.1.0...762fd659abe3026603bfa0c1ed7c089e57e75419))
@@ -20,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-22&to=2025-01-27&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-22..2025-01-27&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.1.0
 
