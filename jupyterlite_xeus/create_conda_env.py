@@ -120,8 +120,7 @@ def _create_conda_env_from_specs_impl(env_name, root_prefix, specs, channels):
             check=True,
             capture_output=True,
         )
-        for entry in [entry for entry in json.loads(res.stdout)["actions"]["LINK"] if entry["name"] == "python"]:
-            return entry["version"]
+        return _get_python_version(res.stdout)
 
     if MAMBA_COMMAND:
         # Mamba needs the directory to exist already
@@ -144,22 +143,30 @@ def _create_env_with_config(conda, prefix_path, specs, channels_args):
         check=True,
     )
     _create_config(prefix_path)
-    subprocess_run(
+    res = subprocess_run(
         [
             conda,
             "install",
             "--yes",
+            "--json",
             "--prefix",
             prefix_path,
             *channels_args,
             *specs,
         ],
         check=True,
+        capture_output=True,
         env=os.environ.copy(),
     )
+    return _get_python_version(res.stdout)
 
 
 def _create_config(prefix_path):
     with open(prefix_path / ".condarc", "w") as fobj:
         fobj.write(f"subdir: {PLATFORM}")
     os.environ["CONDARC"] = str(prefix_path / ".condarc")
+
+
+def _get_python_version(json_str):
+    for entry in [entry for entry in json.loads(json_str)["actions"]["LINK"] if entry["name"] == "python"]:
+        return entry["version"]
