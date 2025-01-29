@@ -1,3 +1,4 @@
+import json
 import shutil
 import sys
 from pathlib import Path
@@ -66,7 +67,7 @@ def create_conda_env_from_specs(
     channels,
     pip_dependencies=None,
 ):
-    _create_conda_env_from_specs_impl(
+    python_version = _create_conda_env_from_specs_impl(
         env_name=env_name,
         root_prefix=root_prefix,
         specs=specs,
@@ -76,6 +77,7 @@ def create_conda_env_from_specs(
         _install_pip_dependencies(
             prefix_path=Path(root_prefix) / "envs" / env_name,
             dependencies=pip_dependencies,
+            python_version=python_version,
         )
 
 
@@ -100,11 +102,12 @@ def _create_conda_env_from_specs_impl(env_name, root_prefix, specs, channels):
         channels_args.extend(["-c", channel])
 
     if MICROMAMBA_COMMAND:
-        subprocess_run(
+        res = subprocess_run(
             [
                 MICROMAMBA_COMMAND,
                 "create",
                 "--yes",
+                "--json",
                 "--no-pyc",
                 "--root-prefix",
                 root_prefix,
@@ -115,8 +118,10 @@ def _create_conda_env_from_specs_impl(env_name, root_prefix, specs, channels):
                 *specs,
             ],
             check=True,
+            capture_output=True,
         )
-        return
+        for entry in [entry for entry in json.loads(res.stdout)["actions"]["LINK"] if entry["name"] == "python"]:
+            return entry["version"]
 
     if MAMBA_COMMAND:
         # Mamba needs the directory to exist already
