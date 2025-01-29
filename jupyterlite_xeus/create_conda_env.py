@@ -171,6 +171,7 @@ def _create_config(prefix_path):
 
 def _get_python_version(json_str):
     for entry in [entry for entry in json.loads(json_str)["actions"]["LINK"] if entry["name"] == "python"]:
+        raise RuntimeError(str(entry))
         python_version = entry["version"]
         python_version = python_version[:python_version.rfind(".")]
         return python_version
