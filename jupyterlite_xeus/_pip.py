@@ -27,6 +27,24 @@ def _install_pip_dependencies(prefix_path, dependencies, python_version, log=Non
     # So we need to do this whole mess "manually"
     pkg_dir = TemporaryDirectory()
 
+    raise RuntimeError(str([
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        *dependencies,
+        # Install in a tmp directory while we process it
+        "--target",
+        pkg_dir.name,
+        # Specify the right Python version
+        "--python-version",
+        python_version,
+        # No dependency installed
+        "--no-deps",
+        "--no-input",
+        "--verbose",
+    ]))
+
     subprocess_run(
         [
             sys.executable,
