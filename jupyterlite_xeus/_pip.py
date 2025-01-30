@@ -10,8 +10,12 @@ import glob
 
 
 def _get_python_version(prefix_path):
-    path = f"{prefix_path}/conda-meta/python-3.*.json"
-    version = json.load(open(glob.glob(path)[0]))["version"].split(".")
+    path = glob.glob(f"{prefix_path}/conda-meta/python-3.*.json")
+
+    if not path:
+        raise RuntimeError("Python needs to be installed for installing pip dependencies")
+
+    version = json.load(open(path[0]))["version"].split(".")
     return f"{version[0].version[1]}"
 
 
@@ -35,6 +39,8 @@ def _install_pip_dependencies(prefix_path, dependencies, log=None):
     # So we need to do this whole mess "manually"
     pkg_dir = TemporaryDirectory()
 
+    python_version = _get_python_version(prefix_path)
+
     subprocess_run(
         [
             sys.executable,
@@ -47,7 +53,7 @@ def _install_pip_dependencies(prefix_path, dependencies, log=None):
             pkg_dir.name,
             # Specify the right Python version
             "--python-version",
-            _get_python_version(prefix_path),
+            python_version,
             # No dependency installed
             "--no-deps",
             "--no-input",
