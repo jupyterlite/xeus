@@ -2,6 +2,36 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.0.0a0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.1.1...feffc843489e684baecb11c12e06aa8eba21d827))
+
+### Enhancements made
+
+- Multi envs support [#164](https://github.com/jupyterlite/xeus/pull/164) ([@martinRenou](https://github.com/martinRenou))
+- Adding xeus-cpp in the docs [#162](https://github.com/jupyterlite/xeus/pull/162) ([@anutosh491](https://github.com/anutosh491))
+
+### Bugs fixed
+
+- Non-hardcoded python version [#177](https://github.com/jupyterlite/xeus/pull/177) ([@martinRenou](https://github.com/martinRenou))
+- Fix cwd when building the environment [#169](https://github.com/jupyterlite/xeus/pull/169) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Rebuild with latest jupyterlite [#171](https://github.com/jupyterlite/xeus/pull/171) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Adding xeus-cpp in the docs [#162](https://github.com/jupyterlite/xeus/pull/162) ([@anutosh491](https://github.com/anutosh491))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-27&to=2025-01-30&type=c))
+
+[@anutosh491](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aanutosh491+updated%3A2025-01-27..2025-01-30&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Adavidbrochart+updated%3A2025-01-27..2025-01-30&type=Issues) | [@lumberbot-app](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Alumberbot-app+updated%3A2025-01-27..2025-01-30&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-27..2025-01-30&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.1.1
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.1.0...762fd659abe3026603bfa0c1ed7c089e57e75419))
@@ -20,8 +50,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-22&to=2025-01-27&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-22..2025-01-27&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.1.0
 
