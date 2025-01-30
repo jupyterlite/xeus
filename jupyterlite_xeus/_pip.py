@@ -5,7 +5,14 @@ from subprocess import run as subprocess_run
 from tempfile import TemporaryDirectory
 from pathlib import Path
 import csv
-from .constants import PYTHON_VERSION
+import json
+import glob
+
+
+def _get_python_version(prefix_path):
+    path = f"{prefix_path}/conda-meta/python-3.*.json"
+    version = json.load(open(glob.glob(path)[0]))["version"].split(".")
+    return f"{version[0].version[1]}"
 
 
 def _install_pip_dependencies(prefix_path, dependencies, log=None):
@@ -40,7 +47,7 @@ def _install_pip_dependencies(prefix_path, dependencies, log=None):
             pkg_dir.name,
             # Specify the right Python version
             "--python-version",
-            PYTHON_VERSION,
+            _get_python_version(prefix_path),
             # No dependency installed
             "--no-deps",
             "--no-input",
