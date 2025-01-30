@@ -5,7 +5,18 @@ from subprocess import run as subprocess_run
 from tempfile import TemporaryDirectory
 from pathlib import Path
 import csv
-from .constants import PYTHON_VERSION
+import json
+import glob
+
+
+def _get_python_version(prefix_path):
+    path = glob.glob(f"{prefix_path}/conda-meta/python-3.*.json")
+
+    if not path:
+        raise RuntimeError("Python needs to be installed for installing pip dependencies")
+
+    version = json.load(open(path[0]))["version"].split(".")
+    return f"{version[0]}.{version[1]}"
 
 
 def _install_pip_dependencies(prefix_path, dependencies, log=None):
@@ -28,6 +39,8 @@ def _install_pip_dependencies(prefix_path, dependencies, log=None):
     # So we need to do this whole mess "manually"
     pkg_dir = TemporaryDirectory()
 
+    python_version = _get_python_version(prefix_path)
+
     subprocess_run(
         [
             sys.executable,
@@ -40,7 +53,7 @@ def _install_pip_dependencies(prefix_path, dependencies, log=None):
             pkg_dir.name,
             # Specify the right Python version
             "--python-version",
-            PYTHON_VERSION,
+            python_version,
             # No dependency installed
             "--no-deps",
             "--no-input",
@@ -85,7 +98,7 @@ def _install_pip_dependencies(prefix_path, dependencies, log=None):
             install_path = (
                 prefix_path
                 if not inside_site_packages
-                else prefix_path / "lib" / f"python{PYTHON_VERSION}" / "site-packages"
+                else prefix_path / "lib" / f"python{python_version}" / "site-packages"
             )
 
             src_path = Path(pkg_dir.name) / file_path
