@@ -16,7 +16,7 @@ def _get_python_version(prefix_path):
         raise RuntimeError("Python needs to be installed for installing pip dependencies")
 
     version = json.load(open(path[0]))["version"].split(".")
-    return f"{version[0].version[1]}"
+    return f"{version[0]}.{version[1]}"
 
 
 def _install_pip_dependencies(prefix_path, dependencies, log=None):
