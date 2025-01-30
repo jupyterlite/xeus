@@ -5,9 +5,10 @@ from subprocess import run as subprocess_run
 from tempfile import TemporaryDirectory
 from pathlib import Path
 import csv
+from .constants import PYTHON_VERSION
 
 
-def _install_pip_dependencies(prefix_path, dependencies, python_version, log=None):
+def _install_pip_dependencies(prefix_path, dependencies, log=None):
     # Why is this so damn complicated?
     # Isn't it easier to download the .whl ourselves? pip is hell
 
@@ -39,7 +40,7 @@ def _install_pip_dependencies(prefix_path, dependencies, python_version, log=Non
             pkg_dir.name,
             # Specify the right Python version
             "--python-version",
-            python_version,
+            PYTHON_VERSION,
             # No dependency installed
             "--no-deps",
             "--no-input",
@@ -84,7 +85,7 @@ def _install_pip_dependencies(prefix_path, dependencies, python_version, log=Non
             install_path = (
                 prefix_path
                 if not inside_site_packages
-                else prefix_path / "lib" / f"python{python_version}" / "site-packages"
+                else prefix_path / "lib" / f"python{PYTHON_VERSION}" / "site-packages"
             )
 
             src_path = Path(pkg_dir.name) / file_path
