@@ -127,6 +127,7 @@ class XeusAddon(FederatedExtensionAddon):
         self.cwd = TemporaryDirectory()
         # TODO Make this configurable
         # You can provide another cwd_name if you want
+
         self.cwd_name = self.cwd.name
 
     def post_build(self, manager):
