@@ -133,6 +133,7 @@ class XeusAddon(FederatedExtensionAddon):
         if not self.prefix and not self.environment_file:
             raise ValueError("Either prefix or environment_file must be set")
 
+
         # create the prefix if it does not exist
         if not self.prefix:
             self.create_prefix()
