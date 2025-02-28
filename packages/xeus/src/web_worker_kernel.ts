@@ -258,8 +258,6 @@ export class WebWorkerKernel implements IKernel {
     let driveName: string;
     let localPath: string;
 
-    console.log('location', options.location);
-
     if (options.location.includes(':')) {
       const parts = options.location.split(':');
       driveName = parts[0];
@@ -276,8 +274,6 @@ export class WebWorkerKernel implements IKernel {
       '/drive',
       PageConfig.getBaseUrl()
     );
-
-    console.log('cd into', localPath);
 
     if (await this._remoteKernel.isDir('/files')) {
       await this._remoteKernel.cd('/files');
