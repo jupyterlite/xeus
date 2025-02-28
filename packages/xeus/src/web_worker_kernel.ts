@@ -278,7 +278,7 @@ export class WebWorkerKernel implements IKernel {
     if (await this._remoteKernel.isDir('/files')) {
       await this._remoteKernel.cd('/files');
     } else {
-      await this._remoteKernel.cd(localPath);
+      await this._remoteKernel.cd(`/drive/${localPath}`);
     }
   }
 
