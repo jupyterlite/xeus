@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.1.5
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.1.4...4c0fb6c1af60d254f52a91a6414d8b73e14066a0))
+
+### Bugs fixed
+
+- Fix cwd for Notebooks (3.x) [#188](https://github.com/jupyterlite/xeus/pull/188) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-02-03&to=2025-02-28&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-02-03..2025-02-28&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.1.4
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.1.3...3ffa65e06ed04dd8138ebd7f5717bf436a4cf664))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-30&to=2025-02-03&type=c))
 
 [@lumberbot-app](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Alumberbot-app+updated%3A2025-01-30..2025-02-03&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-30..2025-02-03&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.1.3
 
