@@ -16,8 +16,8 @@ test.describe('General Tests', () => {
   }) => {
     await page.goto('lab/index.html');
 
-    const launcher = page.locator('.jp-Launcher');
-    expect(await launcher.screenshot()).toMatchSnapshot(
+    const notebookSection = page.locator('.jp-Launcher-section').first();
+    expect(await notebookSection.screenshot()).toMatchSnapshot(
       'jupyter-xeus-launcher.png'
     );
   });
