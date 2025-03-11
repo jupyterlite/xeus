@@ -1,5 +1,5 @@
 {
-    "name": "@jupyterlite/xeus-extension",
+    "name": "@jupyterlite/xeus-kernels-extension",
     "version": "4.0.0-a0",
     "description": "JupyterLite loader for Xeus kernels",
     "keywords": [
@@ -31,15 +31,17 @@
         "build:lib:prod": "tsc",
         "clean": "jlpm clean:lib",
         "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
-        "clean:labextension": "rimraf jupyterlite_xeus/labextension jupyterlite_xeus/_version.py",
+        "clean:labextension": "rimraf jupyterlite_xeus/liteextension jupyterlite_xeus/_version.py",
         "clean:all": "jlpm clean:lib && jlpm clean:labextension",
         "watch": "run-p watch:src watch:labextension",
         "watch:src": "tsc -w --sourceMap",
         "watch:labextension": "jupyter labextension watch ."
     },
     "dependencies": {
-        "@jupyterlab/application": "^4.3.4",
         "@jupyterlab/coreutils": "^6",
+        "@jupyterlite/contents": "^0.2.0 || ^0.3.0 || ^0.4.5 || ^0.5.1",
+        "@jupyterlite/kernel": "^0.2.0 || ^0.3.0 || ^0.4.5 || ^0.5.1",
+        "@jupyterlite/server": "^0.2.0 || ^0.3.0 || ^0.4.5 || ^0.5.1",
         "@jupyterlite/xeus": "^4.0.0-a0",
         "@lumino/coreutils": "^2"
     },
@@ -63,6 +65,24 @@
     },
     "jupyterlab": {
         "extension": true,
-        "outputDir": "../../jupyterlite_xeus/labextension"
+        "outputDir": "../../jupyterlite_xeus/liteextension",
+        "webpackConfig": "lab.webpack.config.js",
+        "sharedPackages": {
+            "@jupyterlite/kernel": {
+                "bundled": false,
+                "singleton": true
+            },
+            "@jupyterlite/server": {
+                "bundled": false,
+                "singleton": true
+            },
+            "@jupyterlite/contents": {
+                "bundled": false,
+                "singleton": true
+            }
+        }
+    },
+    "jupyterlite": {
+        "liteExtension": true
     }
 }
