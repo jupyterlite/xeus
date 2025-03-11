@@ -7,7 +7,7 @@ channels:
 dependencies:
   - micromamba
   - pip
-  - python=3.12
+  - python=3.13
   - nodejs=20
   - click
   - typer
