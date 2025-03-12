@@ -9,7 +9,7 @@ import {
 
 import { MainAreaWidget } from '@jupyterlab/apputils';
 
-import { listIcon } from '@jupyterlab/ui-components';
+import { listIcon, ToolbarButton } from '@jupyterlab/ui-components';
 
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 
@@ -55,7 +55,16 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
         logConsoleWidget.title.label = 'Kernel Logs';
         logConsoleWidget.title.icon = listIcon;
 
-        app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
+        nbPanel.toolbar.addItem(
+          'kernel logs',
+          new ToolbarButton({
+            icon: listIcon,
+            onClick: () => {
+              app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
+            },
+            tooltip: 'Show kernel logs'
+          })
+        );
 
         const channel = new BroadcastChannel(`/kernel-broadcast/${kernelId}`);
 
