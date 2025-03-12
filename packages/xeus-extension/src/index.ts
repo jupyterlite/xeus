@@ -7,7 +7,10 @@ import {
   JupyterFrontEnd
 } from '@jupyterlab/application';
 
+import { listIcon, ToolbarButton } from '@jupyterlab/ui-components';
+
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
+import { LogsDialog, LogsModel } from './logs';
 
 const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
   id: '@jupyterlite/xeus-extension:kernel-status',
@@ -28,13 +31,22 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
           return;
         }
 
-        console.log('kernel id', kernelId);
+        // TODO detect xeus kernel and don't show the button for other kernels?
+        console.log('kernel name', session.session?.kernel?.name);
 
-        const channel = new BroadcastChannel(`/kernel-broadcast/${kernelId}`);
+        const logsModel = new LogsModel(kernelId);
 
-        channel.onmessage = event => {
-          console.log('RECEIVED MESSAGE IN THE MAIN THREAD', event);
-        };
+        nbPanel.toolbar.addItem(
+          'kernel logs',
+          new ToolbarButton({
+            icon: listIcon,
+            onClick: () => {
+              const dialog = new LogsDialog(logsModel);
+              dialog.launch();
+            },
+            tooltip: 'Show kernel logs'
+          })
+        );
       });
     });
   }
