@@ -38,6 +38,8 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
           return;
         }
 
+        const sourceId = `${kernelName}-${kernelId}`;
+
         const logConsolePanel = new LogConsolePanel(
           new LoggerRegistry({
             defaultRendermime: rendermime,
@@ -45,7 +47,7 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
           })
         );
 
-        logConsolePanel.source = kernelName;
+        logConsolePanel.source = sourceId;
 
         nbPanel.toolbar.addItem(
           'kernel logs',
@@ -57,6 +59,20 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
               });
               logConsoleWidget.title.label = 'Kernel Logs';
               logConsoleWidget.title.icon = listIcon;
+
+              // Scroll to bottom when new content shows up
+              logConsolePanel.logger?.contentChanged.connect(() => {
+                const element = document.getElementById(`source:${sourceId}`);
+
+                if (!element) {
+                  return;
+                }
+
+                const lastChild = element.lastElementChild;
+                if (lastChild) {
+                  lastChild.scrollIntoView({ behavior: "smooth" })
+                };
+              });
 
               app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
             },
