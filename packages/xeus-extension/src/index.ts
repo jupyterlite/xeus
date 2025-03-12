@@ -7,44 +7,88 @@ import {
   JupyterFrontEnd
 } from '@jupyterlab/application';
 
-import { listIcon, ToolbarButton } from '@jupyterlab/ui-components';
+import { MainAreaWidget } from '@jupyterlab/apputils';
+
+import { listIcon } from '@jupyterlab/ui-components';
+
+import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
+
+import { LoggerRegistry, LogConsolePanel } from '@jupyterlab/logconsole';
 
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
-import { LogsDialog, LogsModel } from './logs';
 
 const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
   id: '@jupyterlite/xeus-extension:kernel-status',
   autoStart: true,
   optional: [],
-  requires: [INotebookTracker],
-  activate: async (app: JupyterFrontEnd, notebooks: INotebookTracker) => {
+  requires: [INotebookTracker, IRenderMimeRegistry],
+  activate: async (
+    app: JupyterFrontEnd,
+    notebooks: INotebookTracker,
+    rendermime: IRenderMimeRegistry
+  ) => {
     notebooks.widgetAdded.connect((sender, nbPanel: NotebookPanel) => {
       const session = nbPanel.sessionContext;
 
-      console.log(session);
       session.kernelChanged.connect(() => {
         const kernelId = session.session?.id;
+        const kernelName = session.session?.kernel?.name;
 
-        if (!kernelId) {
+        if (!kernelId || !kernelName) {
           return;
         }
 
-        // TODO detect xeus kernel and don't show the button for other kernels?
-        console.log('kernel name', session.session?.kernel?.name);
+        // TODO detect xeus kernel and don't show the logs for other kernels?
 
-        const logsModel = new LogsModel(kernelId);
-
-        nbPanel.toolbar.addItem(
-          'kernel logs',
-          new ToolbarButton({
-            icon: listIcon,
-            onClick: () => {
-              const dialog = new LogsDialog(logsModel);
-              dialog.launch();
-            },
-            tooltip: 'Show kernel logs'
+        const logConsolePanel = new LogConsolePanel(
+          new LoggerRegistry({
+            defaultRendermime: rendermime,
+            maxLength: 1000
           })
         );
+
+        logConsolePanel.source = kernelName;
+
+        const logConsoleWidget = new MainAreaWidget<LogConsolePanel>({
+          content: logConsolePanel
+        });
+        logConsoleWidget.title.label = 'Kernel Logs';
+        logConsoleWidget.title.icon = listIcon;
+
+        app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
+
+        const channel = new BroadcastChannel(`/kernel-broadcast/${kernelId}`);
+
+        if (logConsolePanel.logger) {
+          logConsolePanel.logger.level = 'info';
+        }
+
+        channel.onmessage = event => {
+          switch (event.data.type) {
+            case 'log':
+              console.log('logger defined?', logConsolePanel.logger);
+              logConsolePanel.logger?.log({
+                type: 'text',
+                level: 'info',
+                data: event.data.msg
+              });
+              break;
+            case 'warn':
+              logConsolePanel.logger?.log({
+                type: 'text',
+                level: 'warning',
+                data: event.data.msg
+              });
+              break;
+            case 'error':
+              logConsolePanel.logger?.log({
+                type: 'text',
+                level: 'error',
+                data: event.data.msg
+              });
+              break;
+          }
+        };
       });
     });
   }

@@ -244,7 +244,6 @@ export class XeusRemoteKernel {
     this._sendWorkerMessage = callback;
   }
 
-  // @ts-ignore
   private _logger: XeusWorkerLogger;
   protected _sendWorkerMessage: (msg: any) => void = () => {};
 }
