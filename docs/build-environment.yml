@@ -5,7 +5,7 @@ channels:
   - conda-forge/label/jupyterlite_core_alpha
 
 dependencies:
-  - micromamba=2.0.6
+  - micromamba=2.0.5
   - pip
   - nodejs=20
   - click
