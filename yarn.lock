@@ -23,6 +23,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@baszalmstra/rattler@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@baszalmstra/rattler@npm:0.2.0"
+  checksum: 9afc62422a50eea851b6eedf257731ee553b7d149e21faa6f7a8bd319c5f2eea7d8559746e8057e16a6dd0a3f957ccf7c244088c724dcfc93f2aa36d4d1ad737
+  languageName: node
+  linkType: hard
+
 "@codemirror/autocomplete@npm:^6.0.0, @codemirror/autocomplete@npm:^6.16.0, @codemirror/autocomplete@npm:^6.3.2, @codemirror/autocomplete@npm:^6.7.1":
   version: 6.18.6
   resolution: "@codemirror/autocomplete@npm:6.18.6"
@@ -313,12 +320,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.4.1":
-  version: 0.4.2
-  resolution: "@emscripten-forge/mambajs@npm:0.4.2"
+"@emscripten-forge/mambajs@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "@emscripten-forge/mambajs@npm:0.6.0"
   dependencies:
+    "@baszalmstra/rattler": ^0.2.0
     "@emscripten-forge/untarjs": ^5.3.0
-  checksum: 872c05470e6eb5db9e488453a4dbaf7ee453f24a7c9b43bcc5876cc3ff604e547c5fe2ef37443779570485e2bf40ef97a01eb0425499085c2aeff5ed0b0754f1
+    yaml: ^2.7.0
+  checksum: 19c3d79a9cb8c0a979e00fbc45fca1635f8e9d55fbdf699d5e37f71937736508d9742e79741755e7f01a657ee396c0077798b4386f77c8181e42c79f1e77275a
   languageName: node
   linkType: hard
 
@@ -1322,7 +1331,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.4.1
+    "@emscripten-forge/mambajs": ^0.6.0
     "@jupyterlab/builder": ^4.1.0
     "@jupyterlab/coreutils": ^6
     "@jupyterlab/services": ^7.3.4
@@ -10392,7 +10401,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.6.0":
+"yaml@npm:^2.6.0, yaml@npm:^2.7.0":
   version: 2.7.0
   resolution: "yaml@npm:2.7.0"
   bin:
