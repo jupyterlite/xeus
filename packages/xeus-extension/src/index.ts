@@ -38,8 +38,6 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
           return;
         }
 
-        // TODO detect xeus kernel and don't show the logs for other kernels?
-
         const logConsolePanel = new LogConsolePanel(
           new LoggerRegistry({
             defaultRendermime: rendermime,
@@ -49,17 +47,17 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
 
         logConsolePanel.source = kernelName;
 
-        const logConsoleWidget = new MainAreaWidget<LogConsolePanel>({
-          content: logConsolePanel
-        });
-        logConsoleWidget.title.label = 'Kernel Logs';
-        logConsoleWidget.title.icon = listIcon;
-
         nbPanel.toolbar.addItem(
           'kernel logs',
           new ToolbarButton({
             icon: listIcon,
             onClick: () => {
+              const logConsoleWidget = new MainAreaWidget<LogConsolePanel>({
+                content: logConsolePanel
+              });
+              logConsoleWidget.title.label = 'Kernel Logs';
+              logConsoleWidget.title.icon = listIcon;
+
               app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
             },
             tooltip: 'Show kernel logs'
