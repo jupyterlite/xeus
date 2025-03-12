@@ -70,8 +70,8 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
 
                 const lastChild = element.lastElementChild;
                 if (lastChild) {
-                  lastChild.scrollIntoView({ behavior: "smooth" })
-                };
+                  lastChild.scrollIntoView({ behavior: 'smooth' });
+                }
               });
 
               app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
