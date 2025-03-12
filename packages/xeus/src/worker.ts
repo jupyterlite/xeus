@@ -184,7 +184,6 @@ export class XeusRemoteKernel {
           logger: this._logger
         });
 
-        this._logger.warn('test warning');
 
         // Bootstrap Python, if it's xeus-python
         if (kernelSpec.name === 'xpython') {
@@ -210,7 +209,6 @@ export class XeusRemoteKernel {
           Module: globalThis.Module,
           logger: this._logger
         });
-        this._logger.error('test error');
       }
 
       rawXKernel = new globalThis.Module.xkernel();
