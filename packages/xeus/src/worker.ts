@@ -11,7 +11,8 @@ import {
   bootstrapPython,
   getPythonVersion,
   loadShareLibs,
-  waitRunDependencies
+  waitRunDependencies,
+  ILogger
 } from '@emscripten-forge/mambajs';
 globalThis.Module = {};
 
@@ -55,6 +56,26 @@ globalThis.ready = new Promise(resolve => {
   kernelReady = resolve;
 });
 
+export class XeusWorkerLogger implements ILogger {
+  constructor(kernelId: string) {
+    this._channel = new BroadcastChannel(`/kernel-broadcast/${kernelId}`);
+  }
+
+  log(...msg: any[]): void {
+    this._channel.postMessage({ type: 'log', msg: msg.join(' ') });
+  }
+
+  warn(...msg: any[]): void {
+    this._channel.postMessage({ type: 'warn', msg: msg.join(' ') });
+  }
+
+  error(...msg: any[]): void {
+    this._channel.postMessage({ type: 'error', msg: msg.join(' ') });
+  }
+
+  private _channel: BroadcastChannel;
+}
+
 export class XeusRemoteKernel {
   constructor(options: XeusRemoteKernel.IOptions = {}) {}
 
@@ -68,6 +89,10 @@ export class XeusRemoteKernel {
     }
 
     globalThis.Module.FS.chdir(path);
+  }
+
+  async initLogger(kernelId: string): Promise<void> {
+    this._logger = new XeusWorkerLogger(kernelId);
   }
 
   async isDir(path: string): Promise<boolean> {
@@ -102,7 +127,10 @@ export class XeusRemoteKernel {
   }
 
   async initialize(options: IXeusWorkerKernel.IOptions): Promise<void> {
-    const { baseUrl, kernelSpec, empackEnvMetaLink } = options;
+    const { baseUrl, kernelSpec, empackEnvMetaLink, kernelId } = options;
+
+    this._logger = new XeusWorkerLogger(kernelId);
+
     // location of the kernel binary on the server
     const binary_js = URLExt.join(baseUrl, kernelSpec.argv[0]);
     const binary_wasm = binary_js.replace('.js', '.wasm');
@@ -157,7 +185,7 @@ export class XeusRemoteKernel {
           empackEnvMeta,
           pkgRootUrl,
           Module: globalThis.Module,
-          verbose: false
+          logger: this._logger
         });
 
         // Bootstrap Python, if it's xeus-python
@@ -167,6 +195,8 @@ export class XeusRemoteKernel {
           if (!pythonVersion) {
             throw new Error('Failed to load Python!');
           }
+
+          this._logger.log('Starting Python');
 
           await bootstrapPython({
             prefix: empackEnvMeta.prefix,
@@ -179,24 +209,29 @@ export class XeusRemoteKernel {
         await loadShareLibs({
           sharedLibs,
           prefix: empackEnvMeta.prefix,
-          Module: globalThis.Module
+          Module: globalThis.Module,
+          logger: this._logger
         });
       }
 
       rawXKernel = new globalThis.Module.xkernel();
       rawXServer = rawXKernel.get_server();
       if (!rawXServer) {
-        console.error('Failed to start kernel!');
+        this._logger.error('Failed to start kernel!');
       }
       rawXKernel.start();
     } catch (e) {
       if (typeof e === 'number') {
         const msg = globalThis.Module.get_exception_message(e);
+        this._logger.error(msg);
         throw new Error(msg);
       } else {
+        this._logger.error(e);
         throw e;
       }
     }
+
+    this._logger.log('Kernel successfuly started!');
 
     kernelReady(1);
   }
@@ -209,6 +244,8 @@ export class XeusRemoteKernel {
     this._sendWorkerMessage = callback;
   }
 
+  // @ts-ignore
+  private _logger: XeusWorkerLogger;
   protected _sendWorkerMessage: (msg: any) => void = () => {};
 }
 
