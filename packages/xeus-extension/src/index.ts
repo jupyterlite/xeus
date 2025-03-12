@@ -18,8 +18,6 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
   optional: [],
   requires: [INotebookTracker],
   activate: async (app: JupyterFrontEnd, notebooks: INotebookTracker) => {
-    console.log('ACTIVATE XEUS_EXTENSION', app);
-
     notebooks.widgetAdded.connect((sender, nbPanel: NotebookPanel) => {
       const session = nbPanel.sessionContext;
 
