@@ -75,7 +75,6 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
         channel.onmessage = event => {
           switch (event.data.type) {
             case 'log':
-              console.log('logger defined?', logConsolePanel.logger);
               logConsolePanel.logger?.log({
                 type: 'text',
                 level: 'info',

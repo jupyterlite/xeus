@@ -11,7 +11,7 @@ import {
 import { IBroadcastChannelWrapper } from '@jupyterlite/contents';
 import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
 
-import { WebWorkerKernel } from '@jupyterlite/xeus';
+const xeus = await import('@jupyterlite/xeus');
 import { IEmpackEnvMetaFile } from './tokens';
 
 /**
@@ -98,7 +98,7 @@ const kernelPlugin: JupyterLiteServerPlugin<void> = {
             ? await empackEnvMetaFile.getLink(kernelspec)
             : '';
 
-          return new WebWorkerKernel({
+          return new xeus.WebWorkerKernel({
             ...options,
             contentsManager,
             mountDrive,
