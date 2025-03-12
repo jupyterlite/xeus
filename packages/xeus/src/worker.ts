@@ -184,7 +184,6 @@ export class XeusRemoteKernel {
           logger: this._logger
         });
 
-
         // Bootstrap Python, if it's xeus-python
         if (kernelSpec.name === 'xpython') {
           const pythonVersion = getPythonVersion(empackEnvMeta.packages);
