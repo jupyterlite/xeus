@@ -17,6 +17,13 @@ import { LoggerRegistry, LogConsolePanel } from '@jupyterlab/logconsole';
 
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
 
+enum KernelStatus {
+  None = 0,
+  Info = 1,
+  Warning = 2,
+  Error = 3
+}
+
 const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
   id: '@jupyterlite/xeus-extension:kernel-status',
   autoStart: true,
@@ -40,6 +47,8 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
 
         const sourceId = `${kernelName}-${kernelId}`;
 
+        let currentState = KernelStatus.None;
+
         const logConsolePanel = new LogConsolePanel(
           new LoggerRegistry({
             defaultRendermime: rendermime,
@@ -49,36 +58,35 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
 
         logConsolePanel.source = sourceId;
 
-        nbPanel.toolbar.addItem(
-          'kernel logs',
-          new ToolbarButton({
-            icon: listIcon,
-            onClick: () => {
-              const logConsoleWidget = new MainAreaWidget<LogConsolePanel>({
-                content: logConsolePanel
-              });
-              logConsoleWidget.title.label = 'Kernel Logs';
-              logConsoleWidget.title.icon = listIcon;
+        const toolbarButton = new ToolbarButton({
+          icon: listIcon,
+          onClick: () => {
+            const logConsoleWidget = new MainAreaWidget<LogConsolePanel>({
+              content: logConsolePanel
+            });
+            logConsoleWidget.title.label = 'Kernel Logs';
+            logConsoleWidget.title.icon = listIcon;
 
-              // Scroll to bottom when new content shows up
-              logConsolePanel.logger?.contentChanged.connect(() => {
-                const element = document.getElementById(`source:${sourceId}`);
+            // Scroll to bottom when new content shows up
+            logConsolePanel.logger?.contentChanged.connect(() => {
+              const element = document.getElementById(`source:${sourceId}`);
 
-                if (!element) {
-                  return;
-                }
+              if (!element) {
+                return;
+              }
 
-                const lastChild = element.lastElementChild;
-                if (lastChild) {
-                  lastChild.scrollIntoView({ behavior: 'smooth' });
-                }
-              });
+              const lastChild = element.lastElementChild;
+              if (lastChild) {
+                lastChild.scrollIntoView({ behavior: 'smooth' });
+              }
+            });
 
-              app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
-            },
-            tooltip: 'Show kernel logs'
-          })
-        );
+            app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
+          },
+          tooltip: 'Show kernel logs'
+        });
+
+        nbPanel.toolbar.addItem('kernel logs', toolbarButton);
 
         const channel = new BroadcastChannel(`/kernel-broadcast/${kernelId}`);
 
@@ -94,6 +102,11 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
                 level: 'info',
                 data: event.data.msg
               });
+
+              if (currentState < KernelStatus.Info) {
+                currentState = KernelStatus.Info;
+                toolbarButton.addClass('xeus-kernel-status-info');
+              }
               break;
             case 'warn':
               logConsolePanel.logger?.log({
@@ -101,6 +114,11 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
                 level: 'warning',
                 data: event.data.msg
               });
+
+              if (currentState < KernelStatus.Warning) {
+                currentState = KernelStatus.Warning;
+                toolbarButton.addClass('xeus-kernel-status-warning');
+              }
               break;
             case 'error':
               logConsolePanel.logger?.log({
@@ -108,6 +126,11 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
                 level: 'error',
                 data: event.data.msg
               });
+
+              if (currentState < KernelStatus.Error) {
+                currentState = KernelStatus.Error;
+                toolbarButton.addClass('xeus-kernel-status-error');
+              }
               break;
           }
         };

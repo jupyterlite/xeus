@@ -1,0 +1,17 @@
+.xeus-kernel-status-info {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-color: var(--jp-info-color1);
+}
+
+.xeus-kernel-status-warning {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-color: var(--jp-warn-color1);
+}
+
+.xeus-kernel-status-error {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-color: var(--jp-error-color1);
+}

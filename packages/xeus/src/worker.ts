@@ -91,10 +91,6 @@ export class XeusRemoteKernel {
     globalThis.Module.FS.chdir(path);
   }
 
-  async initLogger(kernelId: string): Promise<void> {
-    this._logger = new XeusWorkerLogger(kernelId);
-  }
-
   async isDir(path: string): Promise<boolean> {
     try {
       const lookup = globalThis.Module.FS.lookupPath(path);
@@ -188,6 +184,8 @@ export class XeusRemoteKernel {
           logger: this._logger
         });
 
+        this._logger.warn('test warning');
+
         // Bootstrap Python, if it's xeus-python
         if (kernelSpec.name === 'xpython') {
           const pythonVersion = getPythonVersion(empackEnvMeta.packages);
@@ -212,6 +210,7 @@ export class XeusRemoteKernel {
           Module: globalThis.Module,
           logger: this._logger
         });
+        this._logger.error('test error');
       }
 
       rawXKernel = new globalThis.Module.xkernel();
