@@ -87,62 +87,7 @@ jobs:
         jupyter labextension list 2>&1 | grep -ie "@jupyterlite/xeus.*OK"
         python -m jupyterlab.browser_check --no-browser-test
 
-  python-tests-mamba-python:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: extension-artifacts
-
-      - name: Install Conda environment with Micromamba
-        uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-file: environment-dev.yaml
-
-      - name: Make sure the Mamba Python API is available
-        run: |
-          python -c "from mamba.api import create"
-
-      - name: Install
-        run: pip install jupyterlite_xeus*.whl
-
-      - name: Run tests
-        run: pytest -rP test_xeus.py
-        working-directory: tests
-
-  python-tests-mamba:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: extension-artifacts
-
-      - name: Install Conda environment with Micromamba
-        uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-file: environment-dev.yaml
-
-      - name: Install mamba
-        run: conda install -c conda-forge mamba
-
-      - name: Install
-        run: pip install jupyterlite_xeus*.whl
-
-      - name: Run tests
-        run: pytest -rP test_xeus.py
-        working-directory: tests
-
-  python-tests-micromamba:
+  python-tests:
     needs: build
     runs-on: ubuntu-latest
 
@@ -159,30 +104,6 @@ jobs:
         with:
           environment-file: environment-dev.yaml
           environment-name: xeus-lite-dev
-
-      - name: Install
-        run: pip install jupyterlite_xeus*.whl
-
-      - name: Run tests
-        run: pytest -rP test_xeus.py
-        working-directory: tests
-
-  python-tests-conda:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: extension-artifacts
-
-      - name: Install Conda environment with Micromamba
-        uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-file: environment-dev.yaml
 
       - name: Install
         run: pip install jupyterlite_xeus*.whl
