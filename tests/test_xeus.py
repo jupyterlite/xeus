@@ -93,7 +93,7 @@ def test_mount_point():
     ]
 
     for step in addon.post_build(manager):
-            pass
+        pass
 
     outpath = Path(addon.cwd_name) / "packed_env" / "xpython"
 
