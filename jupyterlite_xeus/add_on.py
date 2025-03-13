@@ -69,10 +69,6 @@ def get_kernel_binaries(path):
 
     return None
 
-class MountPoints(List):
-    def from_string(self, s):
-        return s.split(",")
-
 
 class ListLike(List):
     def from_string(self, s):
@@ -108,10 +104,10 @@ class XeusAddon(FederatedExtensionAddon):
         description="Whether or not to mount the jupyterlite content into the kernel. This would make the jupyterlite content available under the '/files' directory, and the kernels will automatically be started from there.",
     )
 
-    mounts = MountPoints(
+    mounts = ListLike(
         [],
         config=True,
-        description="A comma-separated list of mount points, in the form <host_path>:<mount_path> to mount in the wasm prefix",
+        description="A list of mount points, in the form <host_path>:<mount_path> to mount in the wasm prefix",
     )
 
     package_url_factory = Callable(
