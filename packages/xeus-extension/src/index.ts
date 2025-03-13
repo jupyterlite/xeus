@@ -159,7 +159,6 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
     };
 
     if (toolbarRegistry) {
-      console.log('ADDING MY FACTORY');
       toolbarRegistry.addFactory<NotebookPanel>(
         'Notebook',
         'xeusKernelLogs',
