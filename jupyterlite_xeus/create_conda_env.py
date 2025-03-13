@@ -76,16 +76,6 @@ def _create_conda_env_from_specs_impl(env_name, root_prefix, specs, channels):
 
     Path(root_prefix).mkdir(parents=True, exist_ok=True)
 
-    if MAMBA_PYTHON_AVAILABLE:
-        mamba_create(
-            env_name=env_name,
-            base_prefix=root_prefix,
-            specs=specs,
-            channels=channels,
-            target_platform=PLATFORM,
-        )
-        return
-
     channels_args = []
     for channel in channels:
         channels_args.extend(["-c", channel])
