@@ -77,6 +77,7 @@ Try it here!
 .. replite::
    :kernel: xcpp20
    :height: 600px
+   :prompt: Try C++!
 
    #include <stdio.h>
    #include <math.h>
