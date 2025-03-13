@@ -72,6 +72,16 @@ dependencies:
   - numpy
 ```
 
+### Multi environment support
+
+Starting with jupyterlite-xeus v4.0.0a0, you can now pass multiple environment files or prefixes.
+
+```
+jupyter lite build --XeusAddon.environment_file=environment-python.yml --XeusAddon.environment_file=environment-r.yml
+```
+
+⚠ This feature is experimental, installing the same kernel in two environments does not work currently. This feature is only useful for e.g. splitting a R environment from a Python environment ⚠
+
 ### pip packages
 
 ⚠ This feature is experimental. You won't have the same user-experience as when using conda/mamba in a "normal" setup ⚠
