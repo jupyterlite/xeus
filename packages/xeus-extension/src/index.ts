@@ -7,7 +7,11 @@ import {
   JupyterFrontEnd
 } from '@jupyterlab/application';
 
-import { MainAreaWidget } from '@jupyterlab/apputils';
+import {
+  MainAreaWidget,
+  IToolbarWidgetRegistry,
+  showErrorMessage
+} from '@jupyterlab/apputils';
 
 import { listIcon, ToolbarButton } from '@jupyterlab/ui-components';
 
@@ -15,7 +19,7 @@ import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 
 import { LoggerRegistry, LogConsolePanel } from '@jupyterlab/logconsole';
 
-import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
+import { NotebookPanel } from '@jupyterlab/notebook';
 
 enum KernelStatus {
   None = 0,
@@ -25,31 +29,72 @@ enum KernelStatus {
 }
 
 const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
-  id: '@jupyterlite/xeus-extension:kernel-status',
+  id: '@jupyterlite/xeus-extension:xeus-kernel-status',
   autoStart: true,
-  optional: [],
-  requires: [INotebookTracker, IRenderMimeRegistry],
+  requires: [IToolbarWidgetRegistry, IRenderMimeRegistry],
   activate: async (
     app: JupyterFrontEnd,
-    notebooks: INotebookTracker,
+    toolbarRegistry: IToolbarWidgetRegistry,
     rendermime: IRenderMimeRegistry
   ) => {
-    notebooks.widgetAdded.connect((sender, nbPanel: NotebookPanel) => {
-      const session = nbPanel.sessionContext;
+    const toolbarFactory = (panel: NotebookPanel) => {
+      const session = panel.sessionContext;
+
+      let currentState = KernelStatus.None;
+      let kernelId: string | undefined;
+      let kernelName: string | undefined;
+      let logConsolePanel: LogConsolePanel | undefined;
+      let sourceId: string | undefined;
+
+      const toolbarButton = new ToolbarButton({
+        icon: listIcon,
+        onClick: () => {
+          if (!logConsolePanel) {
+            showErrorMessage(
+              'Cannot show logs',
+              'Cannot show logs for the current kernel'
+            );
+            return;
+          }
+
+          const logConsoleWidget = new MainAreaWidget<LogConsolePanel>({
+            content: logConsolePanel
+          });
+          logConsoleWidget.title.label = 'Kernel Logs';
+          logConsoleWidget.title.icon = listIcon;
+
+          // Scroll to bottom when new content shows up
+          logConsolePanel.logger?.contentChanged.connect(() => {
+            const element = document.getElementById(`source:${sourceId}`);
+
+            if (!element) {
+              return;
+            }
+
+            const lastChild = element.lastElementChild;
+            if (lastChild) {
+              lastChild.scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+
+          app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
+        },
+        tooltip: 'Show kernel logs'
+      });
 
       session.kernelChanged.connect(() => {
-        const kernelId = session.session?.id;
-        const kernelName = session.session?.kernel?.name;
+        kernelId = session.session?.id;
+        kernelName = session.session?.kernel?.name;
+
+        currentState = KernelStatus.None;
 
         if (!kernelId || !kernelName) {
           return;
         }
 
-        const sourceId = `${kernelName}-${kernelId}`;
+        sourceId = `${kernelName}-${kernelId}`;
 
-        let currentState = KernelStatus.None;
-
-        const logConsolePanel = new LogConsolePanel(
+        logConsolePanel = new LogConsolePanel(
           new LoggerRegistry({
             defaultRendermime: rendermime,
             maxLength: 1000
@@ -58,36 +103,6 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
 
         logConsolePanel.source = sourceId;
 
-        const toolbarButton = new ToolbarButton({
-          icon: listIcon,
-          onClick: () => {
-            const logConsoleWidget = new MainAreaWidget<LogConsolePanel>({
-              content: logConsolePanel
-            });
-            logConsoleWidget.title.label = 'Kernel Logs';
-            logConsoleWidget.title.icon = listIcon;
-
-            // Scroll to bottom when new content shows up
-            logConsolePanel.logger?.contentChanged.connect(() => {
-              const element = document.getElementById(`source:${sourceId}`);
-
-              if (!element) {
-                return;
-              }
-
-              const lastChild = element.lastElementChild;
-              if (lastChild) {
-                lastChild.scrollIntoView({ behavior: 'smooth' });
-              }
-            });
-
-            app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
-          },
-          tooltip: 'Show kernel logs'
-        });
-
-        nbPanel.toolbar.addItem('kernel logs', toolbarButton);
-
         const channel = new BroadcastChannel(`/kernel-broadcast/${kernelId}`);
 
         if (logConsolePanel.logger) {
@@ -95,6 +110,10 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
         }
 
         channel.onmessage = event => {
+          if (!logConsolePanel) {
+            return;
+          }
+
           switch (event.data.type) {
             case 'log':
               logConsolePanel.logger?.log({
@@ -135,7 +154,18 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
           }
         };
       });
-    });
+
+      return toolbarButton;
+    };
+
+    if (toolbarRegistry) {
+      console.log('ADDING MY FACTORY');
+      toolbarRegistry.addFactory<NotebookPanel>(
+        'Notebook',
+        'xeusKernelLogs',
+        toolbarFactory
+      );
+    }
   }
 };
 
