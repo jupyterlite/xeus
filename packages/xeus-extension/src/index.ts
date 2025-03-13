@@ -45,6 +45,7 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
       let kernelName: string | undefined;
       let logConsolePanel: LogConsolePanel | undefined;
       let sourceId: string | undefined;
+      let logConsoleWidget: MainAreaWidget<LogConsolePanel> | undefined;
 
       const toolbarButton = new ToolbarButton({
         icon: listIcon,
@@ -57,27 +58,13 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
             return;
           }
 
-          const logConsoleWidget = new MainAreaWidget<LogConsolePanel>({
-            content: logConsolePanel
-          });
-          logConsoleWidget.title.label = 'Kernel Logs';
-          logConsoleWidget.title.icon = listIcon;
-
-          // Scroll to bottom when new content shows up
-          logConsolePanel.logger?.contentChanged.connect(() => {
-            const element = document.getElementById(`source:${sourceId}`);
-
-            if (!element) {
-              return;
+          if (logConsoleWidget) {
+            if (!logConsoleWidget.isAttached) {
+              app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
             }
 
-            const lastChild = element.lastElementChild;
-            if (lastChild) {
-              lastChild.scrollIntoView({ behavior: 'smooth' });
-            }
-          });
-
-          app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
+            app.shell.activateById(logConsoleWidget.id);
+          }
         },
         tooltip: 'Show kernel logs'
       });
@@ -108,6 +95,27 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
         if (logConsolePanel.logger) {
           logConsolePanel.logger.level = 'info';
         }
+
+        logConsoleWidget = new MainAreaWidget<LogConsolePanel>({
+          content: logConsolePanel
+        });
+        logConsoleWidget.title.label = 'Kernel Logs';
+        logConsoleWidget.title.icon = listIcon;
+        logConsoleWidget.id = `${sourceId}-widget`;
+
+        // Scroll to bottom when new content shows up
+        logConsolePanel.logger?.contentChanged.connect(() => {
+          const element = document.getElementById(`source:${sourceId}`);
+
+          if (!element) {
+            return;
+          }
+
+          const lastChild = element.lastElementChild;
+          if (lastChild) {
+            lastChild.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
 
         channel.onmessage = event => {
           if (!logConsolePanel) {
