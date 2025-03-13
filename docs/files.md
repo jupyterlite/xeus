@@ -43,4 +43,5 @@ You can mount extra directories into the kernel using the mounts option:
 ```bash
 jupyter lite build  \
         --XeusAddon.mounts="mypackage:/lib/python3.11/site-packages/mypackage"
+        --XeusAddon.mounts="hispackage:/lib/python3.11/site-packages/hispackage"
 ```
