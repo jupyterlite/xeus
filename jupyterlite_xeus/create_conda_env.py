@@ -93,6 +93,8 @@ def _create_conda_env_from_specs_impl(env_name, root_prefix, specs, channels):
             "create",
             "--yes",
             "--no-pyc",
+            "--prefix",
+            prefix_path,
             "--relocate-prefix",
             "/",
             "--root-prefix",
