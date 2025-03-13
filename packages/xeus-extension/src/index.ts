@@ -47,6 +47,19 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
       let sourceId: string | undefined;
       let logConsoleWidget: MainAreaWidget<LogConsolePanel> | undefined;
 
+      const createWidget = () => {
+        if (!logConsolePanel) {
+          return;
+        }
+
+        logConsoleWidget = new MainAreaWidget<LogConsolePanel>({
+          content: logConsolePanel
+        });
+        logConsoleWidget.title.label = 'Kernel Logs';
+        logConsoleWidget.title.icon = listIcon;
+        logConsoleWidget.id = `${sourceId}-widget`;
+      };
+
       const toolbarButton = new ToolbarButton({
         icon: listIcon,
         onClick: () => {
@@ -58,7 +71,15 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
             return;
           }
 
+          if (!logConsoleWidget) {
+            createWidget();
+          }
+
           if (logConsoleWidget) {
+            if (logConsoleWidget.isDisposed) {
+              createWidget();
+            }
+
             if (!logConsoleWidget.isAttached) {
               app.shell.add(logConsoleWidget, 'main', { mode: 'split-bottom' });
             }
@@ -95,13 +116,6 @@ const kernelStatusPlugin: JupyterFrontEndPlugin<void> = {
         if (logConsolePanel.logger) {
           logConsolePanel.logger.level = 'info';
         }
-
-        logConsoleWidget = new MainAreaWidget<LogConsolePanel>({
-          content: logConsolePanel
-        });
-        logConsoleWidget.title.label = 'Kernel Logs';
-        logConsoleWidget.title.icon = listIcon;
-        logConsoleWidget.id = `${sourceId}-widget`;
 
         // Scroll to bottom when new content shows up
         logConsolePanel.logger?.contentChanged.connect(() => {
