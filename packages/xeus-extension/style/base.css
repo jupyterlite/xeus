@@ -1,0 +1,28 @@
+@keyframes fadeInOut {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.xeus-kernel-status-info {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-color: var(--jp-info-color1);
+}
+
+.xeus-kernel-status-warning {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-color: var(--jp-warn-color1);
+}
+
+.xeus-kernel-status-error {
+  animation: fadeInOut 1s infinite;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-color: var(--jp-error-color1);
+}

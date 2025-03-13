@@ -14,10 +14,13 @@
     "license": "BSD-3-Clause",
     "author": "JupyterLite Contributors",
     "files": [
-        "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}"
+        "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+        "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
+        "schema/*.json"
     ],
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
+    "style": "style/index.css",
     "repository": {
         "type": "git",
         "url": "https://github.com/jupyterlite/xeus.git"
@@ -38,10 +41,10 @@
         "watch:labextension": "jupyter labextension watch ."
     },
     "dependencies": {
+        "@jupyterlab/application": "^4.3.4",
         "@jupyterlab/coreutils": "^6",
-        "@jupyterlite/contents": "^0.2.0 || ^0.3.0 || ^0.4.5 || ^0.5.1",
-        "@jupyterlite/kernel": "^0.2.0 || ^0.3.0 || ^0.4.5 || ^0.5.1",
-        "@jupyterlite/server": "^0.2.0 || ^0.3.0 || ^0.4.5 || ^0.5.1",
+        "@jupyterlab/logconsole": "^4.3.5",
+        "@jupyterlab/notebook": "^4.3.5",
         "@jupyterlite/xeus": "^4.0.0-a0",
         "@lumino/coreutils": "^2"
     },
@@ -63,26 +66,14 @@
     "publishConfig": {
         "access": "public"
     },
+    "sideEffects": [
+        "style/*.css",
+        "style/index.js"
+    ],
+    "styleModule": "style/index.js",
     "jupyterlab": {
         "extension": true,
-        "outputDir": "../../jupyterlite_xeus/labextension",
-        "webpackConfig": "lab.webpack.config.js",
-        "sharedPackages": {
-            "@jupyterlite/kernel": {
-                "bundled": false,
-                "singleton": true
-            },
-            "@jupyterlite/server": {
-                "bundled": false,
-                "singleton": true
-            },
-            "@jupyterlite/contents": {
-                "bundled": false,
-                "singleton": true
-            }
-        }
-    },
-    "jupyterlite": {
-        "liteExtension": true
+        "schemaDir": "schema",
+        "outputDir": "../../jupyterlite_xeus/labextension"
     }
 }

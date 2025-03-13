@@ -1,0 +1,10 @@
+{
+  "title": "Xeus Kernels Settings",
+  "description": "Xeus Kernels Settings.",
+  "jupyter.lab.toolbars": {
+    "Notebook": [{ "name": "xeusKernelLogs", "rank": 1002.5 }]
+  },
+  "properties": {},
+  "additionalProperties": false,
+  "type": "object"
+}

@@ -41,11 +41,12 @@ source = "nodejs"
 fields = ["description", "authors", "urls"]
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["jupyterlite_xeus/labextension"]
+artifacts = ["jupyterlite_xeus/labextension", "jupyterlite_xeus/liteextension"]
 exclude = [".github", "binder"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupyterlite_xeus/labextension" = "share/jupyter/labextensions/@jupyterlite/xeus"
+"jupyterlite_xeus/labextension" = "share/jupyter/labextensions/@jupyterlite/xeus-kernels-extension"
+"jupyterlite_xeus/liteextension" = "share/jupyter/labextensions/@jupyterlite/xeus"
 "install.json" = "share/jupyter/labextensions/@jupyterlite/xeus/install.json"
 
 [tool.hatch.build.hooks.version]
@@ -55,6 +56,7 @@ path = "jupyterlite_xeus/_version.py"
 dependencies = ["hatch-jupyter-builder>=0.5"]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
+    "jupyterlite_xeus/liteextension/package.json",
     "jupyterlite_xeus/labextension/static/style.js",
     "jupyterlite_xeus/labextension/package.json",
 ]

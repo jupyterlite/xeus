@@ -83,6 +83,7 @@ export namespace IXeusWorkerKernel {
    */
   export interface IOptions extends IWorkerKernel.IOptions {
     baseUrl: string;
+    kernelId: string;
     kernelSpec: any;
     mountDrive: boolean;
     empackEnvMetaLink?: string;
