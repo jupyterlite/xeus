@@ -126,7 +126,8 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
         }
       });
     }
-    await app.serviceManager.kernelspecs.refreshSpecs();
+    // await app.serviceManager.kernelspecs.refreshSpecs();
+    await (app.serviceManager.kernelspecs.specsChanged as any).emit();
   }
 };
 
