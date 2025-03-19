@@ -41,15 +41,18 @@
         "watch:labextension": "jupyter labextension watch ."
     },
     "dependencies": {
-        "@jupyterlab/application": "^4.3.4",
-        "@jupyterlab/coreutils": "^6",
-        "@jupyterlab/logconsole": "^4.3.5",
-        "@jupyterlab/notebook": "^4.3.5",
+        "@jupyterlab/application": "^4.4.0-beta.0",
+        "@jupyterlab/coreutils": "^6.4.0-beta.0",
+        "@jupyterlab/logconsole": "^4.4.0-beta.0",
+        "@jupyterlab/notebook": "^4.4.0-beta.0",
+        "@jupyterlite/contents": "^0.6.0-alpha.3",
+        "@jupyterlite/kernel": "^0.6.0-alpha.3",
+        "@jupyterlite/server": "^0.6.0-alpha.3",
         "@jupyterlite/xeus": "^4.0.0-a1",
         "@lumino/coreutils": "^2"
     },
     "devDependencies": {
-        "@jupyterlab/builder": "^4.1.0",
+        "@jupyterlab/builder": "^4.4.0-beta.0",
         "@types/json-schema": "^7.0.11",
         "@types/react": "^18.0.26",
         "@types/react-addons-linked-state-mixin": "^0.14.22",
@@ -74,6 +77,21 @@
     "jupyterlab": {
         "extension": true,
         "schemaDir": "schema",
-        "outputDir": "../../jupyterlite_xeus/labextension"
+        "outputDir": "../../jupyterlite_xeus/labextension",
+        "webpackConfig": "lab.webpack.config.js",
+        "sharedPackages": {
+            "@jupyterlite/kernel": {
+                "bundled": false,
+                "singleton": true
+            },
+            "@jupyterlite/server": {
+                "bundled": false,
+                "singleton": true
+            },
+            "@jupyterlite/contents": {
+                "bundled": false,
+                "singleton": true
+            }
+        }
     }
 }

@@ -16,7 +16,7 @@ const staticPath = [
   '..',
   '..',
   'jupyterlite_xeus',
-  'liteextension',
+  'labextension',
   'static',
   '[name].wasm'
 ];
