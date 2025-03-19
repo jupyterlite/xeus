@@ -17,9 +17,7 @@ import { LoggerRegistry, LogConsolePanel } from '@jupyterlab/logconsole';
 import { NotebookPanel } from '@jupyterlab/notebook';
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 
-import {
-  IServiceWorkerManager
-} from '@jupyterlite/server';
+import { IServiceWorkerManager } from '@jupyterlite/server';
 import { IBroadcastChannelWrapper } from '@jupyterlite/contents';
 import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
 
