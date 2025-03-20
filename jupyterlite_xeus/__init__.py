@@ -11,4 +11,4 @@ except ImportError:
 
 
 def _jupyter_labextension_paths():
-    return [{"src": "labextension", "dest": "@jupyterlite/xeus"}, {"src": "liteextension", "dest": "@jupyterlite/xeus-kernels-extension"}]
+    return [{"src": "labextension", "dest": "@jupyterlite/xeus"}]

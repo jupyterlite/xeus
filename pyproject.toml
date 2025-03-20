@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling>=1.5.0", "jupyterlab>=4.0,<4.3", "hatch-nodejs-version>=0.3.2"]
+requires = ["hatchling>=1.5.0", "jupyterlab>=4.4.0.b0,<5", "hatch-nodejs-version>=0.3.2"]
 build-backend = "hatchling.build"
 
 [project]
@@ -25,7 +25,7 @@ classifiers = [
 dependencies = [
     "empack>=5,<6",
     "traitlets",
-    "jupyterlite-core>=0.1,<0.6",
+    "jupyterlite-core>=0.6.0a4,<0.7",
     "pyyaml",
     "requests",
 ]
@@ -41,12 +41,11 @@ source = "nodejs"
 fields = ["description", "authors", "urls"]
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["jupyterlite_xeus/labextension", "jupyterlite_xeus/liteextension"]
+artifacts = ["jupyterlite_xeus/labextension"]
 exclude = [".github", "binder"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupyterlite_xeus/labextension" = "share/jupyter/labextensions/@jupyterlite/xeus-kernels-extension"
-"jupyterlite_xeus/liteextension" = "share/jupyter/labextensions/@jupyterlite/xeus"
+"jupyterlite_xeus/labextension" = "share/jupyter/labextensions/@jupyterlite/xeus"
 "install.json" = "share/jupyter/labextensions/@jupyterlite/xeus/install.json"
 
 [tool.hatch.build.hooks.version]
@@ -56,7 +55,6 @@ path = "jupyterlite_xeus/_version.py"
 dependencies = ["hatch-jupyter-builder>=0.5"]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
-    "jupyterlite_xeus/liteextension/package.json",
     "jupyterlite_xeus/labextension/static/style.js",
     "jupyterlite_xeus/labextension/package.json",
 ]
