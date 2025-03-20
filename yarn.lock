@@ -23,10 +23,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@baszalmstra/rattler@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "@baszalmstra/rattler@npm:0.2.0"
-  checksum: 9afc62422a50eea851b6eedf257731ee553b7d149e21faa6f7a8bd319c5f2eea7d8559746e8057e16a6dd0a3f957ccf7c244088c724dcfc93f2aa36d4d1ad737
+"@baszalmstra/rattler@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@baszalmstra/rattler@npm:0.2.1"
+  checksum: 4ed9a10c61f73eb5187914c9bb68c72b7612ac0a8b6f2ce16e97aa5dcdd3dfcda7ae1b74d1a94a63f09562f7b4a7681b31df516664cb7534b12c5c2fda92b0f2
   languageName: node
   linkType: hard
 
@@ -320,14 +320,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "@emscripten-forge/mambajs@npm:0.6.0"
+"@emscripten-forge/mambajs@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "@emscripten-forge/mambajs@npm:0.7.0"
   dependencies:
-    "@baszalmstra/rattler": ^0.2.0
+    "@baszalmstra/rattler": ^0.2.1
     "@emscripten-forge/untarjs": ^5.3.0
     yaml: ^2.7.0
-  checksum: 19c3d79a9cb8c0a979e00fbc45fca1635f8e9d55fbdf699d5e37f71937736508d9742e79741755e7f01a657ee396c0077798b4386f77c8181e42c79f1e77275a
+  checksum: a085a34f553fa76b009e0f46630caff1e3efc4f2bb1c82d95c775785598190e3ee6d4b0e7824a1d3f20264e64eefa9c34a054afd2679b1d5d9ca724b487f4667
   languageName: node
   linkType: hard
 
@@ -1318,7 +1318,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.6.0
+    "@emscripten-forge/mambajs": ^0.7.0
     "@jupyterlab/builder": ^4.4.0-beta.0
     "@jupyterlab/coreutils": ^6.4.0-beta.0
     "@jupyterlab/services": ^7.4.0-beta.0
