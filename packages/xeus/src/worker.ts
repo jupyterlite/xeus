@@ -153,8 +153,7 @@ export class XeusRemoteKernel {
         const sharedLibs = await bootstrapEmpackPackedEnvironment({
           empackEnvMeta,
           pkgRootUrl,
-          Module: globalThis.Module,
-          verbose: false
+          Module: globalThis.Module
         });
 
         // Bootstrap Python, if it's xeus-python

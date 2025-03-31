@@ -23,6 +23,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@baszalmstra/rattler@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@baszalmstra/rattler@npm:0.2.1"
+  checksum: 4ed9a10c61f73eb5187914c9bb68c72b7612ac0a8b6f2ce16e97aa5dcdd3dfcda7ae1b74d1a94a63f09562f7b4a7681b31df516664cb7534b12c5c2fda92b0f2
+  languageName: node
+  linkType: hard
+
 "@discoveryjs/json-ext@npm:^0.5.0":
   version: 0.5.7
   resolution: "@discoveryjs/json-ext@npm:0.5.7"
@@ -58,23 +65,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.4.1":
-  version: 0.4.1
-  resolution: "@emscripten-forge/mambajs@npm:0.4.1"
+"@emscripten-forge/mambajs@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "@emscripten-forge/mambajs@npm:0.8.0"
   dependencies:
-    "@emscripten-forge/untarjs": ^5.2.1
-  checksum: 442868a0cdf045733293af9abe31d20b4be1aa462dec24e0ceab93419d08b264f1e8e1ddfceab7e49dc2035f569cb4e709e68495133212f23f4831555c9199ed
+    "@baszalmstra/rattler": ^0.2.1
+    "@emscripten-forge/untarjs": ^5.3.0
+    yaml: ^2.7.0
+  checksum: bf985ac3b47a32f1b7e876015b72a19b50604dc598af39eb7dfac80a0abccd2031d0cdf94a5cd098d4d7b98bca8884136b1da6dff3b16636c2ea11c2bf6fdf14
   languageName: node
   linkType: hard
 
-"@emscripten-forge/untarjs@npm:^5.2.1":
-  version: 5.2.1
-  resolution: "@emscripten-forge/untarjs@npm:5.2.1"
+"@emscripten-forge/untarjs@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@emscripten-forge/untarjs@npm:5.3.0"
   dependencies:
     assert: ^2.1.0
     process: ^0.11.10
     url: ^0.11.4
-  checksum: 982c28aa6bc40d39ce23aa01a70461eba974f117466e7f59fe05652b3144fe825e8e5bbfcecdee69269e33c179dd69e529603ae904a2155967ab17398435ccde
+  checksum: ba2c9ba878f26b267f334bc941ca508efc227fac4f91cf3babfb02fdb42c77d94ef13926087b075de23d57c030bfa237c68e955ec80f2aa68aec84f10b368f65
   languageName: node
   linkType: hard
 
@@ -526,7 +535,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.4.1
+    "@emscripten-forge/mambajs": ^0.8.0
     "@jupyterlab/builder": ^4.1.0
     "@jupyterlab/coreutils": ^6
     "@jupyterlab/services": ^7.3.4
@@ -8961,6 +8970,15 @@ __metadata:
   bin:
     yaml: bin.mjs
   checksum: 6e8b2f9b9d1b18b10274d58eb3a47ec223d9a93245a890dcb34d62865f7e744747190a9b9177d5f0ef4ea2e44ad2c0214993deb42e0800766203ac46f00a12dd
+  languageName: node
+  linkType: hard
+
+"yaml@npm:^2.7.0":
+  version: 2.7.1
+  resolution: "yaml@npm:2.7.1"
+  bin:
+    yaml: bin.mjs
+  checksum: 385f8115ddfafdf8e599813cca8b2bf4e3f6a01b919fff5ae7da277e164df684d7dfe558b4085172094792b5a04786d3c55fa8b74abb0ee029873f031150bb80
   languageName: node
   linkType: hard
 
