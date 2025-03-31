@@ -59,10 +59,7 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
   id: '@jupyterlite/xeus-kernel:register',
   autoStart: true,
   requires: [IKernelSpecs],
-  optional: [
-    IServiceWorkerManager,
-    IEmpackEnvMetaFile
-  ],
+  optional: [IServiceWorkerManager, IEmpackEnvMetaFile],
   activate: async (
     app: JupyterFrontEnd,
     kernelspecs: IKernelSpecs,
@@ -95,10 +92,7 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
       kernelspecs.register({
         spec: kernelspec,
         create: async (options: IKernel.IOptions): Promise<IKernel> => {
-          const mountDrive = !!(
-            serviceWorker?.enabled ||
-            crossOriginIsolated
-          );
+          const mountDrive = !!(serviceWorker?.enabled || crossOriginIsolated);
 
           if (mountDrive) {
             console.info(
