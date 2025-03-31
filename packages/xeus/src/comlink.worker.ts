@@ -7,28 +7,9 @@
 
 import { expose } from 'comlink';
 
-import {
-  ContentsAPI,
-  DriveFS,
-  ServiceWorkerContentsAPI
-} from '@jupyterlite/contents';
+import { DriveFS } from '@jupyterlite/contents';
 
 import { XeusRemoteKernel } from './worker';
-
-/**
- * A custom drive implementation which uses the service worker
- */
-class XeusDriveFS extends DriveFS {
-  createAPI(options: DriveFS.IOptions): ContentsAPI {
-    return new ServiceWorkerContentsAPI(
-      options.baseUrl,
-      options.driveName,
-      options.mountpoint,
-      options.FS,
-      options.ERRNO_CODES
-    );
-  }
-}
 
 export class XeusComlinkKernel extends XeusRemoteKernel {
   /**
@@ -37,7 +18,8 @@ export class XeusComlinkKernel extends XeusRemoteKernel {
   async mount(
     driveName: string,
     mountpoint: string,
-    baseUrl: string
+    baseUrl: string,
+    browsingContextId: string
   ): Promise<void> {
     const { FS, PATH, ERRNO_CODES } = globalThis.Module;
 
@@ -45,13 +27,14 @@ export class XeusComlinkKernel extends XeusRemoteKernel {
       return;
     }
 
-    const drive = new XeusDriveFS({
+    const drive = new DriveFS({
       FS,
       PATH,
       ERRNO_CODES,
       baseUrl,
       driveName,
-      mountpoint
+      mountpoint,
+      browsingContextId
     });
 
     FS.mkdir(mountpoint);
