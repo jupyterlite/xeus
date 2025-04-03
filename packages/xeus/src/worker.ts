@@ -173,7 +173,7 @@ export class XeusRemoteKernel {
         logger: this._logger
       });
 
-      this._reloadPackages(newPackages);
+      await this._reloadPackages(newPackages);
          
         } catch (error) {
           console.log('error', error);
@@ -187,9 +187,9 @@ export class XeusRemoteKernel {
 
   async _reloadPackages(newPackages: ISolvedPackages) {
     if (Object.keys(newPackages).length) {
-      this.updateKernelPackages(newPackages);
+      await this.updateKernelPackages(newPackages);
       this._setInstalledPackages();
-      this._load();
+      await this._load();
       
     }
   }
@@ -286,7 +286,7 @@ export class XeusRemoteKernel {
         )) as IEmpackEnvMeta;
       this._setInstalledPackages();
         this._activeKernel = kernelSpec.name;
-       this._load();
+       await this._load();
       }
 
       rawXKernel = new globalThis.Module.xkernel();
