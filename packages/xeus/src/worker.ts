@@ -14,8 +14,10 @@ import {
   waitRunDependencies,
   ILogger,
   ISolvedPackages,
-  solve
+  solve,
+  removingFiles
 } from '@emscripten-forge/mambajs';
+import { IUnpackJSAPI } from '@emscripten-forge/untarjs';
 import { parseCommandLine } from './tools';
 globalThis.Module = {};
 
@@ -183,21 +185,23 @@ export class XeusRemoteKernel {
     return code;
   }
 
-  _reloadPackages(newPackages: ISolvedPackages) {
+  async _reloadPackages(newPackages: ISolvedPackages) {
     if (Object.keys(newPackages).length) {
       this.updateKernelPackages(newPackages);
       this._setInstalledPackages();
+      this._load();
+      
     }
   }
 
-  updateKernelPackages(pkgs: ISolvedPackages): any {
-    const removeList: ISolvedPackages = {};
+  async updateKernelPackages(pkgs: ISolvedPackages): Promise<any> {
+    const removeList: any = [];
     const newPackages: any = [];
     Object.keys(pkgs).map((filename: string) => {
       const newPkg = pkgs[filename];
       this._empackEnvMeta.packages.map((oldPkg: any) => {
         if (newPkg.name === oldPkg.name && newPkg.version !== oldPkg.version) {
-          removeList[oldPkg.name] = oldPkg;
+          removeList.push(oldPkg);
         }
       });
       let tmpPkg = {
@@ -211,13 +215,20 @@ export class XeusRemoteKernel {
       }
       newPackages.push(tmpPkg);
     });
-    
 
     if (Object.keys(removeList).length) {
-     //todo removePackages(removeList);
+      await removingFiles({
+        removeList,
+        pkgRootUrl: this._pkgRootUrl,
+        Module: globalThis.Module,
+        logger: this._logger,
+        untarjs: this._untarjs
+      });
     }
-    this._empackEnvMeta.packages = newPackages;
+    
+    this._empackEnvMeta.packages = [...newPackages];
   }
+
 
   async initialize(options: IXeusWorkerKernel.IOptions): Promise<void> {
     const { baseUrl, kernelSpec, empackEnvMetaLink, kernelId } = options;
@@ -301,12 +312,13 @@ export class XeusRemoteKernel {
   }
 
   async _load(){
-    const sharedLibs = await bootstrapEmpackPackedEnvironment({
+    const {sharedLibs, untarjs} = await bootstrapEmpackPackedEnvironment({
       empackEnvMeta: this._empackEnvMeta,
       pkgRootUrl: this._pkgRootUrl,
       Module: globalThis.Module,
       logger: this._logger
     });
+    this._untarjs = untarjs;
 
     // Bootstrap Python, if it's xeus-python
     if (this._activeKernel === 'xpython' && !this._isPythonInstalled) {
@@ -352,6 +364,7 @@ export class XeusRemoteKernel {
   private _pkgRootUrl = '';
   private _activeKernel = '';
   private _installedPackages = {};
+  private _untarjs:IUnpackJSAPI = null
 }
 
 export namespace XeusRemoteKernel {
