@@ -130,11 +130,15 @@ export class XeusRemoteKernel {
   }
 
   _getInstalledPackages(){
+    return this._installedPackages;
+  }
+
+  _setInstalledPackages(){
     const installed = {};
-    this._empackEnvMeta.packages.map((pkg)=>{
-      installed[pkg.filename] = {name: pkg.name, version: pkg.version, repo_url: '', build_string: pkg.build};
+    this._empackEnvMeta.packages.map((pkg: any)=>{
+      installed[pkg.filename] = {name: pkg.name, version: pkg.version, repo_url: pkg.repo_url? pkg.repo_url: '',repo_name:pkg.repo_name? pkg.repo_name: '',  build_string: pkg.build};
     });
-    return installed;
+    this._installedPackages = installed;
   }
 
   async _installPackages(code: string) {
@@ -166,8 +170,8 @@ export class XeusRemoteKernel {
         channels:install.channels,
         logger: this._logger
       });
-//todo
-      //this._reloadPackages(newPackages);
+
+      this._reloadPackages(newPackages);
          
         } catch (error) {
           console.log('error', error);
@@ -179,6 +183,41 @@ export class XeusRemoteKernel {
     return code;
   }
 
+  _reloadPackages(newPackages: ISolvedPackages) {
+    if (Object.keys(newPackages).length) {
+      this.updateKernelPackages(newPackages);
+      this._setInstalledPackages();
+    }
+  }
+
+  updateKernelPackages(pkgs: ISolvedPackages): any {
+    const removeList: ISolvedPackages = {};
+    const newPackages: any = [];
+    Object.keys(pkgs).map((filename: string) => {
+      const newPkg = pkgs[filename];
+      this._empackEnvMeta.packages.map((oldPkg: any) => {
+        if (newPkg.name === oldPkg.name && newPkg.version !== oldPkg.version) {
+          removeList[oldPkg.name] = oldPkg;
+        }
+      });
+      let tmpPkg = {
+        name: newPkg.name,
+        url: newPkg.url,
+        filename,
+        version: newPkg.version,
+        build: newPkg.build_string,
+        repo_name: newPkg.repo_name,
+        repo_url:newPkg.repo_url
+      }
+      newPackages.push(tmpPkg);
+    });
+    
+
+    if (Object.keys(removeList).length) {
+     //todo removePackages(removeList);
+    }
+    this._empackEnvMeta.packages = newPackages;
+  }
 
   async initialize(options: IXeusWorkerKernel.IOptions): Promise<void> {
     const { baseUrl, kernelSpec, empackEnvMetaLink, kernelId } = options;
@@ -234,6 +273,7 @@ export class XeusRemoteKernel {
         this._empackEnvMeta = (await fetchJson(
           packagesJsonUrl
         )) as IEmpackEnvMeta;
+      this._setInstalledPackages();
         this._activeKernel = kernelSpec.name;
        this._load();
       }
