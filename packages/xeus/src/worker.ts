@@ -17,7 +17,6 @@ import {
   solve,
   removingFiles
 } from '@emscripten-forge/mambajs';
-import { IUnpackJSAPI } from '@emscripten-forge/untarjs';
 import { parseCommandLine } from './tools';
 globalThis.Module = {};
 
@@ -173,7 +172,7 @@ export class XeusRemoteKernel {
         logger: this._logger
       });
 
-      await this._reloadPackages(newPackages);
+      await this._reloadPackages({...newPackages.condaPackages, ...newPackages.pipPackages});
          
         } catch (error) {
           console.log('error', error);
@@ -219,10 +218,8 @@ export class XeusRemoteKernel {
     if (Object.keys(removeList).length) {
       await removingFiles({
         removeList,
-        pkgRootUrl: this._pkgRootUrl,
         Module: globalThis.Module,
         logger: this._logger,
-        untarjs: this._untarjs
       });
     }
     
@@ -312,13 +309,12 @@ export class XeusRemoteKernel {
   }
 
   async _load(){
-    const {sharedLibs, untarjs} = await bootstrapEmpackPackedEnvironment({
+    const sharedLibs = await bootstrapEmpackPackedEnvironment({
       empackEnvMeta: this._empackEnvMeta,
       pkgRootUrl: this._pkgRootUrl,
       Module: globalThis.Module,
       logger: this._logger
     });
-    this._untarjs = untarjs;
 
     // Bootstrap Python, if it's xeus-python
     if (this._activeKernel === 'xpython' && !this._isPythonInstalled) {
@@ -359,12 +355,11 @@ export class XeusRemoteKernel {
 
   private _logger: XeusWorkerLogger;
   protected _sendWorkerMessage: (msg: any) => void = () => {};
-  private _empackEnvMeta: IEmpackEnvMeta = {};
+  private _empackEnvMeta: IEmpackEnvMeta;
   private _isPythonInstalled = false;
   private _pkgRootUrl = '';
   private _activeKernel = '';
   private _installedPackages = {};
-  private _untarjs:IUnpackJSAPI = null
 }
 
 export namespace XeusRemoteKernel {
