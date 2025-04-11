@@ -43,11 +43,6 @@ export interface IXeusWorkerKernel extends IWorkerKernel {
   processWorkerMessage(msg: any): void;
 
   /**
-   * Register a callback for handling messages from the worker.
-   */
-  registerCallback(callback: (msg: any) => void): void;
-
-  /**
    * Whether the kernel is ready.
    * @returns a promise that resolves when the kernel is ready.
    */
