@@ -35,7 +35,7 @@ def create_conda_env_from_env_file(root_prefix, env_file_content, env_file_locat
 
     # get the channels
     channels = env_file_content.get(
-        "channels", ["https://repo.mamba.pm/emscripten-forge", "conda-forge"]
+        "channels", ["https://repo.prefix.dev/emscripten-forge-dev", "https://repo.prefix.dev/conda-forge"]
     )
 
     # get the specs
