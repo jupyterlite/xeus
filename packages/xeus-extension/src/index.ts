@@ -18,7 +18,6 @@ import { NotebookPanel } from '@jupyterlab/notebook';
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 
 import { IServiceWorkerManager } from '@jupyterlite/server';
-import { IBroadcastChannelWrapper } from '@jupyterlite/contents';
 import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
 
 import { WebWorkerKernel } from '@jupyterlite/xeus';
@@ -60,16 +59,11 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
   id: '@jupyterlite/xeus-kernel:register',
   autoStart: true,
   requires: [IKernelSpecs],
-  optional: [
-    IServiceWorkerManager,
-    IBroadcastChannelWrapper,
-    IEmpackEnvMetaFile
-  ],
+  optional: [IServiceWorkerManager, IEmpackEnvMetaFile],
   activate: async (
     app: JupyterFrontEnd,
     kernelspecs: IKernelSpecs,
     serviceWorker?: IServiceWorkerManager,
-    broadcastChannel?: IBroadcastChannelWrapper,
     empackEnvMetaFile?: IEmpackEnvMetaFile
   ) => {
     // Fetch kernel list
@@ -98,10 +92,7 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
       kernelspecs.register({
         spec: kernelspec,
         create: async (options: IKernel.IOptions): Promise<IKernel> => {
-          const mountDrive = !!(
-            (serviceWorker?.enabled && broadcastChannel?.enabled) ||
-            crossOriginIsolated
-          );
+          const mountDrive = !!(serviceWorker?.enabled || crossOriginIsolated);
 
           if (mountDrive) {
             console.info(
