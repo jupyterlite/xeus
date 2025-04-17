@@ -210,7 +210,7 @@ export class XeusRemoteKernel {
         });
       }
 
-      rawXKernel = new globalThis.Module.xkernel();
+      rawXKernel = new globalThis.Module.xkernel(kernelSpec.argv);
       rawXServer = rawXKernel.get_server();
       if (!rawXServer) {
         this._logger.error('Failed to start kernel!');
