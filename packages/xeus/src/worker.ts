@@ -121,23 +121,29 @@ export class XeusRemoteKernel {
 
     if (msg_type === 'input_reply') {
       resolveInputReply(event.msg);
-    } else if (msg_type === 'execute_request'){
+    } else if (msg_type === 'execute_request') {
       const code = event.msg.content.code;
       event.msg.content.code = await this._installPackages(code);
       rawXServer.notify_listener(event.msg);
-    }else {
+    } else {
       rawXServer.notify_listener(event.msg);
     }
   }
 
-  _getInstalledPackages(){
+  _getInstalledPackages() {
     return this._installedPackages;
   }
 
-  _setInstalledPackages(){
+  _setInstalledPackages() {
     const installed = {};
-    this._empackEnvMeta.packages.map((pkg: any)=>{
-      installed[pkg.filename] = {name: pkg.name, version: pkg.version, repo_url: pkg.repo_url? pkg.repo_url: '',repo_name:pkg.repo_name? pkg.repo_name: '',  build_string: pkg.build};
+    this._empackEnvMeta.packages.map((pkg: any) => {
+      installed[pkg.filename] = {
+        name: pkg.name,
+        version: pkg.version,
+        repo_url: pkg.repo_url ? pkg.repo_url : '',
+        repo_name: pkg.repo_name ? pkg.repo_name : '',
+        build_string: pkg.build
+      };
     });
     this._installedPackages = installed;
   }
@@ -160,20 +166,21 @@ export class XeusRemoteKernel {
     if (isInstallCommand) {
       const { install, run } = parseCommandLine(code);
       if (install.specs || install.pipSpecs) {
-       const installedPackages = this._getInstalledPackages();
-  
+        const installedPackages = this._getInstalledPackages();
+
         try {
+          const newPackages = await solve({
+            ymlOrSpecs: install.specs ? install.specs : [],
+            installedPackages,
+            pipSpecs: install.pipSpecs ? install.pipSpecs : [],
+            channels: install.channels,
+            logger: this._logger
+          });
 
-       const newPackages = await solve({
-        ymlOrSpecs: install.specs? install.specs : [],
-        installedPackages,
-        pipSpecs: install.pipSpecs? install.pipSpecs :[],
-        channels:install.channels,
-        logger: this._logger
-      });
-
-      await this._reloadPackages({...newPackages.condaPackages, ...newPackages.pipPackages});
-         
+          await this._reloadPackages({
+            ...newPackages.condaPackages,
+            ...newPackages.pipPackages
+          });
         } catch (error) {
           console.log('error', error);
         }
@@ -189,7 +196,6 @@ export class XeusRemoteKernel {
       await this.updateKernelPackages(newPackages);
       this._setInstalledPackages();
       await this._load();
-      
     }
   }
 
@@ -210,8 +216,8 @@ export class XeusRemoteKernel {
         version: newPkg.version,
         build: newPkg.build_string,
         repo_name: newPkg.repo_name,
-        repo_url:newPkg.repo_url
-      }
+        repo_url: newPkg.repo_url
+      };
       newPackages.push(tmpPkg);
     });
 
@@ -219,13 +225,13 @@ export class XeusRemoteKernel {
       await removingFiles({
         removeList,
         Module: globalThis.Module,
-        logger: this._logger,
+        paths: this._paths,
+        logger: this._logger
       });
     }
-    
+
     this._empackEnvMeta.packages = [...newPackages];
   }
-
 
   async initialize(options: IXeusWorkerKernel.IOptions): Promise<void> {
     const { baseUrl, kernelSpec, empackEnvMetaLink, kernelId } = options;
@@ -281,9 +287,9 @@ export class XeusRemoteKernel {
         this._empackEnvMeta = (await fetchJson(
           packagesJsonUrl
         )) as IEmpackEnvMeta;
-      this._setInstalledPackages();
+        this._setInstalledPackages();
         this._activeKernel = kernelSpec.name;
-       await this._load();
+        await this._load();
       }
 
       rawXKernel = new globalThis.Module.xkernel();
@@ -308,13 +314,14 @@ export class XeusRemoteKernel {
     kernelReady(1);
   }
 
-  async _load(){
-    const sharedLibs = await bootstrapEmpackPackedEnvironment({
+  async _load() {
+    const { sharedLibs, paths } = await bootstrapEmpackPackedEnvironment({
       empackEnvMeta: this._empackEnvMeta,
       pkgRootUrl: this._pkgRootUrl,
       Module: globalThis.Module,
       logger: this._logger
     });
+    this._paths = paths;
 
     // Bootstrap Python, if it's xeus-python
     if (this._activeKernel === 'xpython' && !this._isPythonInstalled) {
@@ -343,13 +350,13 @@ export class XeusRemoteKernel {
     });
   }
 
-
   private _logger: XeusWorkerLogger;
   private _empackEnvMeta: IEmpackEnvMeta;
   private _isPythonInstalled = false;
   private _pkgRootUrl = '';
   private _activeKernel = '';
   private _installedPackages = {};
+  private _paths = {};
 }
 
 export namespace XeusRemoteKernel {
