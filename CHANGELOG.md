@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.0.0a3
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@4.0.0-a2...bf33a1181ab602a30fd4766e3cea1fe159293fbb))
+
+### Maintenance and upkeep improvements
+
+- Update jupyterlite + mambajs [#211](https://github.com/jupyterlite/xeus/pull/211) ([@martinRenou](https://github.com/martinRenou))
+- Remove unused code [#209](https://github.com/jupyterlite/xeus/pull/209) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-03-20&to=2025-04-22&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-03-20..2025-04-22&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.0.0a2
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@4.0.0-a1...870959c7a0d45f2d19305d86833a9964855f1cba))
@@ -20,8 +37,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-03-13&to=2025-03-20&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-03-13..2025-03-20&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.0.0a1
 

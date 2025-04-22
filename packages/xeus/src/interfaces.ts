@@ -43,11 +43,6 @@ export interface IXeusWorkerKernel extends IWorkerKernel {
   processWorkerMessage(msg: any): void;
 
   /**
-   * Register a callback for handling messages from the worker.
-   */
-  registerCallback(callback: (msg: any) => void): void;
-
-  /**
    * Whether the kernel is ready.
    * @returns a promise that resolves when the kernel is ready.
    */
@@ -58,8 +53,14 @@ export interface IXeusWorkerKernel extends IWorkerKernel {
    * @param driveName The name of the drive
    * @param mountpoint The mountpoint of the drive
    * @param baseUrl The base URL of the server
+   * @param browsingContextId The current page id
    */
-  mount(driveName: string, mountpoint: string, baseUrl: string): Promise<void>;
+  mount(
+    driveName: string,
+    mountpoint: string,
+    baseUrl: string,
+    browsingContextId: string
+  ): Promise<void>;
 
   /**
    * Change the current working directory
