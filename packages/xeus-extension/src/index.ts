@@ -112,7 +112,8 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
             contentsManager,
             mountDrive,
             kernelSpec: kernelspec,
-            empackEnvMetaLink: link
+            empackEnvMetaLink: link,
+            browsingContextId: serviceWorker?.browsingContextId || ''
           });
         }
       });

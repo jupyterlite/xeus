@@ -274,7 +274,7 @@ export class WebWorkerKernel implements IKernel {
       driveName,
       '/drive',
       PageConfig.getBaseUrl(),
-      browsingContextId: options.browsingContextId
+      options.browsingContextId
     );
 
     if (await this._remoteKernel.isDir('/files')) {
@@ -316,5 +316,6 @@ export namespace WebWorkerKernel {
     mountDrive: boolean;
     kernelSpec: any;
     empackEnvMetaLink?: string | undefined;
+    browsingContextId: string;
   }
 }
