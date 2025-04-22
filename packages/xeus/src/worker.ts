@@ -344,17 +344,7 @@ export class XeusRemoteKernel {
   }
 
 
-
-  /**
-   * Register the callback function to send messages from the worker back to the main thread.
-   * @param callback the callback to register
-   */
-  registerCallback(callback: (msg: any) => void): void {
-    this._sendWorkerMessage = callback;
-  }
-
   private _logger: XeusWorkerLogger;
-  protected _sendWorkerMessage: (msg: any) => void = () => {};
   private _empackEnvMeta: IEmpackEnvMeta;
   private _isPythonInstalled = false;
   private _pkgRootUrl = '';
