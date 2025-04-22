@@ -18,5 +18,5 @@ dependencies:
   - empack >=3.1.0
   - pip:
     - jupyterlab >=4.4.0.b0,<5
-    - jupyterlite-core >=0.6.0.a3,<0.7
+    - jupyterlite-core >=0.6.0.a8,<0.7
     - ..

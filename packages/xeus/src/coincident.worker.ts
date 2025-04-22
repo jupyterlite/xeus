@@ -31,12 +31,7 @@ export class SharedBufferContentsAPI extends ContentsAPI {
  */
 class XeusDriveFS extends DriveFS {
   createAPI(options: DriveFS.IOptions): ContentsAPI {
-    return new SharedBufferContentsAPI(
-      options.driveName,
-      options.mountpoint,
-      options.FS,
-      options.ERRNO_CODES
-    );
+    return new SharedBufferContentsAPI(options);
   }
 }
 
@@ -47,7 +42,8 @@ export class XeusCoincidentKernel extends XeusRemoteKernel {
   async mount(
     driveName: string,
     mountpoint: string,
-    baseUrl: string
+    baseUrl: string,
+    browsingContextId: string
   ): Promise<void> {
     const { FS, PATH, ERRNO_CODES } = globalThis.Module;
 
@@ -61,7 +57,8 @@ export class XeusCoincidentKernel extends XeusRemoteKernel {
       ERRNO_CODES,
       baseUrl,
       driveName,
-      mountpoint
+      mountpoint,
+      browsingContextId
     });
 
     FS.mkdir(mountpoint);
