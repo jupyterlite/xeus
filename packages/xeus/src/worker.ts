@@ -37,6 +37,7 @@ let resolveInputReply: any;
 let kernelReady: (value: unknown) => void;
 let rawXKernel: any;
 let rawXServer: any;
+const names = { log: 'stdout', warn: 'stdout', error: 'stderr' };
 
 async function get_stdin() {
   const replyPromise = new Promise(resolve => {
@@ -169,6 +170,14 @@ export class XeusRemoteKernel {
         const installedPackages = this._getInstalledPackages();
 
         try {
+          postMessage({
+            _stream: {
+              name: names['log'],
+              text: `Collecting ${this.getPackageNames(install.specs, install.pipSpecs)?.join(',')}
+          Solving packages...    `
+            }
+          });
+
           const newPackages = await solve({
             ymlOrSpecs: install.specs ? install.specs : [],
             installedPackages,
@@ -177,12 +186,22 @@ export class XeusRemoteKernel {
             logger: this._logger
           });
 
-          await this._reloadPackages({
-            ...newPackages.condaPackages,
-            ...newPackages.pipPackages
+          await this._reloadPackages(
+            {
+              ...newPackages.condaPackages,
+              ...newPackages.pipPackages
+            },
+            install.specs,
+            install.pipSpecs
+          );
+        } catch (error: any) {
+          postMessage({
+            _stream: {
+              name: names['error'],
+              text: error.message
+            }
           });
-        } catch (error) {
-          console.log('error', error);
+          this._logger?.error(error);
         }
       }
       code = run || '';
@@ -191,11 +210,66 @@ export class XeusRemoteKernel {
     return code;
   }
 
-  async _reloadPackages(newPackages: ISolvedPackages) {
+  getPackageNames(specs: string[] | undefined, pipSpecs: string[] | undefined) {
+    let pkgs: string[] = [];
+    if (specs?.length && pipSpecs?.length) {
+      pkgs = [...specs, ...pipSpecs];
+    } else if (specs?.length) {
+      pkgs = [...specs];
+    } else if (pipSpecs?.length) {
+      pkgs = [...pipSpecs];
+    }
+    const regex = /(\w+)(?:=\S*)?/g;
+
+    let packageNames: string[] | undefined = [];
+    let match: any = regex.exec(pkgs.join(','));
+
+    while (match !== null) {
+      packageNames.push(match[1]);
+    }
+    return packageNames;
+  }
+
+  async _reloadPackages(
+    newPackages: ISolvedPackages,
+    specs: string[] | undefined,
+    pipSpecs: string[] | undefined
+  ) {
+    const packageNames = this.getPackageNames(specs, pipSpecs);
+    postMessage({
+      _stream: {
+        name: names['warn'],
+        text: `There are no available packages ${packageNames.length ? `for ${packageNames.join(',')}` : ''}`
+      }
+    });
+
     if (Object.keys(newPackages).length) {
+      postMessage({
+        _stream: {
+          name: names['log'],
+          text: `Installing collected packages ${packageNames.join(',')}`
+        }
+      });
+
       await this.updateKernelPackages(newPackages);
       this._setInstalledPackages();
+
       await this._load();
+      let collectedPkgs: string[] = [];
+      packageNames.forEach((pkg: string) => {
+        Object.keys(this._installedPackages).map((filename: string) => {
+          if (filename.includes(pkg)) {
+            collectedPkgs.push(this._installedPackages[filename].name);
+          }
+        });
+      });
+
+      postMessage({
+        _stream: {
+          name: names['log'],
+          text: `Successfully installed ${collectedPkgs?.join(',')}`
+        }
+      });
     }
   }
 
@@ -209,7 +283,7 @@ export class XeusRemoteKernel {
           removeList.push(oldPkg);
         }
       });
-      let tmpPkg = {
+      const tmpPkg = {
         name: newPkg.name,
         url: newPkg.url,
         filename,
@@ -220,7 +294,7 @@ export class XeusRemoteKernel {
       };
       newPackages.push(tmpPkg);
     });
-
+  
     if (Object.keys(removeList).length) {
       await removingFiles({
         removeList,

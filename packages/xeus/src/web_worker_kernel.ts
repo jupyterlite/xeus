@@ -172,7 +172,7 @@ export class WebWorkerKernel implements IKernel {
 
     msg.data.header.session = this._parentHeader?.session ?? '';
     msg.data.session = this._parentHeader?.session ?? '';
-    this._sendMessage(msg.data);
+      this._sendMessage(msg.data);
 
     // resolve promise
     if (
@@ -189,8 +189,21 @@ export class WebWorkerKernel implements IKernel {
    * @param msg The worker message to process.
    */
   private _processComlinkWorkerMessage(msg: any): void {
+
     if (!msg.header) {
-      return;
+      if (msg?._stream) {
+        const parentHeaderValue = this._parentHeader;
+        const message = KernelMessage.createMessage<KernelMessage.IStreamMsg>({
+          channel: 'iopub',
+          msgType: 'stream',
+          session: parentHeaderValue?.session ?? '',
+          parentHeader: parentHeaderValue,
+          content: msg._stream
+        });
+        msg = message;
+      } else {
+        return;
+      }
     }
 
     msg.header.session = this._parentHeader?.session ?? '';
