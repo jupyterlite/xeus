@@ -15,7 +15,7 @@ import {
   ILogger,
   ISolvedPackages,
   solve,
-  removingFiles
+  removePackagesFromEmscriptenFS
 } from '@emscripten-forge/mambajs';
 import { parseCommandLine } from './tools';
 globalThis.Module = {};
@@ -168,13 +168,16 @@ export class XeusRemoteKernel {
       const { install, run } = parseCommandLine(code);
       if (install.specs || install.pipSpecs) {
         const installedPackages = this._getInstalledPackages();
-
+        const packageNames = this.getPackageNames(
+          install.specs,
+          install.pipSpecs
+        );
         try {
           postMessage({
             _stream: {
               name: names['log'],
-              text: `Collecting ${this.getPackageNames(install.specs, install.pipSpecs)?.join(',')}
-          Solving packages...    `
+              text: `Collecting ${packageNames?.join(',')}
+              Solving packages...    `
             }
           });
 
@@ -191,14 +194,14 @@ export class XeusRemoteKernel {
               ...newPackages.condaPackages,
               ...newPackages.pipPackages
             },
-            install.specs,
-            install.pipSpecs
+            packageNames
           );
         } catch (error: any) {
           postMessage({
             _stream: {
               name: names['error'],
-              text: error.message
+              text: `
+              ${error.message}`
             }
           });
           this._logger?.error(error);
@@ -221,33 +224,24 @@ export class XeusRemoteKernel {
     }
     const regex = /(\w+)(?:=\S*)?/g;
 
-    let packageNames: string[] | undefined = [];
-    let match: any = regex.exec(pkgs.join(','));
-
+    let packageNames: string[] = [];
+    let match: RegExpExecArray | null = regex.exec(pkgs.join(','));
     while (match !== null) {
       packageNames.push(match[1]);
+      match = regex.exec(pkgs.join(','));
     }
     return packageNames;
   }
 
-  async _reloadPackages(
-    newPackages: ISolvedPackages,
-    specs: string[] | undefined,
-    pipSpecs: string[] | undefined
-  ) {
-    const packageNames = this.getPackageNames(specs, pipSpecs);
-    postMessage({
-      _stream: {
-        name: names['warn'],
-        text: `There are no available packages ${packageNames.length ? `for ${packageNames.join(',')}` : ''}`
-      }
-    });
+  async _reloadPackages(newPackages: ISolvedPackages, packageNames: string[]) {
+    let text = '';
 
     if (Object.keys(newPackages).length) {
       postMessage({
         _stream: {
           name: names['log'],
-          text: `Installing collected packages ${packageNames.join(',')}`
+          text: `
+          Installing collected packages ${packageNames.join(',')}`
         }
       });
 
@@ -263,11 +257,21 @@ export class XeusRemoteKernel {
           }
         });
       });
-
+      text = `
+Successfully installed ${collectedPkgs?.join(',')}`;
       postMessage({
         _stream: {
           name: names['log'],
-          text: `Successfully installed ${collectedPkgs?.join(',')}`
+          text
+        }
+      });
+    } else {
+      text = `
+There are no available packages ${packageNames.join(',')}`;
+      postMessage({
+        _stream: {
+          name: names['warn'],
+          text
         }
       });
     }
@@ -294,9 +298,9 @@ export class XeusRemoteKernel {
       };
       newPackages.push(tmpPkg);
     });
-  
+
     if (Object.keys(removeList).length) {
-      await removingFiles({
+      await removePackagesFromEmscriptenFS({
         removeList,
         Module: globalThis.Module,
         paths: this._paths,
