@@ -110,11 +110,16 @@ export class XeusRemoteKernel {
     } else {
       rawXServer.notify_listener(event.msg);
     }
-
   }
 
   async initialize(options: IXeusWorkerKernel.IOptions): Promise<void> {
-    const { baseUrl, browsingContextId, kernelSpec, empackEnvMetaLink, kernelId } = options;
+    const {
+      baseUrl,
+      browsingContextId,
+      kernelSpec,
+      empackEnvMetaLink,
+      kernelId
+    } = options;
 
     this._logger = new XeusWorkerLogger(kernelId);
 
@@ -235,7 +240,7 @@ export class XeusRemoteKernel {
         xhr.open('POST', url, false); // Synchronous XMLHttpRequest
         const msg = JSON.stringify({
           browsingContextId,
-          data: inputRequest,
+          data: inputRequest
         });
         // Send input request, this blocks until the input reply is received.
         xhr.send(msg);
@@ -248,9 +253,9 @@ export class XeusRemoteKernel {
 
         return inputReply;
       } catch (err) {
-        return {error: `Failed to request stdin via service worker: ${err}`}
+        return { error: `Failed to request stdin via service worker: ${err}` };
       }
-    }
+    };
   }
 
   private _logger: XeusWorkerLogger;
