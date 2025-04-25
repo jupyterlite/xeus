@@ -29,17 +29,9 @@ globalThis.toplevel_promise_py_proxy = null;
 
 declare function createXeusModule(options: any): any;
 
-let resolveInputReply: any;
 let kernelReady: (value: unknown) => void;
 let rawXKernel: any;
 let rawXServer: any;
-
-async function get_stdin() {
-  const replyPromise = new Promise(resolve => {
-    resolveInputReply = resolve;
-  });
-  return replyPromise;
-}
 
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url);
@@ -49,8 +41,6 @@ async function fetchJson(url: string): Promise<any> {
   const json = await response.json();
   return json;
 }
-
-(self as any).get_stdin = get_stdin;
 
 globalThis.ready = new Promise(resolve => {
   kernelReady = resolve;
@@ -116,14 +106,15 @@ export class XeusRemoteKernel {
     }
 
     if (msg_type === 'input_reply') {
-      resolveInputReply(event.msg);
+      // Should never be called as input_reply messages are returned via service worker
     } else {
       rawXServer.notify_listener(event.msg);
     }
+
   }
 
   async initialize(options: IXeusWorkerKernel.IOptions): Promise<void> {
-    const { baseUrl, kernelSpec, empackEnvMetaLink, kernelId } = options;
+    const { baseUrl, browsingContextId, kernelSpec, empackEnvMetaLink, kernelId } = options;
 
     this._logger = new XeusWorkerLogger(kernelId);
 
@@ -210,6 +201,8 @@ export class XeusRemoteKernel {
         });
       }
 
+      this._initializeStdin(baseUrl, browsingContextId);
+
       rawXKernel = new globalThis.Module.xkernel();
       rawXServer = rawXKernel.get_server();
       if (!rawXServer) {
@@ -230,6 +223,34 @@ export class XeusRemoteKernel {
     this._logger.log('Kernel successfuly started!');
 
     kernelReady(1);
+  }
+
+  private _initializeStdin(baseUrl: string, browsingContextId: string): void {
+    globalThis.get_stdin = (inputRequest: any): any => {
+      // Send a input request to the front-end via the service worker and block until
+      // the reply is received.
+      try {
+        const xhr = new XMLHttpRequest();
+        const url = URLExt.join(baseUrl, '/stdin/kernel');
+        xhr.open('POST', url, false); // Synchronous XMLHttpRequest
+        const msg = JSON.stringify({
+          browsingContextId,
+          data: inputRequest,
+        });
+        // Send input request, this blocks until the input reply is received.
+        xhr.send(msg);
+        const inputReply = JSON.parse(xhr.response as string);
+
+        if ('error' in inputReply) {
+          // Service worker may return an error instead of an input reply message.
+          throw new Error(inputReply['error']);
+        }
+
+        return inputReply;
+      } catch (err) {
+        return {error: `Failed to request stdin via service worker: ${err}`}
+      }
+    }
   }
 
   private _logger: XeusWorkerLogger;
