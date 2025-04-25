@@ -149,6 +149,36 @@ export class XeusRemoteKernel {
     this._installedPackages = installed;
   }
 
+  _showPackagesList() {
+    const installedPackages = this._getInstalledPackages();
+
+    const nameWidth = 30;
+    const versionWidth = 15;
+    const buildWidth = 20;
+
+    postMessage({
+      _stream: {
+        name: names['log'],
+        text: `${'Name'.padEnd(nameWidth)}${'Version'.padEnd(versionWidth)}${'Build'.padEnd(buildWidth)} \n`
+      }
+    });
+    postMessage({
+      _stream: {
+        name: names['log'],
+        text: '─'.repeat(nameWidth + versionWidth + buildWidth)+'\n'
+      }
+    });
+
+    Object.keys(installedPackages).forEach(filename => {
+      const text = `${installedPackages[filename].name.padEnd(nameWidth)}${installedPackages[filename].version.padEnd(versionWidth)}${installedPackages[filename].build_string.padEnd(buildWidth)} \n`;
+      postMessage({
+        _stream: {
+          name: names['log'],
+          text
+        }
+      });
+    });
+  }
   async _installPackages(code: string) {
     const commandNames = [
       'micromamba',
@@ -159,13 +189,20 @@ export class XeusRemoteKernel {
       'pip'
     ];
     let isInstallCommand = false;
+    let isListCommand = false;
     commandNames.forEach((command: string) => {
       if (code.includes(`${command} install`)) {
         isInstallCommand = true;
+      } else if (code.includes(`${command} list`)){
+        isListCommand = true
       }
     });
-    if (isInstallCommand) {
-      const { install, run } = parseCommandLine(code);
+    if (isInstallCommand || isListCommand) {
+      const { install, run, list } = parseCommandLine(code);
+      if (list.includes(true)) {
+        this._showPackagesList();
+      }
+
       if (install.specs || install.pipSpecs) {
         const installedPackages = this._getInstalledPackages();
         const packageNames = this.getPackageNames(
@@ -176,8 +213,7 @@ export class XeusRemoteKernel {
           postMessage({
             _stream: {
               name: names['log'],
-              text: `Collecting ${packageNames?.join(',')}
-              Solving packages...    `
+              text: ` Collecting ${packageNames?.join(',')} \n Solving packages...    `
             }
           });
 
@@ -200,8 +236,7 @@ export class XeusRemoteKernel {
           postMessage({
             _stream: {
               name: names['error'],
-              text: `
-              ${error.message}`
+              text: `${error.message}\n ${error.stack}`
             }
           });
           this._logger?.error(error);
@@ -240,8 +275,7 @@ export class XeusRemoteKernel {
       postMessage({
         _stream: {
           name: names['log'],
-          text: `
-          Installing collected packages ${packageNames.join(',')}`
+          text: `\n Installing collected packages: ${packageNames.join(',')}`
         }
       });
 
@@ -253,12 +287,13 @@ export class XeusRemoteKernel {
       packageNames.forEach((pkg: string) => {
         Object.keys(this._installedPackages).map((filename: string) => {
           if (filename.includes(pkg)) {
-            collectedPkgs.push(this._installedPackages[filename].name);
+            collectedPkgs.push(
+              `${this._installedPackages[filename].name}-${this._installedPackages[filename].version}`
+            );
           }
         });
       });
-      text = `
-Successfully installed ${collectedPkgs?.join(',')}`;
+      text = `\n Successfully installed: ${collectedPkgs?.join(',')}`;
       postMessage({
         _stream: {
           name: names['log'],
@@ -266,8 +301,7 @@ Successfully installed ${collectedPkgs?.join(',')}`;
         }
       });
     } else {
-      text = `
-There are no available packages ${packageNames.join(',')}`;
+      text = `\n There are no available packages: ${packageNames.join(',')}`;
       postMessage({
         _stream: {
           name: names['warn'],
@@ -361,10 +395,11 @@ There are no available packages ${packageNames.join(',')}`;
           baseUrl,
           `xeus/kernels/${kernelSpec.name}/kernel_packages`
         );
-
+        //if (!this._empackEnvMeta) {
         this._empackEnvMeta = (await fetchJson(
           packagesJsonUrl
         )) as IEmpackEnvMeta;
+        //     }
         this._setInstalledPackages();
         this._activeKernel = kernelSpec.name;
         await this._load();

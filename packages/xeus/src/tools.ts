@@ -2,6 +2,10 @@ export interface IParsedCommands {
   install: IInstallationCommandOptions;
   run: string;
 }
+
+export interface ICommands extends IParsedCommands {
+  list: boolean[];
+}
 export interface IInstallationCommandOptions {
   channels?: string[];
   specs?: string[];
@@ -11,25 +15,29 @@ export interface IInstallationCommandOptions {
 
 export type SpecTypes = 'specs' | 'pipSpecs';
 
-export const parseCommandLine = (code: string): IParsedCommands => {
-  let result: IParsedCommands = {
+export const parseCommandLine = (code: string): ICommands => {
+  let result: ICommands = {
     install: {},
-    run: code
+    run: code,
+    list: [false]
   };
   const codeLines = code.split('\n');
   if (codeLines.length > 1) {
     result = { ...parseLines(codeLines) };
   } else {
-    result = { ...parseCommand(code) };
+    if (hasCondaListCommand(code)) {
+      result = { install: result.install, run: '', list: [true] };
+    } else {
+      result = { ...parseCommand(code), list: [false] };
+    }
   }
-
   return result;
 };
 
 function parseCommand(code: string) {
   const run = code;
   let isPipCommand = false;
-  const isCondaCommand = hasCondaCommand(code);
+  const isCondaCommand = hasCondaInstallCommand(code);
   code = isCondaCodeLine(code);
 
   if (!isCondaCommand && code.includes('%pip install')) {
@@ -54,16 +62,19 @@ function parseCommand(code: string) {
   }
 }
 
-function parseLines(codeLines: string[]): IParsedCommands {
+function parseLines(codeLines: string[]): ICommands {
   const installCommands: string[] = [];
   const runCommands: string[] = [];
+  const listCommand: boolean[] = [];
 
   let channels: string[] = [];
   let specs: string[] = [];
   let pipSpecs: string[] = [];
   codeLines.forEach((line: string) => {
-    if (hasCondaCommand(line) || hasPipCommand(line)) {
+    if (hasCondaInstallCommand(line) || hasPipCommand(line)) {
       installCommands.push(line);
+    } else if (hasCondaListCommand(line)) {
+      listCommand.push(true);
     } else {
       runCommands.push(line);
     }
@@ -94,7 +105,8 @@ function parseLines(codeLines: string[]): IParsedCommands {
 
   return {
     install: { channels, specs, pipSpecs },
-    run: runCommands ? runCommands.join('\n') : ''
+    run: runCommands ? runCommands.join('\n') : '',
+    list: listCommand ? listCommand : [false]
   };
 }
 
@@ -109,7 +121,7 @@ function isCondaCodeLine(code: string) {
   return code;
 }
 
-function hasCondaCommand(code: string) {
+function hasCondaInstallCommand(code: string) {
   let isCondaCommand = false;
   const commandNames = ['micromamba', 'un', 'mamba', 'conda', 'rattler'];
   commandNames.forEach((name: string) => {
@@ -119,6 +131,18 @@ function hasCondaCommand(code: string) {
   });
 
   return isCondaCommand;
+}
+
+function hasCondaListCommand(code: string) {
+  let isCondaListCommand = false;
+  const commandNames = ['micromamba', 'un', 'mamba', 'conda', 'rattler'];
+  commandNames.forEach((name: string) => {
+    if (code === `%${name} list`) {
+      isCondaListCommand = true;
+    }
+  });
+
+  return isCondaListCommand;
 }
 
 function hasPipCommand(code: string) {
