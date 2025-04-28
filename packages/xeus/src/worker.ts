@@ -276,12 +276,7 @@ export class XeusRemoteKernel {
     let text = '';
 
     if (Object.keys(newPackages).length) {
-      postMessage({
-        _stream: {
-          name: names['log'],
-          text: `Installing collected packages: ${packageNames.join(',')}\n`
-        }
-      });
+      this.showMessage(`Installing collected packages: ${packageNames.join(',')}\n`, 'log');
 
       await this.updateKernelPackages(newPackages);
       this._setInstalledPackages();
@@ -298,20 +293,10 @@ export class XeusRemoteKernel {
         });
       });
       text = `Successfully installed: ${collectedPkgs?.join(',')}\n`;
-      postMessage({
-        _stream: {
-          name: names['log'],
-          text
-        }
-      });
+      this.showMessage(text, 'log');
     } else {
       text = `There are no available packages: ${packageNames.join(',')}\n`;
-      postMessage({
-        _stream: {
-          name: names['warn'],
-          text
-        }
-      });
+      this.showMessage(text, 'warn');
     }
   }
 
