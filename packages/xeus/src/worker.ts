@@ -153,32 +153,38 @@ export class XeusRemoteKernel {
     const installedPackages = this._getInstalledPackages();
 
     const nameWidth = 30;
-    const versionWidth = 15;
-    const buildWidth = 20;
+    const versionWidth = 30;
+    const buildWidth = 30;
 
-    postMessage({
-      _stream: {
-        name: names['log'],
-        text: `${'Name'.padEnd(nameWidth)}${'Version'.padEnd(versionWidth)}${'Build'.padEnd(buildWidth)} \n`
-      }
-    });
-    postMessage({
-      _stream: {
-        name: names['log'],
-        text: '─'.repeat(nameWidth + versionWidth + buildWidth)+'\n'
-      }
-    });
+    this.showMessage(`${'Name'.padEnd(nameWidth)}${'Version'.padEnd(versionWidth)}${'Build'.padEnd(buildWidth)} \n`, 'log');
+
+    this.showMessage('─'.repeat(nameWidth + versionWidth + buildWidth) + '\n', 'log');
+
 
     Object.keys(installedPackages).forEach(filename => {
       const text = `${installedPackages[filename].name.padEnd(nameWidth)}${installedPackages[filename].version.padEnd(versionWidth)}${installedPackages[filename].build_string.padEnd(buildWidth)} \n`;
-      postMessage({
-        _stream: {
-          name: names['log'],
-          text
-        }
-      });
+      this.showMessage(text, 'log');
     });
   }
+
+   showMessage(text: string, log: string){
+    postMessage({
+      _stream: {
+        name: names[log],
+        text
+      }
+    });
+  }
+
+  showSolverInformation(packages:ISolvedPackages, time:number) {
+    this.showMessage(`Solving took ${time/1000} seconds \n`, 'log');
+    this.showMessage('Solved environment!\n', 'log');
+    Object.keys(packages).map((filename)=>{
+      const {name, version, build_string} = packages[filename];
+      this.showMessage(`${name} ${version} ${build_string}\n`, 'log');
+    });
+  }
+
   async _installPackages(code: string) {
     const commandNames = [
       'micromamba',
@@ -193,8 +199,8 @@ export class XeusRemoteKernel {
     commandNames.forEach((command: string) => {
       if (code.includes(`${command} install`)) {
         isInstallCommand = true;
-      } else if (code.includes(`${command} list`)){
-        isListCommand = true
+      } else if (code.includes(`${command} list`)) {
+        isListCommand = true;
       }
     });
     if (isInstallCommand || isListCommand) {
@@ -210,13 +216,8 @@ export class XeusRemoteKernel {
           install.pipSpecs
         );
         try {
-          postMessage({
-            _stream: {
-              name: names['log'],
-              text: ` Collecting ${packageNames?.join(',')} \n Solving packages...    `
-            }
-          });
-
+          this.showMessage(`Collecting ${packageNames?.join(',')} \nSolving environment...\n`, 'log');
+          const start = performance.now();
           const newPackages = await solve({
             ymlOrSpecs: install.specs ? install.specs : [],
             installedPackages,
@@ -224,6 +225,9 @@ export class XeusRemoteKernel {
             channels: install.channels,
             logger: this._logger
           });
+          const end = performance.now();
+          const time = end - start;
+          this.showSolverInformation({...newPackages.condaPackages, ...newPackages.pipPackages}, time);
 
           await this._reloadPackages(
             {
@@ -275,7 +279,7 @@ export class XeusRemoteKernel {
       postMessage({
         _stream: {
           name: names['log'],
-          text: `\n Installing collected packages: ${packageNames.join(',')}`
+          text: `Installing collected packages: ${packageNames.join(',')}\n`
         }
       });
 
@@ -293,7 +297,7 @@ export class XeusRemoteKernel {
           }
         });
       });
-      text = `\n Successfully installed: ${collectedPkgs?.join(',')}`;
+      text = `Successfully installed: ${collectedPkgs?.join(',')}\n`;
       postMessage({
         _stream: {
           name: names['log'],
@@ -301,7 +305,7 @@ export class XeusRemoteKernel {
         }
       });
     } else {
-      text = `\n There are no available packages: ${packageNames.join(',')}`;
+      text = `There are no available packages: ${packageNames.join(',')}\n`;
       postMessage({
         _stream: {
           name: names['warn'],
