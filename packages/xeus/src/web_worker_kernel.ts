@@ -162,6 +162,13 @@ export class WebWorkerKernel implements IKernel {
   }
 
   /**
+   * Send kernel message to the client
+   */
+  protected get sendMessage(): IKernel.SendMessage {
+    return this._sendMessage;
+  }
+
+  /**
    * Process a message coming from the coincident web worker.
    *
    * @param msg The worker message to process.
