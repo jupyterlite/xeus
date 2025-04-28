@@ -231,6 +231,16 @@ export abstract class XeusRemoteKernel {
   }
 
   /**
+   * Setup custom Emscripten FileSystem
+   */
+  abstract mount(
+    driveName: string,
+    mountpoint: string,
+    baseUrl: string,
+    browsingContextId: string
+  ): Promise<void>;
+
+  /**
    * Add get_stdin function to globalThis that takes an input_request message, blocks
    * until the corresponding input_reply is received and returns the input_reply message.
    * If an error occurs return an object of the form { error: "Error explanation" }
