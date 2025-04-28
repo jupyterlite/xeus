@@ -66,7 +66,7 @@ export class XeusWorkerLogger implements ILogger {
   private _channel: BroadcastChannel;
 }
 
-export class XeusRemoteKernel {
+export abstract class XeusRemoteKernel {
   constructor(options: XeusRemoteKernel.IOptions = {}) {}
 
   async ready(): Promise<void> {
@@ -230,33 +230,16 @@ export class XeusRemoteKernel {
     kernelReady(1);
   }
 
-  private _initializeStdin(baseUrl: string, browsingContextId: string): void {
-    globalThis.get_stdin = (inputRequest: any): any => {
-      // Send a input request to the front-end via the service worker and block until
-      // the reply is received.
-      try {
-        const xhr = new XMLHttpRequest();
-        const url = URLExt.join(baseUrl, '/stdin/kernel');
-        xhr.open('POST', url, false); // Synchronous XMLHttpRequest
-        const msg = JSON.stringify({
-          browsingContextId,
-          data: inputRequest
-        });
-        // Send input request, this blocks until the input reply is received.
-        xhr.send(msg);
-        const inputReply = JSON.parse(xhr.response as string);
-
-        if ('error' in inputReply) {
-          // Service worker may return an error instead of an input reply message.
-          throw new Error(inputReply['error']);
-        }
-
-        return inputReply;
-      } catch (err) {
-        return { error: `Failed to request stdin via service worker: ${err}` };
-      }
-    };
-  }
+  /**
+   * Add get_stdin function to globalThis that takes an input_request message, blocks
+   * until the corresponding input_reply is received and returns the input_reply message.
+   * If an error occurs return an object of the form { error: "Error explanation" }
+   * This function is called by xeus-lite's get_stdin.
+   */
+  protected abstract _initializeStdin(
+    baseUrl: string,
+    browsingContextId: string
+  ): void;
 
   private _logger: XeusWorkerLogger;
 }

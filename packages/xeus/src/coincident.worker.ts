@@ -65,6 +65,10 @@ export class XeusCoincidentKernel extends XeusRemoteKernel {
     FS.mount(drive, {}, mountpoint);
     FS.chdir(mountpoint);
   }
+
+  protected _initializeStdin(baseUrl: string, browsingContextId: string): void {
+    // TODO: SharedArrayBuffer implementation
+  }
 }
 
 const worker = new XeusCoincidentKernel();
