@@ -177,7 +177,7 @@ export class XeusRemoteKernel {
           packagesJsonUrl
         )) as IEmpackEnvMeta;
 
-        const sharedLibs = await bootstrapEmpackPackedEnvironment({
+        const bootstrapData = await bootstrapEmpackPackedEnvironment({
           empackEnvMeta,
           pkgRootUrl,
           Module: globalThis.Module,
@@ -203,7 +203,7 @@ export class XeusRemoteKernel {
 
         // Load shared libs
         await loadShareLibs({
-          sharedLibs,
+          sharedLibs: bootstrapData.sharedLibs,
           prefix: empackEnvMeta.prefix,
           Module: globalThis.Module,
           logger: this._logger
