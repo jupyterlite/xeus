@@ -208,7 +208,7 @@ export abstract class XeusRemoteKernel {
 
       this._initializeStdin(baseUrl, browsingContextId);
 
-      rawXKernel = new globalThis.Module.xkernel(kernelSpec.argv);
+      rawXKernel = globalThis.Module.xkernel.length ? new globalThis.Module.xkernel(kernelSpec.argv) : new globalThis.Module.xkernel();
       rawXServer = rawXKernel.get_server();
       if (!rawXServer) {
         this._logger.error('Failed to start kernel!');
