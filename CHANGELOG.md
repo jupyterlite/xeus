@@ -2,6 +2,37 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.0.0a5
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@4.0.0-a4...4ee136ef40830da69a925d32f9f803738092c075))
+
+### Enhancements made
+
+- Expose sendMessage to subclasses [#214](https://github.com/jupyterlite/xeus/pull/214) ([@martinRenou](https://github.com/martinRenou))
+- Support stdin via service worker [#212](https://github.com/jupyterlite/xeus/pull/212) ([@ianthomas23](https://github.com/ianthomas23))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-04-28&to=2025-04-28&type=c))
+
+[@ianthomas23](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aianthomas23+updated%3A2025-04-28..2025-04-28&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-04-28..2025-04-28&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
+## 4.0.0a4
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@4.0.0-a3...f7c8808554f95b58d1d5e0952fa76b826532993e))
+
+### Maintenance and upkeep improvements
+
+- Update mambajs 0.10.0 [#213](https://github.com/jupyterlite/xeus/pull/213) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-04-22&to=2025-04-28&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-04-22..2025-04-28&type=Issues)
+
 ## 4.0.0a3
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@4.0.0-a2...bf33a1181ab602a30fd4766e3cea1fe159293fbb))
@@ -16,8 +47,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-03-20&to=2025-04-22&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-03-20..2025-04-22&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.0.0a2
 

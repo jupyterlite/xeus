@@ -113,7 +113,8 @@ export class WebWorkerKernel implements IKernel {
         kernelSpec: this._kernelSpec,
         baseUrl: PageConfig.getBaseUrl(),
         mountDrive: options.mountDrive,
-        empackEnvMetaLink: this._empackEnvMetaLink
+        empackEnvMetaLink: this._empackEnvMetaLink,
+        browsingContextId: options.browsingContextId
       })
       .then(this._ready.resolve.bind(this._ready));
 
@@ -158,6 +159,13 @@ export class WebWorkerKernel implements IKernel {
    */
   get location(): string {
     return this._location;
+  }
+
+  /**
+   * Send kernel message to the client
+   */
+  protected get sendMessage(): IKernel.SendMessage {
+    return this._sendMessage;
   }
 
   /**
