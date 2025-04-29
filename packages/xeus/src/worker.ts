@@ -29,17 +29,9 @@ globalThis.toplevel_promise_py_proxy = null;
 
 declare function createXeusModule(options: any): any;
 
-let resolveInputReply: any;
 let kernelReady: (value: unknown) => void;
 let rawXKernel: any;
 let rawXServer: any;
-
-async function get_stdin() {
-  const replyPromise = new Promise(resolve => {
-    resolveInputReply = resolve;
-  });
-  return replyPromise;
-}
 
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url);
@@ -49,8 +41,6 @@ async function fetchJson(url: string): Promise<any> {
   const json = await response.json();
   return json;
 }
-
-(self as any).get_stdin = get_stdin;
 
 globalThis.ready = new Promise(resolve => {
   kernelReady = resolve;
@@ -76,7 +66,7 @@ export class XeusWorkerLogger implements ILogger {
   private _channel: BroadcastChannel;
 }
 
-export class XeusRemoteKernel {
+export abstract class XeusRemoteKernel {
   constructor(options: XeusRemoteKernel.IOptions = {}) {}
 
   async ready(): Promise<void> {
@@ -116,14 +106,20 @@ export class XeusRemoteKernel {
     }
 
     if (msg_type === 'input_reply') {
-      resolveInputReply(event.msg);
+      // Should never be called as input_reply messages are returned via service worker
     } else {
       rawXServer.notify_listener(event.msg);
     }
   }
 
   async initialize(options: IXeusWorkerKernel.IOptions): Promise<void> {
-    const { baseUrl, kernelSpec, empackEnvMetaLink, kernelId } = options;
+    const {
+      baseUrl,
+      browsingContextId,
+      kernelSpec,
+      empackEnvMetaLink,
+      kernelId
+    } = options;
 
     this._logger = new XeusWorkerLogger(kernelId);
 
@@ -177,7 +173,7 @@ export class XeusRemoteKernel {
           packagesJsonUrl
         )) as IEmpackEnvMeta;
 
-        const sharedLibs = await bootstrapEmpackPackedEnvironment({
+        const bootstrapData = await bootstrapEmpackPackedEnvironment({
           empackEnvMeta,
           pkgRootUrl,
           Module: globalThis.Module,
@@ -203,12 +199,14 @@ export class XeusRemoteKernel {
 
         // Load shared libs
         await loadShareLibs({
-          sharedLibs,
+          sharedLibs: bootstrapData.sharedLibs,
           prefix: empackEnvMeta.prefix,
           Module: globalThis.Module,
           logger: this._logger
         });
       }
+
+      this._initializeStdin(baseUrl, browsingContextId);
 
       rawXKernel = new globalThis.Module.xkernel(kernelSpec.argv);
       rawXServer = rawXKernel.get_server();
@@ -231,6 +229,27 @@ export class XeusRemoteKernel {
 
     kernelReady(1);
   }
+
+  /**
+   * Setup custom Emscripten FileSystem
+   */
+  abstract mount(
+    driveName: string,
+    mountpoint: string,
+    baseUrl: string,
+    browsingContextId: string
+  ): Promise<void>;
+
+  /**
+   * Add get_stdin function to globalThis that takes an input_request message, blocks
+   * until the corresponding input_reply is received and returns the input_reply message.
+   * If an error occurs return an object of the form { error: "Error explanation" }
+   * This function is called by xeus-lite's get_stdin.
+   */
+  protected abstract _initializeStdin(
+    baseUrl: string,
+    browsingContextId: string
+  ): void;
 
   private _logger: XeusWorkerLogger;
 }

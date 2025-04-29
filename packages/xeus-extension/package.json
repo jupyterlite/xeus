@@ -1,6 +1,6 @@
 {
     "name": "@jupyterlite/xeus-extension",
-    "version": "4.0.0-a2",
+    "version": "4.0.0-a5",
     "description": "JupyterLite loader for Xeus kernels",
     "keywords": [
         "jupyter",
@@ -41,18 +41,18 @@
         "watch:labextension": "jupyter labextension watch ."
     },
     "dependencies": {
-        "@jupyterlab/application": "^4.4.0-beta.0",
-        "@jupyterlab/coreutils": "^6.4.0-beta.0",
-        "@jupyterlab/logconsole": "^4.4.0-beta.0",
-        "@jupyterlab/notebook": "^4.4.0-beta.0",
-        "@jupyterlite/contents": "^0.6.0-alpha.4",
-        "@jupyterlite/kernel": "^0.6.0-alpha.4",
-        "@jupyterlite/server": "^0.6.0-alpha.4",
-        "@jupyterlite/xeus": "^4.0.0-a2",
+        "@jupyterlab/application": "^4.4.0-rc.1",
+        "@jupyterlab/coreutils": "^6.4.0-rc.1",
+        "@jupyterlab/logconsole": "^4.4.0-rc.1",
+        "@jupyterlab/notebook": "^4.4.0-rc.1",
+        "@jupyterlite/contents": "^0.6.0-alpha.8",
+        "@jupyterlite/kernel": "^0.6.0-alpha.8",
+        "@jupyterlite/server": "^0.6.0-alpha.8",
+        "@jupyterlite/xeus": "^4.0.0-a5",
         "@lumino/coreutils": "^2"
     },
     "devDependencies": {
-        "@jupyterlab/builder": "^4.4.0-beta.0",
+        "@jupyterlab/builder": "^4.4.0-rc.0",
         "@types/json-schema": "^7.0.11",
         "@types/react": "^18.0.26",
         "@types/react-addons-linked-state-mixin": "^0.14.22",

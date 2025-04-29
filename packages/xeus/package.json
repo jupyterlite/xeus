@@ -1,6 +1,6 @@
 {
     "name": "@jupyterlite/xeus",
-    "version": "4.0.0-a2",
+    "version": "4.0.0-a5",
     "description": "JupyterLite Xeus kernels",
     "keywords": [
         "jupyter",
@@ -36,19 +36,19 @@
         "watch:src": "tsc -w --sourceMap"
     },
     "dependencies": {
-        "@emscripten-forge/mambajs": "^0.7.0",
-        "@jupyterlab/coreutils": "^6.4.0-beta.0",
-        "@jupyterlab/services": "^7.4.0-beta.0",
-        "@jupyterlite/contents": "^0.6.0-alpha.4",
-        "@jupyterlite/kernel": "^0.6.0-alpha.4",
-        "@jupyterlite/server": "^0.6.0-alpha.4",
+        "@emscripten-forge/mambajs": "^0.10.0",
+        "@jupyterlab/coreutils": "^6.4.0-rc.1",
+        "@jupyterlab/services": "^7.4.0-rc.1",
+        "@jupyterlite/contents": "^0.6.0-alpha.8",
+        "@jupyterlite/kernel": "^0.6.0-alpha.8",
+        "@jupyterlite/server": "^0.6.0-alpha.8",
         "@lumino/coreutils": "^2",
         "@lumino/signaling": "^2",
         "coincident": "^1.2.3",
         "comlink": "^4.4.1"
     },
     "devDependencies": {
-        "@jupyterlab/builder": "^4.4.0-beta.0",
+        "@jupyterlab/builder": "^4.4.0-rc.0",
         "@types/json-schema": "^7.0.11",
         "@types/react": "^18.0.26",
         "@types/react-addons-linked-state-mixin": "^0.14.22",
