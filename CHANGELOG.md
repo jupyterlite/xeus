@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 3.1.7
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.1.6...60d8ade6a019c005c95d6ccefabd9425618df96b))
+
+### Enhancements made
+
+- Enable Kernels to be built on top of kernel spec arguments [#210](https://github.com/jupyterlite/xeus/pull/210) ([@anutosh491](https://github.com/anutosh491))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-03-31&to=2025-04-29&type=c))
+
+[@anutosh491](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aanutosh491+updated%3A2025-03-31..2025-04-29&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-03-31..2025-04-29&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 3.1.6
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.1.5...c20087c4d78d26b103c0e96d65fb2cd63abd29a6))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-02-28&to=2025-03-31&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2025-02-28..2025-03-31&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-02-28..2025-03-31&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 3.1.5
 
