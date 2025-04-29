@@ -15,7 +15,9 @@ import {
   ILogger,
   ISolvedPackages,
   solve,
-  removePackagesFromEmscriptenFS
+  removePackagesFromEmscriptenFS,
+  sort,
+  showPackagesList
 } from '@emscripten-forge/mambajs';
 import { parseCommandLine } from './tools';
 globalThis.Module = {};
@@ -125,8 +127,51 @@ export abstract class XeusRemoteKernel {
     return this._installedPackages;
   }
 
+  _getKernelLogger(): ILogger {
+    return {
+      log(...msg: any[]): void {
+        postMessage({
+          _stream: {
+            name: names['log'],
+            text: msg.join(' ') + '\n'
+          }
+        });
+      },
+
+      warn(...msg: any[]): void {
+        postMessage({
+          _stream: {
+            name: names['warn'],
+            text: msg.join(' ') + '\n'
+          }
+        });
+      },
+
+      error({
+        evalue,
+        ename,
+        traceback
+      }: {
+        evalue: string;
+        ename: string;
+        traceback: string;
+      }): void {
+        postMessage({
+          _stream: {
+            name: names['error'],
+            evalue,
+            ename,
+            traceback,
+            text: `${evalue} ${traceback} \n'`,
+            
+          }
+        });
+      }
+    };
+  }
+
   _setInstalledPackages() {
-    const installed = {};
+    let installed = {};
     this._empackEnvMeta.packages.map((pkg: any) => {
       installed[pkg.filename] = {
         name: pkg.name,
@@ -136,42 +181,21 @@ export abstract class XeusRemoteKernel {
         build_string: pkg.build
       };
     });
+    installed = sort(installed);
     this._installedPackages = installed;
   }
 
-  _showPackagesList() {
-    const installedPackages = this._getInstalledPackages();
-
-    const nameWidth = 30;
-    const versionWidth = 30;
-    const buildWidth = 30;
-
-    this.showMessage(`${'Name'.padEnd(nameWidth)}${'Version'.padEnd(versionWidth)}${'Build'.padEnd(buildWidth)} \n`, 'log');
-
-    this.showMessage('─'.repeat(nameWidth + versionWidth + buildWidth) + '\n', 'log');
-
-
-    Object.keys(installedPackages).forEach(filename => {
-      const text = `${installedPackages[filename].name.padEnd(nameWidth)}${installedPackages[filename].version.padEnd(versionWidth)}${installedPackages[filename].build_string.padEnd(buildWidth)} \n`;
-      this.showMessage(text, 'log');
-    });
-  }
-
-   showMessage(text: string, log: string){
-    postMessage({
-      _stream: {
-        name: names[log],
-        text
-      }
-    });
-  }
-
-  showSolverInformation(packages:ISolvedPackages, time:number) {
-    this.showMessage(`Solving took ${time/1000} seconds \n`, 'log');
-    this.showMessage('Solved environment!\n', 'log');
-    Object.keys(packages).map((filename)=>{
-      const {name, version, build_string} = packages[filename];
-      this.showMessage(`${name} ${version} ${build_string}\n`, 'log');
+  showSolverInformation(
+    packages: ISolvedPackages,
+    time: number,
+    logger: ILogger
+  ) {
+    logger.log(`Solving took ${time / 1000} seconds`);
+    logger.log('Solved environment!');
+    packages = sort(packages) as ISolvedPackages;
+    Object.keys(packages).map(filename => {
+      const { name, version, build_string } = packages[filename];
+      logger.log(`${name} ${version} ${build_string}`);
     });
   }
 
@@ -194,19 +218,22 @@ export abstract class XeusRemoteKernel {
       }
     });
     if (isInstallCommand || isListCommand) {
+      const kernelLogger = this._getKernelLogger();
       const { install, run, list } = parseCommandLine(code);
+      const installedPackages = this._getInstalledPackages();
       if (list.includes(true)) {
-        this._showPackagesList();
+        showPackagesList(installedPackages, kernelLogger);
       }
 
       if (install.specs || install.pipSpecs) {
-        const installedPackages = this._getInstalledPackages();
         const packageNames = this.getPackageNames(
           install.specs,
           install.pipSpecs
         );
         try {
-          this.showMessage(`Collecting ${packageNames?.join(',')} \nSolving environment...\n`, 'log');
+          kernelLogger.log(
+            `Collecting ${packageNames?.join(',')} \nSolving environment...`
+          );
           const start = performance.now();
           const newPackages = await solve({
             ymlOrSpecs: install.specs ? install.specs : [],
@@ -217,21 +244,25 @@ export abstract class XeusRemoteKernel {
           });
           const end = performance.now();
           const time = end - start;
-          this.showSolverInformation({...newPackages.condaPackages, ...newPackages.pipPackages}, time);
+          this.showSolverInformation(
+            { ...newPackages.condaPackages, ...newPackages.pipPackages },
+            time,
+            kernelLogger
+          );
 
           await this._reloadPackages(
             {
               ...newPackages.condaPackages,
               ...newPackages.pipPackages
             },
-            packageNames
+            packageNames,
+            kernelLogger
           );
         } catch (error: any) {
-          postMessage({
-            _stream: {
-              name: names['error'],
-              text: `${error.message}\n ${error.stack}`
-            }
+          kernelLogger.error({
+            evalue: error.message,
+            ename: 'InstallationError',
+            traceback: error.stack
           });
           this._logger?.error(error);
         }
@@ -253,7 +284,7 @@ export abstract class XeusRemoteKernel {
     }
     const regex = /(\w+)(?:=\S*)?/g;
 
-    let packageNames: string[] = [];
+    const packageNames: string[] = [];
     let match: RegExpExecArray | null = regex.exec(pkgs.join(','));
     while (match !== null) {
       packageNames.push(match[1]);
@@ -262,17 +293,21 @@ export abstract class XeusRemoteKernel {
     return packageNames;
   }
 
-  async _reloadPackages(newPackages: ISolvedPackages, packageNames: string[]) {
+  async _reloadPackages(
+    newPackages: ISolvedPackages,
+    packageNames: string[],
+    logger: ILogger
+  ) {
     let text = '';
 
     if (Object.keys(newPackages).length) {
-      this.showMessage(`Installing collected packages: ${packageNames.join(',')}\n`, 'log');
+      logger.log(`Installing collected packages: ${packageNames.join(',')}`);
 
       await this.updateKernelPackages(newPackages);
       this._setInstalledPackages();
 
       await this._load();
-      let collectedPkgs: string[] = [];
+      const collectedPkgs: string[] = [];
       packageNames.forEach((pkg: string) => {
         Object.keys(this._installedPackages).map((filename: string) => {
           if (filename.includes(pkg)) {
@@ -283,10 +318,10 @@ export abstract class XeusRemoteKernel {
         });
       });
       text = `Successfully installed: ${collectedPkgs?.join(',')}\n`;
-      this.showMessage(text, 'log');
+      logger.log(text);
     } else {
       text = `There are no available packages: ${packageNames.join(',')}\n`;
-      this.showMessage(text, 'warn');
+      logger.warn(text);
     }
   }
 
@@ -449,7 +484,7 @@ export abstract class XeusRemoteKernel {
       logger: this._logger
     });
   }
-  
+
   /**
    * Setup custom Emscripten FileSystem
    */
