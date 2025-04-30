@@ -4,6 +4,8 @@
 
 import coincident from 'coincident';
 
+import type { KernelMessage } from '@jupyterlab/services';
+
 import {
   ContentsAPI,
   DriveFS,
@@ -67,7 +69,10 @@ export class XeusCoincidentKernel extends XeusRemoteKernel {
   }
 
   protected _initializeStdin(baseUrl: string, browsingContextId: string): void {
-    // TODO: SharedArrayBuffer implementation
+    globalThis.get_stdin = (
+      inputRequest: KernelMessage.IInputRequestMsg
+    ): KernelMessage.IInputReplyMsg =>
+      workerAPI.processStdinRequest(inputRequest);
   }
 }
 
