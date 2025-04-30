@@ -209,9 +209,11 @@ export abstract class XeusRemoteKernel {
 
       this._initializeStdin(baseUrl, browsingContextId);
       // backward compatibility: Checking if the kernel constructor takes argument or not
-      rawXKernel = globalThis.Module.xkernel.length
-        ? new globalThis.Module.xkernel(kernelSpec.argv)
-        : new globalThis.Module.xkernel();
+      try {
+        rawXKernel = new globalThis.Module.xkernel(kernelSpec.argv);
+      } catch (e) {
+        rawXKernel = new globalThis.Module.xkernel();
+      }
       rawXServer = rawXKernel.get_server();
       if (!rawXServer) {
         this._logger.error('Failed to start kernel!');
