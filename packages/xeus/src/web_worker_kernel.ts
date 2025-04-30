@@ -191,6 +191,12 @@ export class WebWorkerKernel implements IKernel {
     }
   }
 
+  private _assignSession(msg: any) {
+    msg.header.session = this._parentHeader?.session ?? '';
+    msg.session = this._parentHeader?.session ?? '';
+    return msg;
+  }
+
   /**
    * Process a message coming from the comlink web worker.
    *
@@ -199,23 +205,49 @@ export class WebWorkerKernel implements IKernel {
   private _processComlinkWorkerMessage(msg: any): void {
     if (!msg.header) {
       if (msg?._stream) {
+        let message: KernelMessage.IStreamMsg | KernelMessage.IExecuteReplyMsg;
         const parentHeaderValue = this._parentHeader;
-        const message = KernelMessage.createMessage<KernelMessage.IStreamMsg>({
+        const { name, text } = msg._stream;
+        console.log('msg._stream', msg._stream);
+        if (name === 'stderr') {
+          const errorMessage =
+            KernelMessage.createMessage<KernelMessage.IExecuteReplyMsg>({
+              msgType: 'execute_reply',
+              channel: 'shell',
+              parentHeader:
+                parentHeaderValue as KernelMessage.IHeader<'execute_request'>,
+              session: parentHeaderValue?.session ?? '',
+              content: {
+                execution_count: msg._stream.executionCount,
+                status: 'error',
+                ename: msg._stream.ename,
+                evalue: msg._stream.evalue,
+                traceback: msg._stream.traceback
+              }
+            });
+          msg = this._assignSession(errorMessage);
+          this._sendMessage(msg);
+        }
+
+        message = KernelMessage.createMessage<KernelMessage.IStreamMsg>({
           channel: 'iopub',
           msgType: 'stream',
           session: parentHeaderValue?.session ?? '',
           parentHeader: parentHeaderValue,
-          content: msg._stream
+          content: {
+            name,
+            text
+          }
         });
-        msg = message;
+
+        msg = this._assignSession(message);
+        this._sendMessage(msg);
       } else {
         return;
       }
+    } else {
+      this._sendMessage(this._assignSession(msg));
     }
-
-    msg.header.session = this._parentHeader?.session ?? '';
-    msg.session = this._parentHeader?.session ?? '';
-    this._sendMessage(msg);
 
     // resolve promise
     if (

@@ -16,7 +16,6 @@ import {
   ISolvedPackages,
   solve,
   removePackagesFromEmscriptenFS,
-  sort,
   showPackagesList
 } from '@emscripten-forge/mambajs';
 import { parseCommandLine } from './tools';
@@ -115,6 +114,7 @@ export abstract class XeusRemoteKernel {
     if (msg_type === 'input_reply') {
       // Should never be called as input_reply messages are returned via service worker
     } else if (msg_type === 'execute_request') {
+      this._executionCount += 1;
       const code = event.msg.content.code;
       event.msg.content.code = await this._installPackages(code);
       rawXServer.notify_listener(event.msg);
@@ -149,23 +149,27 @@ export abstract class XeusRemoteKernel {
 
       error({
         evalue,
-        ename,
-        traceback
+        traceback,
+        executionCount
       }: {
         evalue: string;
-        ename: string;
-        traceback: string;
+        traceback?: string[];
+        executionCount?: 0;
       }): void {
-        postMessage({
-          _stream: {
-            name: names['error'],
-            evalue,
-            ename,
-            traceback,
-            text: `${evalue} ${traceback} \n'`,
-            
-          }
-        });
+        if (evalue !== undefined) {
+          console.log('evalue', evalue);
+          console.log('traceback', traceback);
+          console.log('executionCount', executionCount);
+          postMessage({
+            _stream: {
+              name: names['error'],
+              evalue,
+              traceback,
+              executionCount,
+              text: evalue
+            }
+          });
+        }
       }
     };
   }
@@ -181,22 +185,7 @@ export abstract class XeusRemoteKernel {
         build_string: pkg.build
       };
     });
-    installed = sort(installed);
     this._installedPackages = installed;
-  }
-
-  showSolverInformation(
-    packages: ISolvedPackages,
-    time: number,
-    logger: ILogger
-  ) {
-    logger.log(`Solving took ${time / 1000} seconds`);
-    logger.log('Solved environment!');
-    packages = sort(packages) as ISolvedPackages;
-    Object.keys(packages).map(filename => {
-      const { name, version, build_string } = packages[filename];
-      logger.log(`${name} ${version} ${build_string}`);
-    });
   }
 
   async _installPackages(code: string) {
@@ -231,24 +220,18 @@ export abstract class XeusRemoteKernel {
           install.pipSpecs
         );
         try {
-          kernelLogger.log(
-            `Collecting ${packageNames?.join(',')} \nSolving environment...`
-          );
+          kernelLogger.log(`Collecting ${packageNames?.join(',')}`);
           const start = performance.now();
           const newPackages = await solve({
             ymlOrSpecs: install.specs ? install.specs : [],
             installedPackages,
             pipSpecs: install.pipSpecs ? install.pipSpecs : [],
             channels: install.channels,
-            logger: this._logger
+            logger: kernelLogger
           });
           const end = performance.now();
           const time = end - start;
-          this.showSolverInformation(
-            { ...newPackages.condaPackages, ...newPackages.pipPackages },
-            time,
-            kernelLogger
-          );
+          kernelLogger.log(`Solving took ${time / 1000} seconds`);
 
           await this._reloadPackages(
             {
@@ -259,10 +242,12 @@ export abstract class XeusRemoteKernel {
             kernelLogger
           );
         } catch (error: any) {
+          console.log('++++');
+          console.log('error', error);
           kernelLogger.error({
             evalue: error.message,
-            ename: 'InstallationError',
-            traceback: error.stack
+            traceback: [error.stack],
+            execution_count: this._executionCount
           });
           this._logger?.error(error);
         }
@@ -513,6 +498,7 @@ export abstract class XeusRemoteKernel {
   private _activeKernel = '';
   private _installedPackages = {};
   private _paths = {};
+  private _executionCount = 0;
 }
 
 export namespace XeusRemoteKernel {
