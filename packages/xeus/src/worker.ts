@@ -106,7 +106,8 @@ export abstract class XeusRemoteKernel {
     }
 
     if (msg_type === 'input_reply') {
-      // Should never be called as input_reply messages are returned via service worker
+      // Should never be called as input_reply messages are handled by get_stdin
+      // via SharedArrayBuffer or service worker.
     } else {
       rawXServer.notify_listener(event.msg);
     }

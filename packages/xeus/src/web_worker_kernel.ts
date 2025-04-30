@@ -100,6 +100,17 @@ export class WebWorkerKernel implements IKernel {
 
         return await this._contentsProcessor.processDriveRequest(data);
       };
+
+      // Stdin request is synchronous from the web worker's point of view, blocking
+      // until the reply is received. From the UI thread's point of view it is async.
+      (remote.processStdinRequest as any) = async (
+        inputRequest: KernelMessage.IInputRequestMsg
+      ): Promise<KernelMessage.IInputReplyMsg> => {
+        this._processCoincidentWorkerMessage({ data: inputRequest });
+        this._inputDelegate =
+          new PromiseDelegate<KernelMessage.IInputReplyMsg>();
+        return await this._inputDelegate.promise;
+      };
     } else {
       this._worker.onmessage = e => {
         this._processComlinkWorkerMessage(e.data);
@@ -128,12 +139,11 @@ export class WebWorkerKernel implements IKernel {
   }
 
   private async _sendMessageToWorker(msg: any): Promise<void> {
-    if (msg.header.msg_type !== 'input_reply') {
+    if (msg.header.msg_type === 'input_reply') {
+      this._inputDelegate.resolve(msg);
+    } else {
       this._executeDelegate = new PromiseDelegate<void>();
-    }
-
-    await this._remoteKernel.processMessage({ msg, parent: this.parent });
-    if (msg.header.msg_type !== 'input_reply') {
+      await this._remoteKernel.processMessage({ msg, parent: this.parent });
       return await this._executeDelegate.promise;
     }
   }
@@ -304,6 +314,7 @@ export class WebWorkerKernel implements IKernel {
   private _worker: Worker;
   private _sendMessage: IKernel.SendMessage;
   private _executeDelegate = new PromiseDelegate<void>();
+  private _inputDelegate = new PromiseDelegate<KernelMessage.IInputReplyMsg>();
   private _parentHeader:
     | KernelMessage.IHeader<KernelMessage.MessageType>
     | undefined = undefined;
