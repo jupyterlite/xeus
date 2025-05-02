@@ -480,51 +480,7 @@ export abstract class XeusRemoteKernel {
   _getInstalledPackages() {
     return this._installedPackages;
   }
-  /*
-  _getKernelLogger(): ILogger {
-    return {
-      log(...msg: any[]): void {
-        postMessage({
-          _stream: {
-            name: names['log'],
-            text: msg.join(' ') + '\n'
-          }
-        });
-      },
 
-      warn(...msg: any[]): void {
-        postMessage({
-          _stream: {
-            name: names['warn'],
-            text: msg.join(' ') + '\n'
-          }
-        });
-      },
-
-      error({
-        evalue,
-        traceback,
-        executionCount
-      }: {
-        evalue: string;
-        traceback?: string[];
-        executionCount?: 0;
-      }): void {
-        if (evalue !== undefined) {
-          postMessage({
-            _stream: {
-              name: names['error'],
-              evalue,
-              traceback,
-              executionCount,
-              text: `${evalue}${traceback?.length? traceback.join(''):''}`
-            }
-          });
-        }
-      }
-    };
-  }
-*/
   _setInstalledPackages() {
     let installed = {};
     this._empackEnvMeta.packages.map((pkg: any) => {
