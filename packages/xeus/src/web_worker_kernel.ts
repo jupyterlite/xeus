@@ -222,7 +222,7 @@ export class WebWorkerKernel implements IKernel {
                 status: 'error',
                 ename: msg._stream.ename,
                 evalue: msg._stream.evalue,
-                traceback: msg._stream.traceback
+                traceback: msg._stream.traceback.join('')
               }
             });
           msg = this._assignSession(errorMessage);
