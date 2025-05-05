@@ -16,8 +16,10 @@ import {
   ISolvedPackages,
   solve,
   removePackagesFromEmscriptenFS,
-  showPackagesList
+  showPackagesList,
+  IBootstrapData
 } from '@emscripten-forge/mambajs';
+import { IUnpackJSAPI } from '@emscripten-forge/untarjs';
 globalThis.Module = {};
 
 // when a toplevel cell uses an await, the cell is implicitly
@@ -90,7 +92,7 @@ class CommandParser {
    *  - run command code,
    *  - and a list flag indicating whether a list command was detected.
    */
-  parseCommandLine(code: string): CommandParser.ICommands {
+  parse(code: string): CommandParser.ICommands {
     let result: CommandParser.ICommands = {
       install: {},
       run: code,
@@ -488,6 +490,9 @@ export abstract class XeusRemoteKernel {
         name: pkg.name,
         version: pkg.version,
         repo_url: pkg.repo_url ? pkg.repo_url : '',
+        filename: pkg.filename ? pkg.filename : '',
+        filename_stem: pkg.filename_stem ? pkg.filename_stem : '',
+        url: pkg.url ? pkg.url : '',
         repo_name: pkg.repo_name ? pkg.repo_name : '',
         build_string: pkg.build
       };
@@ -515,7 +520,7 @@ export abstract class XeusRemoteKernel {
     });
     if (isInstallCommand || isListCommand) {
       const commandParser = new CommandParser();
-      const { install, run, list } = commandParser.parseCommandLine(code);
+      const { install, run, list } = commandParser.parse(code);
       const installedPackages = this._getInstalledPackages();
       if (list.includes(true)) {
         showPackagesList(installedPackages, this._logger);
@@ -613,10 +618,14 @@ export abstract class XeusRemoteKernel {
   async updateKernelPackages(pkgs: ISolvedPackages): Promise<any> {
     const removeList: any = [];
     const newPackages: any = [];
+
     Object.keys(pkgs).map((filename: string) => {
       const newPkg = pkgs[filename];
       this._empackEnvMeta.packages.map((oldPkg: any) => {
-        if (newPkg.name === oldPkg.name && newPkg.version !== oldPkg.version) {
+        if (
+          newPkg.name === oldPkg.name &&
+          (newPkg.version !== oldPkg.version || filename !== oldPkg.filename)
+        ) {
           removeList.push(oldPkg);
         }
       });
@@ -631,7 +640,6 @@ export abstract class XeusRemoteKernel {
       };
       newPackages.push(tmpPkg);
     });
-
     if (Object.keys(removeList).length) {
       await removePackagesFromEmscriptenFS({
         removeList,
@@ -700,11 +708,10 @@ export abstract class XeusRemoteKernel {
           baseUrl,
           `xeus/kernels/${kernelSpec.name}/kernel_packages`
         );
-        //if (!this._empackEnvMeta) {
         this._empackEnvMeta = (await fetchJson(
           packagesJsonUrl
         )) as IEmpackEnvMeta;
-        //     }
+
         this._setInstalledPackages();
         this._activeKernel = kernelSpec.name;
         await this._load();
@@ -735,14 +742,18 @@ export abstract class XeusRemoteKernel {
   }
 
   async _load() {
-    const { sharedLibs, paths } = await bootstrapEmpackPackedEnvironment({
-      empackEnvMeta: this._empackEnvMeta,
-      pkgRootUrl: this._pkgRootUrl,
-      Module: globalThis.Module,
-      logger: this._logger
-    });
+    const { sharedLibs, paths, untarjs }: IBootstrapData =
+      await bootstrapEmpackPackedEnvironment({
+        empackEnvMeta: this._empackEnvMeta,
+        pkgRootUrl: this._pkgRootUrl,
+        untarjs: this._untarjs,
+        Module: globalThis.Module,
+        logger: this._logger
+      });
     this._paths = paths;
-
+    if (!this._untarjs) {
+      this._untarjs = untarjs;
+    }
     // Bootstrap Python, if it's xeus-python
     if (this._activeKernel === 'xpython' && !this._isPythonInstalled) {
       const pythonVersion = getPythonVersion(this._empackEnvMeta.packages);
@@ -799,6 +810,7 @@ export abstract class XeusRemoteKernel {
   private _installedPackages = {};
   private _paths = {};
   private _executionCount = 0;
+  private _untarjs: IUnpackJSAPI | undefined;
 }
 
 export namespace XeusRemoteKernel {

@@ -208,7 +208,6 @@ export class WebWorkerKernel implements IKernel {
         let message: KernelMessage.IStreamMsg | KernelMessage.IExecuteReplyMsg;
         const parentHeaderValue = this._parentHeader;
         const { name, text } = msg._stream;
-        console.log('msg._stream', msg._stream);
         if (name === 'stderr') {
           const errorMessage =
             KernelMessage.createMessage<KernelMessage.IExecuteReplyMsg>({
