@@ -12,8 +12,15 @@ import {
   getPythonVersion,
   loadShareLibs,
   waitRunDependencies,
-  ILogger
+  ILogger,
+  ISolvedPackages,
+  solve,
+  removePackagesFromEmscriptenFS,
+  showPackagesList,
+  IBootstrapData,
+  parse
 } from '@emscripten-forge/mambajs';
+import { IUnpackJSAPI } from '@emscripten-forge/untarjs';
 globalThis.Module = {};
 
 // when a toplevel cell uses an await, the cell is implicitly
@@ -32,6 +39,7 @@ declare function createXeusModule(options: any): any;
 let kernelReady: (value: unknown) => void;
 let rawXKernel: any;
 let rawXServer: any;
+const names = { log: 'stdout', warn: 'stdout', error: 'stderr' };
 
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url);
@@ -46,21 +54,55 @@ globalThis.ready = new Promise(resolve => {
   kernelReady = resolve;
 });
 
+
 export class XeusWorkerLogger implements ILogger {
   constructor(kernelId: string) {
     this._channel = new BroadcastChannel(`/kernel-broadcast/${kernelId}`);
   }
 
   log(...msg: any[]): void {
+    postMessage({
+      _stream: {
+        name: names['log'],
+        text: msg.join(' ') + '\n'
+      }
+    });
     this._channel.postMessage({ type: 'log', msg: msg.join(' ') });
   }
 
   warn(...msg: any[]): void {
+    postMessage({
+      _stream: {
+        name: names['warn'],
+        text: msg.join(' ') + '\n'
+      }
+    });
     this._channel.postMessage({ type: 'warn', msg: msg.join(' ') });
   }
 
   error(...msg: any[]): void {
-    this._channel.postMessage({ type: 'error', msg: msg.join(' ') });
+    const [firstEl, ...rest] = msg;
+    let executionCount = 0;
+    let evalue = '';
+    if (msg !== undefined) {
+      if (typeof firstEl === 'number') {
+        executionCount = firstEl;
+        evalue = rest.join('');
+      } else {
+        evalue = msg.join('');
+      }
+      postMessage({
+        _stream: {
+          name: names['error'],
+          evalue,
+          traceback: [],
+          executionCount,
+          text: evalue
+        }
+      });
+
+      this._channel.postMessage({ type: 'error', msg: msg.join(' ') });
+    }
   }
 
   private _channel: BroadcastChannel;
@@ -108,9 +150,186 @@ export abstract class XeusRemoteKernel {
     if (msg_type === 'input_reply') {
       // Should never be called as input_reply messages are handled by get_stdin
       // via SharedArrayBuffer or service worker.
+    } else if (msg_type === 'execute_request') {
+      this._executionCount += 1;
+      const code = event.msg.content.code;
+      event.msg.content.code = await this._installPackages(code);
+      rawXServer.notify_listener(event.msg);
     } else {
       rawXServer.notify_listener(event.msg);
     }
+  }
+
+  _getInstalledPackages() {
+    return this._installedPackages;
+  }
+
+  _setInstalledPackages() {
+    const installed = {};
+    this._empackEnvMeta.packages.map((pkg: any) => {
+      installed[pkg.filename] = {
+        name: pkg.name,
+        version: pkg.version,
+        repo_url: pkg.repo_url ? pkg.repo_url : '',
+        filename: pkg.filename ? pkg.filename : '',
+        filename_stem: pkg.filename_stem ? pkg.filename_stem : '',
+        url: pkg.url ? pkg.url : '',
+        repo_name: pkg.repo_name ? pkg.repo_name : '',
+        build_string: pkg.build
+      };
+    });
+    this._installedPackages = installed;
+  }
+
+  async _installPackages(code: string) {
+    const commandNames = [
+      'micromamba',
+      'un',
+      'mamba',
+      'conda',
+      'rattler',
+      'pip'
+    ];
+    let isInstallCommand = false;
+    let isListCommand = false;
+    commandNames.forEach((command: string) => {
+      if (code.includes(`${command} install`)) {
+        isInstallCommand = true;
+      } else if (code.includes(`${command} list`)) {
+        isListCommand = true;
+      }
+    });
+    if (isInstallCommand || isListCommand) {
+      const { install, run, list } = parse(code);
+      const installedPackages = this._getInstalledPackages();
+      if (list.includes(true)) {
+        showPackagesList(installedPackages, this._logger);
+      }
+
+      if (install.specs || install.pipSpecs) {
+        const packageNames = this.getPackageNames(
+          install.specs,
+          install.pipSpecs
+        );
+        try {
+          this._logger.log(`Collecting ${packageNames?.join(',')}`);
+          const start = performance.now();
+          const newPackages = await solve({
+            ymlOrSpecs: install.specs ? install.specs : [],
+            installedPackages,
+            pipSpecs: install.pipSpecs ? install.pipSpecs : [],
+            channels: install.channels,
+            logger: this._logger
+          });
+          const end = performance.now();
+          const time = end - start;
+          this._logger.log(`Solving took ${time / 1000} seconds`);
+
+          await this._reloadPackages(
+            {
+              ...newPackages.condaPackages,
+              ...newPackages.pipPackages
+            },
+            packageNames,
+            this._logger
+          );
+        } catch (error: any) {
+          this._logger?.error(this._executionCount, error.stack);
+        }
+      }
+      code = run || '';
+    }
+
+    return code;
+  }
+
+  getPackageNames(specs: string[] | undefined, pipSpecs: string[] | undefined) {
+    let pkgs: string[] = [];
+    if (specs?.length && pipSpecs?.length) {
+      pkgs = [...specs, ...pipSpecs];
+    } else if (specs?.length) {
+      pkgs = [...specs];
+    } else if (pipSpecs?.length) {
+      pkgs = [...pipSpecs];
+    }
+    const regex = /(\w+)(?:=\S*)?/g;
+
+    const packageNames: string[] = [];
+    let match: RegExpExecArray | null = regex.exec(pkgs.join(','));
+    while (match !== null) {
+      packageNames.push(match[1]);
+      match = regex.exec(pkgs.join(','));
+    }
+    return packageNames;
+  }
+
+  async _reloadPackages(
+    newPackages: ISolvedPackages,
+    packageNames: string[],
+    logger: ILogger
+  ) {
+    let text = '';
+
+    if (Object.keys(newPackages).length) {
+      logger.log(`Installing collected packages: ${packageNames.join(',')}`);
+
+      await this.updateKernelPackages(newPackages);
+      this._setInstalledPackages();
+
+      await this._load();
+      const collectedPkgs: string[] = [];
+      packageNames.forEach((pkg: string) => {
+        Object.keys(this._installedPackages).map((filename: string) => {
+          if (filename.includes(pkg)) {
+            collectedPkgs.push(
+              `${this._installedPackages[filename].name}-${this._installedPackages[filename].version}`
+            );
+          }
+        });
+      });
+      text = `Successfully installed: ${collectedPkgs?.join(',')}\n`;
+      logger.log(text);
+    } else {
+      text = `There are no available packages: ${packageNames.join(',')}\n`;
+      logger.warn(text);
+    }
+  }
+
+  async updateKernelPackages(pkgs: ISolvedPackages): Promise<any> {
+    const removeList: any = [];
+    const newPackages: any = [];
+
+    Object.keys(pkgs).map((filename: string) => {
+      const newPkg = pkgs[filename];
+      this._empackEnvMeta.packages.map((oldPkg: any) => {
+        if (
+          newPkg.name === oldPkg.name &&
+          (newPkg.version !== oldPkg.version || filename !== oldPkg.filename)
+        ) {
+          removeList.push(oldPkg);
+        }
+      });
+      const tmpPkg = {
+        name: newPkg.name,
+        url: newPkg.url,
+        filename,
+        version: newPkg.version,
+        build: newPkg.build_string,
+        repo_name: newPkg.repo_name,
+        repo_url: newPkg.repo_url
+      };
+      newPackages.push(tmpPkg);
+    });
+    if (Object.keys(removeList).length) {
+      await removePackagesFromEmscriptenFS({
+        removeList,
+        Module: globalThis.Module,
+        paths: this._paths,
+        logger: this._logger
+      });
+    }
+
+    this._empackEnvMeta.packages = [...newPackages];
   }
 
   async initialize(options: IXeusWorkerKernel.IOptions): Promise<void> {
@@ -165,46 +384,17 @@ export abstract class XeusRemoteKernel {
       ) {
         const empackEnvMetaLocation = empackEnvMetaLink || kernel_root_url;
         const packagesJsonUrl = `${empackEnvMetaLocation}/empack_env_meta.json`;
-        const pkgRootUrl = URLExt.join(
+        this._pkgRootUrl = URLExt.join(
           baseUrl,
           `xeus/kernels/${kernelSpec.name}/kernel_packages`
         );
-
-        const empackEnvMeta = (await fetchJson(
+        this._empackEnvMeta = (await fetchJson(
           packagesJsonUrl
         )) as IEmpackEnvMeta;
 
-        const bootstrapData = await bootstrapEmpackPackedEnvironment({
-          empackEnvMeta,
-          pkgRootUrl,
-          Module: globalThis.Module,
-          logger: this._logger
-        });
-
-        // Bootstrap Python, if it's xeus-python
-        if (kernelSpec.name === 'xpython') {
-          const pythonVersion = getPythonVersion(empackEnvMeta.packages);
-
-          if (!pythonVersion) {
-            throw new Error('Failed to load Python!');
-          }
-
-          this._logger.log('Starting Python');
-
-          await bootstrapPython({
-            prefix: empackEnvMeta.prefix,
-            pythonVersion: pythonVersion,
-            Module: globalThis.Module
-          });
-        }
-
-        // Load shared libs
-        await loadShareLibs({
-          sharedLibs: bootstrapData.sharedLibs,
-          prefix: empackEnvMeta.prefix,
-          Module: globalThis.Module,
-          logger: this._logger
-        });
+        this._setInstalledPackages();
+        this._activeKernel = kernelSpec.name;
+        await this._load();
       }
 
       this._initializeStdin(baseUrl, browsingContextId);
@@ -235,6 +425,46 @@ export abstract class XeusRemoteKernel {
     kernelReady(1);
   }
 
+  async _load() {
+    const { sharedLibs, paths, untarjs }: IBootstrapData =
+      await bootstrapEmpackPackedEnvironment({
+        empackEnvMeta: this._empackEnvMeta,
+        pkgRootUrl: this._pkgRootUrl,
+        untarjs: this._untarjs,
+        Module: globalThis.Module,
+        logger: this._logger
+      });
+    this._paths = paths;
+    if (!this._untarjs) {
+      this._untarjs = untarjs;
+    }
+    // Bootstrap Python, if it's xeus-python
+    if (this._activeKernel === 'xpython' && !this._isPythonInstalled) {
+      const pythonVersion = getPythonVersion(this._empackEnvMeta.packages);
+
+      if (!pythonVersion) {
+        throw new Error('Failed to load Python!');
+      }
+
+      this._logger.log('Starting Python');
+
+      await bootstrapPython({
+        prefix: this._empackEnvMeta.prefix,
+        pythonVersion: pythonVersion,
+        Module: globalThis.Module
+      });
+      this._isPythonInstalled = true;
+    }
+
+    // Load shared libs
+    await loadShareLibs({
+      sharedLibs,
+      prefix: this._empackEnvMeta.prefix,
+      Module: globalThis.Module,
+      logger: this._logger
+    });
+  }
+
   /**
    * Setup custom Emscripten FileSystem
    */
@@ -257,6 +487,14 @@ export abstract class XeusRemoteKernel {
   ): void;
 
   private _logger: XeusWorkerLogger;
+  private _empackEnvMeta: IEmpackEnvMeta;
+  private _isPythonInstalled = false;
+  private _pkgRootUrl = '';
+  private _activeKernel = '';
+  private _installedPackages = {};
+  private _paths = {};
+  private _executionCount = 0;
+  private _untarjs: IUnpackJSAPI | undefined;
 }
 
 export namespace XeusRemoteKernel {
