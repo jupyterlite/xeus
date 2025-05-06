@@ -5,6 +5,8 @@
  * Definitions for the Xeus kernel.
  */
 
+import type { KernelMessage } from '@jupyterlab/services';
+
 import {
   TDriveMethod,
   TDriveRequest,
@@ -35,6 +37,15 @@ export interface IXeusWorkerKernel extends IWorkerKernel {
    * @param msg
    */
   processMessage(msg: any): void;
+
+  /**
+   * Process stdin request, blocking until the reply is received.
+   * This is sync for the web worker, async for the UI thread.
+   * @param inputRequest
+   */
+  processStdinRequest(
+    inputRequest: KernelMessage.IInputRequestMsg
+  ): KernelMessage.IInputReplyMsg;
 
   /**
    * Process worker message

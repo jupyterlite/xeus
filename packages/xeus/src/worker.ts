@@ -468,7 +468,8 @@ export abstract class XeusRemoteKernel {
     }
 
     if (msg_type === 'input_reply') {
-      // Should never be called as input_reply messages are returned via service worker
+      // Should never be called as input_reply messages are handled by get_stdin
+      // via SharedArrayBuffer or service worker.
     } else if (msg_type === 'execute_request') {
       this._executionCount += 1;
       const code = event.msg.content.code;
@@ -718,8 +719,12 @@ export abstract class XeusRemoteKernel {
       }
 
       this._initializeStdin(baseUrl, browsingContextId);
-
-      rawXKernel = new globalThis.Module.xkernel();
+      // backward compatibility: Checking if the kernel constructor takes argument or not
+      try {
+        rawXKernel = new globalThis.Module.xkernel(kernelSpec.argv);
+      } catch (e) {
+        rawXKernel = new globalThis.Module.xkernel();
+      }
       rawXServer = rawXKernel.get_server();
       if (!rawXServer) {
         this._logger.error('Failed to start kernel!');
