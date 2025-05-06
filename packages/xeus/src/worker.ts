@@ -485,7 +485,7 @@ export abstract class XeusRemoteKernel {
   }
 
   _setInstalledPackages() {
-    let installed = {};
+    const installed = {};
     this._empackEnvMeta.packages.map((pkg: any) => {
       installed[pkg.filename] = {
         name: pkg.name,

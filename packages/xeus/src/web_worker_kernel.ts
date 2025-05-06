@@ -215,7 +215,6 @@ export class WebWorkerKernel implements IKernel {
   private _processComlinkWorkerMessage(msg: any): void {
     if (!msg.header) {
       if (msg?._stream) {
-        let message: KernelMessage.IStreamMsg | KernelMessage.IExecuteReplyMsg;
         const parentHeaderValue = this._parentHeader;
         const { name, text } = msg._stream;
         if (name === 'stderr') {
@@ -238,7 +237,7 @@ export class WebWorkerKernel implements IKernel {
           this._sendMessage(msg);
         }
 
-        message = KernelMessage.createMessage<KernelMessage.IStreamMsg>({
+        const message = KernelMessage.createMessage<KernelMessage.IStreamMsg>({
           channel: 'iopub',
           msgType: 'stream',
           session: parentHeaderValue?.session ?? '',
