@@ -54,7 +54,6 @@ globalThis.ready = new Promise(resolve => {
   kernelReady = resolve;
 });
 
-
 export class XeusWorkerLogger implements ILogger {
   constructor(kernelId: string) {
     this._channel = new BroadcastChannel(`/kernel-broadcast/${kernelId}`);
