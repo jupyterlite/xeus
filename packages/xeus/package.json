@@ -36,12 +36,12 @@
         "watch:src": "tsc -w --sourceMap"
     },
     "dependencies": {
-        "@emscripten-forge/mambajs": "^0.10.0",
-        "@jupyterlab/coreutils": "^6.4.0-rc.1",
-        "@jupyterlab/services": "^7.4.0-rc.1",
-        "@jupyterlite/contents": "^0.6.0-alpha.8",
-        "@jupyterlite/kernel": "^0.6.0-alpha.8",
-        "@jupyterlite/server": "^0.6.0-alpha.8",
+        "@emscripten-forge/mambajs": "^0.10.1",
+        "@jupyterlab/coreutils": "^6.4.2",
+        "@jupyterlab/services": "^7.4.2",
+        "@jupyterlite/contents": "^0.6.0-alpha.10",
+        "@jupyterlite/kernel": "^0.6.0-alpha.10",
+        "@jupyterlite/server": "^0.6.0-alpha.10",
         "@lumino/coreutils": "^2",
         "@lumino/signaling": "^2",
         "coincident": "^1.2.3",
