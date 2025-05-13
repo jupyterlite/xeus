@@ -180,66 +180,67 @@ export abstract class XeusRemoteKernel {
     this._installedPackages = installed;
   }
 
-  async _installPackages(code: string) {
-    const commandNames = [
-      'micromamba',
-      'un',
-      'mamba',
-      'conda',
-      'rattler',
-      'pip'
-    ];
-    let isInstallCommand = false;
-    let isListCommand = false;
-    commandNames.forEach((command: string) => {
-      if (code.includes(`${command} install`)) {
-        isInstallCommand = true;
-      } else if (code.includes(`${command} list`)) {
-        isListCommand = true;
-      }
-    });
-    if (isInstallCommand || isListCommand) {
-      const { install, run, list } = parse(code);
-      const installedPackages = this._getInstalledPackages();
-      if (list.includes(true)) {
-        showPackagesList(installedPackages, this._logger);
-      }
+  async _install(
+    installedPackages: any,
+    channels: string[],
+    specs: string[],
+    pipSpecs: string[]
+  ) {
+    if (specs.length || pipSpecs.length) {
+      const packageNames = this.getPackageNames(specs, pipSpecs);
+      try {
+        this._logger.log(`Collecting ${packageNames?.join(',')}`);
+        const start = performance.now();
+        const newPackages = await solve({
+          ymlOrSpecs: specs,
+          installedPackages,
+          pipSpecs,
+          channels,
+          logger: this._logger
+        });
+        const end = performance.now();
+        const time = end - start;
+        this._logger.log(`Solving took ${time / 1000} seconds`);
 
-      if (install.specs || install.pipSpecs) {
-        const packageNames = this.getPackageNames(
-          install.specs,
-          install.pipSpecs
+        await this._reloadPackages(
+          {
+            ...newPackages.condaPackages,
+            ...newPackages.pipPackages
+          },
+          packageNames,
+          this._logger
         );
-        try {
-          this._logger.log(`Collecting ${packageNames?.join(',')}`);
-          const start = performance.now();
-          const newPackages = await solve({
-            ymlOrSpecs: install.specs ? install.specs : [],
-            installedPackages,
-            pipSpecs: install.pipSpecs ? install.pipSpecs : [],
-            channels: install.channels,
-            logger: this._logger
-          });
-          const end = performance.now();
-          const time = end - start;
-          this._logger.log(`Solving took ${time / 1000} seconds`);
-
-          await this._reloadPackages(
-            {
-              ...newPackages.condaPackages,
-              ...newPackages.pipPackages
-            },
-            packageNames,
-            this._logger
-          );
-        } catch (error: any) {
-          this._logger?.error(this._executionCount, error.stack);
-        }
+      } catch (error: any) {
+        this._logger?.error(this._executionCount, error.stack);
       }
-      code = run || '';
     }
+  }
 
-    return code;
+  async _installPackages(code: string) {
+    const { commands, run } = parse(code);
+    const installedPackages = this._getInstalledPackages();
+
+    for (const command of commands) {
+      switch (command.type) {
+        case 'install':
+          if (command.data) {
+            const { channels, specs, pipSpecs } = command.data;
+            await this._install(
+              installedPackages,
+              channels,
+              specs as string[],
+              pipSpecs as string[]
+            );
+          }
+          break;
+        case 'list':
+          showPackagesList(installedPackages, this._logger);
+          break;
+        default:
+          break;
+      }
+    }
+    return run;
   }
 
   getPackageNames(specs: string[] | undefined, pipSpecs: string[] | undefined) {
