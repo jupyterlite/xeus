@@ -48,21 +48,32 @@ globalThis.ready = new Promise(resolve => {
 
 export class XeusWorkerLogger implements ILogger {
   constructor(kernelId: string) {
-    this._channel = new BroadcastChannel(`/kernel-broadcast/${kernelId}`);
+    this._id = kernelId;
+    this._channel = new BroadcastChannel('/xeus-kernel-logs-broadcast');
   }
 
   log(...msg: any[]): void {
-    this._channel.postMessage({ type: 'log', msg: msg.join(' ') });
+    this._channel.postMessage({
+      kernelId: this._id,
+      payload: { type: 'text', level: 'info', data: msg.join(' ') }
+    });
   }
 
   warn(...msg: any[]): void {
-    this._channel.postMessage({ type: 'warn', msg: msg.join(' ') });
+    this._channel.postMessage({
+      kernelId: this._id,
+      payload: { type: 'text', level: 'warning', data: msg.join(' ') }
+    });
   }
 
   error(...msg: any[]): void {
-    this._channel.postMessage({ type: 'error', msg: msg.join(' ') });
+    this._channel.postMessage({
+      kernelId: this._id,
+      payload: { type: 'text', level: 'critical', data: msg.join(' ') }
+    });
   }
 
+  private _id: string;
   private _channel: BroadcastChannel;
 }
 
