@@ -50,7 +50,7 @@ export class XeusComlinkKernel extends XeusRemoteKernel {
       // the reply is received.
       try {
         const xhr = new XMLHttpRequest();
-        const url = URLExt.join(baseUrl, '/stdin/kernel');
+        const url = URLExt.join(baseUrl, '/api/stdin/kernel');
         xhr.open('POST', url, false); // Synchronous XMLHttpRequest
         const msg = JSON.stringify({
           browsingContextId,
