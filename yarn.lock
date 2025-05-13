@@ -331,14 +331,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.11.0":
-  version: 0.11.0
-  resolution: "@emscripten-forge/mambajs@npm:0.11.0"
+"@emscripten-forge/mambajs@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "@emscripten-forge/mambajs@npm:0.12.0"
   dependencies:
     "@baszalmstra/rattler": ^0.2.1
     "@emscripten-forge/untarjs": ^5.3.0
     yaml: ^2.7.0
-  checksum: a80cdeb817d5164d61817fa19595c740be58ad035a777eac5be4e34ec7e84c5566d623563cc399dcfe25ff306adc4f382dbd7c6d968d8fe49b1b6020038c35fa
+  checksum: 52640b8e55924ebc8c40093be88896333f210f9fea14bc0592dad525e7c11a24d35f238d88dde8dcca3801528dfa3357b701522e5d778bace335ab6abbd91721
   languageName: node
   linkType: hard
 
@@ -623,12 +623,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/builder@npm:^4.4.0-rc.0":
-  version: 4.4.0
-  resolution: "@jupyterlab/builder@npm:4.4.0"
+"@jupyterlab/builder@npm:^4.4.2":
+  version: 4.4.2
+  resolution: "@jupyterlab/builder@npm:4.4.2"
   dependencies:
     "@lumino/algorithm": ^2.0.3
-    "@lumino/application": ^2.4.3
+    "@lumino/application": ^2.4.4
     "@lumino/commands": ^2.3.2
     "@lumino/coreutils": ^2.2.1
     "@lumino/disposable": ^2.1.4
@@ -638,7 +638,7 @@ __metadata:
     "@lumino/properties": ^2.0.3
     "@lumino/signaling": ^2.1.4
     "@lumino/virtualdom": ^2.0.3
-    "@lumino/widgets": ^2.7.0
+    "@lumino/widgets": ^2.7.1
     ajv: ^8.12.0
     commander: ^9.4.1
     css-loader: ^6.7.1
@@ -660,7 +660,7 @@ __metadata:
     worker-loader: ^3.0.2
   bin:
     build-labextension: lib/build-labextension.js
-  checksum: 06e14bdc57ca43ccf157afa19ffa8af788fccfdc773975541e9d3856ef563c862ce87f31c4e5d9044c510f8808ef53c0220a0626d6802a0feeb6b5aa752b57c1
+  checksum: e88d19e12f00586c7a42c744ed242c8192dded2f8961343c6d8d325b4363b9660f85942a406ceaf4ae2ef6b98a5a9071587cff99a13907b7a7cdb18af60de015
   languageName: node
   linkType: hard
 
@@ -1274,7 +1274,7 @@ __metadata:
   resolution: "@jupyterlite/xeus-extension@workspace:packages/xeus-extension"
   dependencies:
     "@jupyterlab/application": ^4.4.2
-    "@jupyterlab/builder": ^4.4.0-rc.0
+    "@jupyterlab/builder": ^4.4.2
     "@jupyterlab/coreutils": ^6.4.2
     "@jupyterlab/logconsole": ^4.4.2
     "@jupyterlab/notebook": ^4.4.2
@@ -1318,8 +1318,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.11.0
-    "@jupyterlab/builder": ^4.4.0-rc.0
+    "@emscripten-forge/mambajs": ^0.12.0
     "@jupyterlab/coreutils": ^6.4.2
     "@jupyterlab/services": ^7.4.2
     "@jupyterlite/contents": ^0.6.0-beta.0
@@ -1584,17 +1583,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lumino/application@npm:^2.4.3":
-  version: 2.4.3
-  resolution: "@lumino/application@npm:2.4.3"
-  dependencies:
-    "@lumino/commands": ^2.3.2
-    "@lumino/coreutils": ^2.2.1
-    "@lumino/widgets": ^2.7.0
-  checksum: 1a1ebd7a883664b29624765fe01d31ff30324e39c90565827ba8b578a21e36c94dc096d9a285dc8738e0ec9dbaf48c50337a7976ec01acd0e78afc9066370bee
-  languageName: node
-  linkType: hard
-
 "@lumino/application@npm:^2.4.4":
   version: 2.4.4
   resolution: "@lumino/application@npm:2.4.4"
@@ -1735,25 +1723,6 @@ __metadata:
     "@lumino/signaling": ^2.1.4
     "@lumino/virtualdom": ^2.0.3
   checksum: c57f7e6cfbaddbd830e14db55242dcbdf531524cdf8641214ce737f43a6684004219eb58a572838f99f78af433bb8f9f19fd2ac6f0ffab4a635bd20164b75cec
-  languageName: node
-  linkType: hard
-
-"@lumino/widgets@npm:^2.7.0":
-  version: 2.7.0
-  resolution: "@lumino/widgets@npm:2.7.0"
-  dependencies:
-    "@lumino/algorithm": ^2.0.3
-    "@lumino/commands": ^2.3.2
-    "@lumino/coreutils": ^2.2.1
-    "@lumino/disposable": ^2.1.4
-    "@lumino/domutils": ^2.0.3
-    "@lumino/dragdrop": ^2.1.6
-    "@lumino/keyboard": ^2.0.3
-    "@lumino/messaging": ^2.0.3
-    "@lumino/properties": ^2.0.3
-    "@lumino/signaling": ^2.1.4
-    "@lumino/virtualdom": ^2.0.3
-  checksum: 6c2426e50549c7685cf2ad4d5f86d2b8e0d325003a70b29b14dc7b4655b0b3d41034728564675244fd09822ef200651aa856d28b6940aabccbf1dbc1f67f19f8
   languageName: node
   linkType: hard
 

@@ -11,9 +11,9 @@ import { URLExt } from '@jupyterlab/coreutils';
 
 import { DriveFS } from '@jupyterlite/contents';
 
-import { XeusRemoteKernel } from './worker';
+import { EmpackedXeusRemoteKernel } from './worker';
 
-export class XeusComlinkKernel extends XeusRemoteKernel {
+export class XeusComlinkKernel extends EmpackedXeusRemoteKernel {
   /**
    * Setup custom Emscripten FileSystem
    */
@@ -44,7 +44,7 @@ export class XeusComlinkKernel extends XeusRemoteKernel {
     FS.chdir(mountpoint);
   }
 
-  protected _initializeStdin(baseUrl: string, browsingContextId: string): void {
+  protected initializeStdin(baseUrl: string, browsingContextId: string): void {
     globalThis.get_stdin = (inputRequest: any): any => {
       // Send a input request to the front-end via the service worker and block until
       // the reply is received.
