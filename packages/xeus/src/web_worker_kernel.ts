@@ -120,7 +120,7 @@ export class WebWorkerKernel implements IKernel {
 
     remote
       .initialize({
-        kernelId: this._id,
+        kernelId: this.id,
         kernelSpec: this._kernelSpec,
         baseUrl: PageConfig.getBaseUrl(),
         mountDrive: options.mountDrive,
