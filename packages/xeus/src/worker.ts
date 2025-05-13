@@ -39,7 +39,7 @@ declare function createXeusModule(options: any): any;
 let kernelReady: (value: unknown) => void;
 let rawXKernel: any;
 let rawXServer: any;
-const names = { log: 'stdout', warn: 'stdout', error: 'stderr' };
+const STREAM = { log: 'stdout', warn: 'stdout', error: 'stderr' };
 
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url);
@@ -62,7 +62,7 @@ export class XeusWorkerLogger implements ILogger {
   log(...msg: any[]): void {
     postMessage({
       _stream: {
-        name: names['log'],
+        name: STREAM['log'],
         text: msg.join(' ') + '\n'
       }
     });
@@ -72,7 +72,7 @@ export class XeusWorkerLogger implements ILogger {
   warn(...msg: any[]): void {
     postMessage({
       _stream: {
-        name: names['warn'],
+        name: STREAM['warn'],
         text: msg.join(' ') + '\n'
       }
     });
@@ -80,31 +80,22 @@ export class XeusWorkerLogger implements ILogger {
   }
 
   error(...msg: any[]): void {
-    const [firstEl, ...rest] = msg;
-    let executionCount = 0;
-    let evalue = '';
-    if (msg !== undefined) {
-      if (typeof firstEl === 'number') {
-        executionCount = firstEl;
-        evalue = rest.join('');
-      } else {
-        evalue = msg.join('');
-      }
       postMessage({
         _stream: {
-          name: names['error'],
-          evalue,
+          name: STREAM['error'],
+          evalue: msg.join(''),
           traceback: [],
-          executionCount,
-          text: evalue
+          executionCount: this.executionCount,
+          text: msg.join('')
         }
       });
 
       this._channel.postMessage({ type: 'error', msg: msg.join(' ') });
     }
-  }
+  
 
   private _channel: BroadcastChannel;
+  executionCount: number = 0;
 }
 
 export abstract class XeusRemoteKernel {
@@ -151,16 +142,11 @@ export abstract class XeusRemoteKernel {
       // via SharedArrayBuffer or service worker.
     } else if (msg_type === 'execute_request') {
       this._executionCount += 1;
-      const code = event.msg.content.code;
-      event.msg.content.code = await this._installPackages(code);
+      event.msg.content.code = await this.processMagics(event.msg.content.code);
       rawXServer.notify_listener(event.msg);
     } else {
       rawXServer.notify_listener(event.msg);
     }
-  }
-
-  _getInstalledPackages() {
-    return this._installedPackages;
   }
 
   _setInstalledPackages() {
@@ -181,7 +167,6 @@ export abstract class XeusRemoteKernel {
   }
 
   async _install(
-    installedPackages: any,
     channels: string[],
     specs: string[],
     pipSpecs: string[]
@@ -193,7 +178,7 @@ export abstract class XeusRemoteKernel {
         const start = performance.now();
         const newPackages = await solve({
           ymlOrSpecs: specs,
-          installedPackages,
+          installedPackages: this._installedPackages,
           pipSpecs,
           channels,
           logger: this._logger
@@ -211,22 +196,20 @@ export abstract class XeusRemoteKernel {
           this._logger
         );
       } catch (error: any) {
-        this._logger?.error(this._executionCount, error.stack);
+        this._logger.executionCount= this._executionCount;
+        this._logger?.error(error.stack);
       }
     }
   }
 
-  async _installPackages(code: string) {
+  async processMagics(code: string) {
     const { commands, run } = parse(code);
-    const installedPackages = this._getInstalledPackages();
-
     for (const command of commands) {
       switch (command.type) {
         case 'install':
           if (command.data) {
             const { channels, specs, pipSpecs } = command.data;
             await this._install(
-              installedPackages,
               channels,
               specs as string[],
               pipSpecs as string[]
@@ -234,7 +217,7 @@ export abstract class XeusRemoteKernel {
           }
           break;
         case 'list':
-          showPackagesList(installedPackages, this._logger);
+          showPackagesList(this._installedPackages, this._logger);
           break;
         default:
           break;
