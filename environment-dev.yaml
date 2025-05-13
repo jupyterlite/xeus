@@ -4,7 +4,7 @@ channels:
 dependencies:
   - black
   - python-build
-  - empack >=3.3
+  - empack >=5.1.1
   - hatch-jupyter-builder
   - hatch-nodejs-version
   - jupyterlab >=4.0
