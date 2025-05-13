@@ -4,7 +4,6 @@ channels:
 dependencies:
   - black
   - python-build
-  - empack >=5.1.1
   - hatch-jupyter-builder
   - hatch-nodejs-version
   - jupyterlab >=4.0
@@ -19,3 +18,5 @@ dependencies:
   - traitlets
   - typer
   - yarn=3
+  - pip:
+    - empack >=5.1.1
