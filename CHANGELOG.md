@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.0.0a8
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@4.0.0-a7...b852adb6e121134cc227e2130f3187b051516f3f))
+
+### Maintenance and upkeep improvements
+
+- Update JupyterLite and JupyterLab - stdin support + use kernel logs UI [#221](https://github.com/jupyterlite/xeus/pull/221) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-05-06&to=2025-05-13&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-05-06..2025-05-13&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.0.0a7
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@4.0.0-a6...3b2cb8754e8e8e9de0af02f915ce1b77ce778997))
@@ -17,8 +33,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-04-29&to=2025-05-06&type=c))
 
 [@anutosh491](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aanutosh491+updated%3A2025-04-29..2025-05-06&type=Issues) | [@ianthomas23](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aianthomas23+updated%3A2025-04-29..2025-05-06&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-04-29..2025-05-06&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.0.0a6
 
