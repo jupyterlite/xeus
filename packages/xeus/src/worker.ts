@@ -61,7 +61,7 @@ export class XeusWorkerLogger implements ILogger {
   }
 
   log(...msg: any[]): void {
-     postMessage({
+    postMessage({
       _stream: {
         name: STREAM['log'],
         text: msg.join(' ') + '\n'
@@ -75,7 +75,7 @@ export class XeusWorkerLogger implements ILogger {
   }
 
   warn(...msg: any[]): void {
-     postMessage({
+    postMessage({
       _stream: {
         name: STREAM['warn'],
         text: msg.join(' ') + '\n'
@@ -90,14 +90,14 @@ export class XeusWorkerLogger implements ILogger {
 
   error(...msg: any[]): void {
     postMessage({
-        _stream: {
-          name: STREAM['error'],
-          evalue: msg.join(''),
-          traceback: [],
-          executionCount: this.executionCount,
-          text: msg.join('')
-        }
-      });
+      _stream: {
+        name: STREAM['error'],
+        evalue: msg.join(''),
+        traceback: [],
+        executionCount: this.executionCount,
+        text: msg.join('')
+      }
+    });
     this._channel.postMessage({
       kernelId: this._id,
       payload: { type: 'text', level: 'critical', data: msg.join(' ') }
@@ -166,27 +166,26 @@ export abstract class XeusRemoteKernel {
       installed[pkg.filename] = {
         name: pkg.name,
         version: pkg.version,
-        repo_url: pkg.repo_url ? pkg.repo_url : pkg.channel ? pkg.channel: '',
+        repo_url: pkg.repo_url ? pkg.repo_url : pkg.channel ? pkg.channel : '',
         filename: pkg.filename ? pkg.filename : '',
         filename_stem: pkg.filename_stem ? pkg.filename_stem : '',
         url: pkg.url ? pkg.url : '',
-        repo_name: pkg.repo_name ? pkg.repo_name : pkg.channel ? pkg.channel: '',
+        repo_name: pkg.repo_name
+          ? pkg.repo_name
+          : pkg.channel
+            ? pkg.channel
+            : '',
         build_string: pkg.build
       };
     });
     this._installedPackages = installed;
   }
 
-  async _install(
-    channels: string[],
-    specs: string[],
-    pipSpecs: string[]
-  ) {
+  async _install(channels: string[], specs: string[], pipSpecs: string[]) {
     if (specs.length || pipSpecs.length) {
       const packageNames = this.getPackageNames(specs, pipSpecs);
       try {
         this._logger.log(`Collecting ${packageNames?.join(',')}`);
-        const start = performance.now();
         const newPackages = await solve({
           ymlOrSpecs: specs,
           installedPackages: this._installedPackages,
@@ -194,9 +193,6 @@ export abstract class XeusRemoteKernel {
           channels,
           logger: this._logger
         });
-        const end = performance.now();
-        const time = end - start;
-        this._logger.log(`Solving took ${time / 1000} seconds`);
 
         await this._reloadPackages(
           {
@@ -207,7 +203,7 @@ export abstract class XeusRemoteKernel {
           this._logger
         );
       } catch (error: any) {
-        this._logger.executionCount= this._executionCount;
+        this._logger.executionCount = this._executionCount;
         this._logger?.error(error.stack);
       }
     }
