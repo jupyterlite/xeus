@@ -155,14 +155,15 @@ export abstract class XeusRemoteKernel {
       installed[pkg.filename] = {
         name: pkg.name,
         version: pkg.version,
-        repo_url: pkg.repo_url ? pkg.repo_url : '',
+        repo_url: pkg.repo_url ? pkg.repo_url : pkg.channel ? pkg.channel: '',
         filename: pkg.filename ? pkg.filename : '',
         filename_stem: pkg.filename_stem ? pkg.filename_stem : '',
         url: pkg.url ? pkg.url : '',
-        repo_name: pkg.repo_name ? pkg.repo_name : '',
+        repo_name: pkg.repo_name ? pkg.repo_name : pkg.channel ? pkg.channel: '',
         build_string: pkg.build
       };
     });
+    console.log('installed',installed);
     this._installedPackages = installed;
   }
 
