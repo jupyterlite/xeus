@@ -163,7 +163,6 @@ export abstract class XeusRemoteKernel {
         build_string: pkg.build
       };
     });
-    console.log('installed',installed);
     this._installedPackages = installed;
   }
 
