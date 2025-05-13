@@ -17,6 +17,14 @@ import { WebWorkerKernel } from '@jupyterlite/xeus';
 import { IEmpackEnvMetaFile } from './tokens';
 
 /**
+ * Interface for items in the kernel list (kernels.json file), created in XeusAddon.
+ */
+interface IKernelListItem {
+  env_name: string;
+  kernel: string;
+}
+
+/**
  * Fetches JSON data from the specified URL asynchronously.
  *
  * This function constructs the full URL using the base URL from the PageConfig and
@@ -53,7 +61,7 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
     loggerRegistry?: ILoggerRegistry
   ) => {
     // Fetch kernel list
-    let kernelList: string[] = [];
+    let kernelList: IKernelListItem[] = [];
     try {
       kernelList = await getJson('xeus/kernels.json');
     } catch (err) {
@@ -62,13 +70,15 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
     }
     const contentsManager = app.serviceManager.contents;
 
-    for (const kernel of kernelList) {
+    for (const kernelItem of kernelList) {
+      const { env_name, kernel } = kernelItem;
       // Fetch kernel spec
       const kernelspec = await getJson(
-        'xeus/kernels/' + kernel + '/kernel.json'
+        `xeus/${env_name}/${kernel}/kernel.json`
       );
       kernelspec.name = kernel;
       kernelspec.dir = kernel;
+      kernelspec.envName = env_name;
       for (const [key, value] of Object.entries(kernelspec.resources)) {
         kernelspec.resources[key] = URLExt.join(
           PageConfig.getBaseUrl(),
@@ -141,10 +151,10 @@ const empackEnvMetaPlugin: JupyterFrontEndPlugin<IEmpackEnvMetaFile> = {
   activate: (): IEmpackEnvMetaFile => {
     return {
       getLink: async (kernelspec: Record<string, any>) => {
-        const kernelName = kernelspec.name;
+        const { envName } = kernelspec;
         const kernel_root_url = URLExt.join(
           PageConfig.getBaseUrl(),
-          `xeus/kernels/${kernelName}`
+          `xeus/${envName}`
         );
         return `${kernel_root_url}`;
       }

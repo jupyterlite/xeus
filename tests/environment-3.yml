@@ -1,0 +1,3 @@
+name: xeus-cpp-env
+dependencies:
+  - xeus-cpp

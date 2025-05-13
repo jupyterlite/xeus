@@ -337,12 +337,7 @@ export abstract class XeusRemoteKernel {
     const binary_js = URLExt.join(baseUrl, kernelSpec.argv[0]);
     const binary_wasm = binary_js.replace('.js', '.wasm');
     const binary_data = binary_js.replace('.js', '.data');
-    const kernel_root_url = URLExt.join(
-      baseUrl,
-      'xeus',
-      'kernels',
-      kernelSpec.dir
-    );
+    const kernel_root_url = URLExt.join(baseUrl, 'xeus', kernelSpec.envName);
 
     const sharedLibs =
       kernelSpec.metadata && kernelSpec.metadata.shared
@@ -353,7 +348,7 @@ export abstract class XeusRemoteKernel {
     globalThis.Module = await createXeusModule({
       locateFile: (file: string) => {
         if (file in sharedLibs) {
-          return URLExt.join(kernel_root_url, file);
+          return URLExt.join(kernel_root_url, kernelSpec.name, file);
         }
 
         if (file.endsWith('.wasm')) {
@@ -376,7 +371,7 @@ export abstract class XeusRemoteKernel {
         const packagesJsonUrl = `${empackEnvMetaLocation}/empack_env_meta.json`;
         this._pkgRootUrl = URLExt.join(
           baseUrl,
-          `xeus/kernels/${kernelSpec.name}/kernel_packages`
+          `xeus/${kernelSpec.envName}/kernel_packages`
         );
         this._empackEnvMeta = (await fetchJson(
           packagesJsonUrl
