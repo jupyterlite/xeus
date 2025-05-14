@@ -33,11 +33,11 @@ def test_python_env_from_file_1():
     assert os.path.isfile(Path(addon.prefixes[0]) / "bin/xlua.wasm")
 
     # Checking pip packages
-    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.11")
-    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.11/site-packages")
-    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.11/site-packages/ipywidgets")
-    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.11/site-packages/ipycanvas")
-    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.11/site-packages/py2vega")
+    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.13")
+    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.13/site-packages")
+    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.13/site-packages/ipywidgets")
+    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.13/site-packages/ipycanvas")
+    assert os.path.isdir(Path(addon.prefixes[0]) / "lib/python3.13/site-packages/py2vega")
 
     # Checking labextensions
     assert os.path.isdir(
@@ -60,10 +60,10 @@ def test_python_env_from_file_3():
 
     # Test
     assert os.path.isdir(
-        Path(addon.prefixes[0]) / "lib/python3.11/site-packages/test_package"
+        Path(addon.prefixes[0]) / "lib/python3.13/site-packages/test_package"
     )
     assert os.path.isfile(
-        Path(addon.prefixes[0]) / "lib/python3.11/site-packages/test_package/hey.py"
+        Path(addon.prefixes[0]) / "lib/python3.13/site-packages/test_package/hey.py"
     )
 
 
