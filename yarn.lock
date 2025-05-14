@@ -331,14 +331,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.10.1":
-  version: 0.10.1
-  resolution: "@emscripten-forge/mambajs@npm:0.10.1"
+"@emscripten-forge/mambajs@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "@emscripten-forge/mambajs@npm:0.11.0"
   dependencies:
     "@baszalmstra/rattler": ^0.2.1
     "@emscripten-forge/untarjs": ^5.3.0
     yaml: ^2.7.0
-  checksum: 825f4424c06450fda4eafd24ad07f271c3d5fc5760dfcfd6911ad35d9dc3f91c53391718ebb317bea1b62364e17361ecb48298fa08d731f4d98b3e7cda4be9ad
+  checksum: a80cdeb817d5164d61817fa19595c740be58ad035a777eac5be4e34ec7e84c5566d623563cc399dcfe25ff306adc4f382dbd7c6d968d8fe49b1b6020038c35fa
   languageName: node
   linkType: hard
 
@@ -1318,7 +1318,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.10.1
+    "@emscripten-forge/mambajs": ^0.11.0
     "@jupyterlab/builder": ^4.4.0-rc.0
     "@jupyterlab/coreutils": ^6.4.2
     "@jupyterlab/services": ^7.4.2
