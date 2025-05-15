@@ -70,7 +70,7 @@ export class XeusWorkerLoggerBase implements ILogger {
  * Meant to be extended in order to load kernels from other sources, implement custom magics etc.
  */
 export abstract class XeusRemoteKernelBase {
-  constructor(options: XeusRemoteKernel.IOptions = {}) {
+  constructor(options: XeusRemoteKernelBase.IOptions = {}) {
     this._ready = new Promise(resolve => {
       this.setKernelReady = resolve;
     });
@@ -289,6 +289,6 @@ export abstract class XeusRemoteKernelBase {
   private _logger: XeusWorkerLoggerBase;
 }
 
-export namespace XeusRemoteKernel {
+export namespace XeusRemoteKernelBase {
   export interface IOptions {}
 }
