@@ -70,6 +70,11 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
     }
     const contentsManager = app.serviceManager.contents;
 
+    const kernelNames = kernelList.map(item => item.kernel);
+    const duplicateNames = kernelNames.filter(
+      (item, index) => kernelNames.indexOf(item) !== index
+    );
+
     for (const kernelItem of kernelList) {
       const { env_name, kernel } = kernelItem;
       // Fetch kernel spec
@@ -79,6 +84,13 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
       kernelspec.name = kernel;
       kernelspec.dir = kernel;
       kernelspec.envName = env_name;
+
+      if (duplicateNames.includes(kernel)) {
+        // Ensure kernelspec.name and display_name are unique.
+        kernelspec.name = `${kernel} (${env_name})`;
+        kernelspec.display_name = `${kernelspec.display_name} [${env_name}]`;
+      }
+
       for (const [key, value] of Object.entries(kernelspec.resources)) {
         kernelspec.resources[key] = URLExt.join(
           PageConfig.getBaseUrl(),
@@ -88,8 +100,14 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
       kernelspecs.register({
         spec: kernelspec,
         create: async (options: IKernel.IOptions): Promise<IKernel> => {
-          const mountDrive = !!(serviceWorker?.enabled || crossOriginIsolated);
+          // If kernelspec.name contains a space then the actual name of the executable
+          // is only the part before the space.
+          const index = kernelspec.name.indexOf(' ');
+          if (index > 0) {
+            kernelspec.name = kernelspec.name.slice(0, index);
+          }
 
+          const mountDrive = !!(serviceWorker?.enabled || crossOriginIsolated);
           if (mountDrive) {
             console.info(
               `${kernelspec.name} contents will be synced with Jupyter Contents`
