@@ -2,6 +2,25 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.0.0a9
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@4.0.0-a8...aedc9b33bbd75720d5fe17e3592e57b598801554))
+
+### Enhancements made
+
+- Support the same kernel in multiple environments [#225](https://github.com/jupyterlite/xeus/pull/225) ([@ianthomas23](https://github.com/ianthomas23))
+- Separate deployment directory for each xeus environment [#223](https://github.com/jupyterlite/xeus/pull/223) ([@ianthomas23](https://github.com/ianthomas23))
+- Making the kernel worker more extensible [#222](https://github.com/jupyterlite/xeus/pull/222) ([@martinRenou](https://github.com/martinRenou))
+- Install packages dynamically [#208](https://github.com/jupyterlite/xeus/pull/208) ([@AnastasiaSliusar](https://github.com/AnastasiaSliusar))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-05-13&to=2025-05-15&type=c))
+
+[@AnastasiaSliusar](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AAnastasiaSliusar+updated%3A2025-05-13..2025-05-15&type=Issues) | [@ianthomas23](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aianthomas23+updated%3A2025-05-13..2025-05-15&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-05-13..2025-05-15&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.0.0a8
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@4.0.0-a7...b852adb6e121134cc227e2130f3187b051516f3f))
@@ -15,8 +34,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-05-06&to=2025-05-13&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-05-06..2025-05-13&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.0.0a7
 
