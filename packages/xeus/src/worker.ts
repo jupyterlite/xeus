@@ -114,8 +114,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     this._pythonVersion = getPythonVersion(empackEnvMeta.packages);
     this._prefix = empackEnvMeta.prefix;
 
-    console.log('---DEBUG bootstrap');
-
     const bootstrapped = await bootstrapEmpackPackedEnvironment({
       empackEnvMeta,
       pkgRootUrl: this._pkgRootUrl,
@@ -237,9 +235,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
 
       newPackages[filename] = newPkg;
     }
-
-    console.log('--- DEBUG remove packages', removedPackages);
-    console.log('--- DEBUG install packages', newPackages);
 
     await removePackagesFromEmscriptenFS({
       removedPackages,
