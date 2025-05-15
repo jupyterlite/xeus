@@ -15,7 +15,7 @@ import {
 } from '@jupyterlite/contents';
 
 import { IXeusWorkerKernel } from './interfaces';
-import { XeusRemoteKernel } from './worker';
+import { EmpackedXeusRemoteKernel } from './worker';
 
 const workerAPI = coincident(self) as IXeusWorkerKernel;
 
@@ -37,7 +37,7 @@ class XeusDriveFS extends DriveFS {
   }
 }
 
-export class XeusCoincidentKernel extends XeusRemoteKernel {
+export class XeusCoincidentKernel extends EmpackedXeusRemoteKernel {
   /**
    * Setup custom Emscripten FileSystem
    */
@@ -68,7 +68,7 @@ export class XeusCoincidentKernel extends XeusRemoteKernel {
     FS.chdir(mountpoint);
   }
 
-  protected _initializeStdin(baseUrl: string, browsingContextId: string): void {
+  protected initializeStdin(baseUrl: string, browsingContextId: string): void {
     globalThis.get_stdin = (
       inputRequest: KernelMessage.IInputRequestMsg
     ): KernelMessage.IInputReplyMsg =>

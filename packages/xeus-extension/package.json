@@ -52,7 +52,7 @@
         "@lumino/coreutils": "^2"
     },
     "devDependencies": {
-        "@jupyterlab/builder": "^4.4.0-rc.0",
+        "@jupyterlab/builder": "^4.4.2",
         "@types/json-schema": "^7.0.11",
         "@types/react": "^18.0.26",
         "@types/react-addons-linked-state-mixin": "^0.14.22",
