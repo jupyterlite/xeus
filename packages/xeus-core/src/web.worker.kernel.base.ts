@@ -31,14 +31,8 @@ export abstract class WebWorkerKernelBase implements IKernel {
     });
     this._sendMessage = sendMessage;
     this._worker = this.initWorker(options);
-    this._remoteKernel = this.initRemote(options);
-    this._remoteKernel
-      .initialize({
-        baseUrl: PageConfig.getBaseUrl(),
-        kernelId: this._id,
-        ...options
-      })
-      .then(this._ready.resolve.bind(this._ready));
+    this._remoteKernel = this.createRemote(options);
+    this.initRemote(options).then(this._ready.resolve.bind(this._ready));
     this.initFileSystem(options);
   }
 
@@ -48,11 +42,25 @@ export abstract class WebWorkerKernelBase implements IKernel {
   abstract initWorker(options: WebWorkerKernelBase.IOptions): Worker;
 
   /**
-   * Initialize the remote kernel.
+   * Create the remote kernel.
    */
-  abstract initRemote(
+  abstract createRemote(
     options: WebWorkerKernelBase.IOptions
   ): IXeusWorkerKernel | Remote<IXeusWorkerKernel>;
+
+  /**
+   * Initialize the remote kernel
+   * @param options
+   */
+  protected async initRemote(options: WebWorkerKernelBase.IOptions) {
+    return this._remoteKernel.initialize({
+      baseUrl: PageConfig.getBaseUrl(),
+      kernelId: this.id,
+      mountDrive: options.mountDrive,
+      kernelSpec: options.kernelSpec,
+      browsingContextId: options.browsingContextId
+    });
+  }
 
   async handleMessage(msg: KernelMessage.IMessage): Promise<void> {
     this._parent = msg;
@@ -163,6 +171,10 @@ export abstract class WebWorkerKernelBase implements IKernel {
    */
   protected get worker() {
     return this._worker;
+  }
+
+  protected get remoteKernel() {
+    return this._remoteKernel;
   }
 
   /**

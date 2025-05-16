@@ -19,14 +19,8 @@ import {
   ISolvedPackage
 } from '@emscripten-forge/mambajs';
 import { IUnpackJSAPI } from '@emscripten-forge/untarjs';
-import {
-  XeusRemoteKernelBase,
-  IXeusWorkerKernel
-} from '@jupyterlite/xeus-core';
-
-export interface IEmpackKernelOptions extends IXeusWorkerKernel.IOptions {
-  empackEnvMetaLink?: string | undefined;
-}
+import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
+import { IEmpackXeusWorkerKernel } from './interfaces';
 
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url);
@@ -42,7 +36,7 @@ async function fetchJson(url: string): Promise<any> {
  */
 export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   protected async initializeModule(
-    options: IXeusWorkerKernel.IOptions
+    options: IEmpackXeusWorkerKernel.IOptions
   ): Promise<any> {
     const { baseUrl, kernelSpec } = options;
 
@@ -77,7 +71,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   }
 
   protected async initializeFileSystem(
-    options: IEmpackKernelOptions
+    options: IEmpackXeusWorkerKernel.IOptions
   ): Promise<any> {
     const { baseUrl, kernelSpec, empackEnvMetaLink } = options;
 
@@ -137,7 +131,9 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
    * Initialize the interpreter if needed
    * @param options
    */
-  protected async initializeInterpreter(options: IXeusWorkerKernel.IOptions) {
+  protected async initializeInterpreter(
+    options: IEmpackXeusWorkerKernel.IOptions
+  ) {
     // Bootstrap Python, if it's xeus-python
     if (options.kernelSpec.name === 'xpython') {
       if (!this._pythonVersion) {

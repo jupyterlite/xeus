@@ -17,7 +17,9 @@ import {
   TDriveRequest
 } from '@jupyterlite/contents';
 
-import { WebWorkerKernelBase, IXeusWorkerKernel } from '@jupyterlite/xeus-core';
+import { WebWorkerKernelBase } from '@jupyterlite/xeus-core';
+import { PageConfig } from '@jupyterlab/coreutils';
+import { IEmpackXeusWorkerKernel } from './interfaces';
 
 export class WebWorkerKernel extends WebWorkerKernelBase {
   /**
@@ -51,16 +53,16 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
    *  - https://github.com/jupyterlite/jupyterlite/issues/1424
    *  - https://github.com/jupyterlite/xeus/issues/102
    */
-  initRemote(
+  createRemote(
     options: WebWorkerKernel.IOptions
-  ): IXeusWorkerKernel | Remote<IXeusWorkerKernel> {
-    let remote: IXeusWorkerKernel | Remote<IXeusWorkerKernel>;
+  ): IEmpackXeusWorkerKernel | Remote<IEmpackXeusWorkerKernel> {
+    let remote: IEmpackXeusWorkerKernel | Remote<IEmpackXeusWorkerKernel>;
     if (crossOriginIsolated) {
       // We directly forward messages to xeus, which will dispatch them properly
       // See discussion in https://github.com/jupyterlite/xeus/pull/108#discussion_r1750143661
       this.worker.onmessage = this._processCoincidentWorkerMessage.bind(this);
 
-      remote = coincident(this.worker) as IXeusWorkerKernel;
+      remote = coincident(this.worker) as IEmpackXeusWorkerKernel;
       // The coincident worker uses its own filesystem API:
       (remote.processDriveRequest as any) = async <T extends TDriveMethod>(
         data: TDriveRequest<T>
@@ -88,10 +90,25 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
       this.worker.onmessage = e => {
         this._processComlinkWorkerMessage(e.data);
       };
-      remote = wrap(this.worker) as Remote<IXeusWorkerKernel>;
+      remote = wrap(this.worker) as Remote<IEmpackXeusWorkerKernel>;
     }
 
     return remote;
+  }
+
+  /**
+   * Initialize the remote kernel
+   * @param options
+   */
+  protected async initRemote(options: WebWorkerKernel.IOptions) {
+    return (this.remoteKernel as IEmpackXeusWorkerKernel).initialize({
+      baseUrl: PageConfig.getBaseUrl(),
+      kernelId: this.id,
+      mountDrive: options.mountDrive,
+      kernelSpec: options.kernelSpec,
+      browsingContextId: options.browsingContextId,
+      empackEnvMetaLink: options.empackEnvMetaLink
+    });
   }
 
   /**
