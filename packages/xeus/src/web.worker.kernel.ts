@@ -56,11 +56,14 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
     options: WebWorkerKernel.IOptions
   ): IEmpackXeusWorkerKernel | Remote<IEmpackXeusWorkerKernel> {
     let remote: IEmpackXeusWorkerKernel | Remote<IEmpackXeusWorkerKernel>;
-    if (crossOriginIsolated) {
-      // We directly forward messages to xeus, which will dispatch them properly
-      // See discussion in https://github.com/jupyterlite/xeus/pull/108#discussion_r1750143661
-      this.worker.onmessage = this._processCoincidentWorkerMessage.bind(this);
 
+    // We directly forward messages to xeus, which will dispatch them properly
+    // See discussion in https://github.com/jupyterlite/xeus/pull/108#discussion_r1750143661
+    this.worker.onmessage = e => {
+      this.processWorkerMessage(e.data);
+    };
+
+    if (crossOriginIsolated) {
       remote = coincident(this.worker) as IEmpackXeusWorkerKernel;
       // The coincident worker uses its own filesystem API:
       (remote.processDriveRequest as any) = async <T extends TDriveMethod>(
@@ -80,107 +83,16 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
       (remote.processStdinRequest as any) = async (
         inputRequest: KernelMessage.IInputRequestMsg
       ): Promise<KernelMessage.IInputReplyMsg> => {
-        this._processCoincidentWorkerMessage({ data: inputRequest });
+        this.processWorkerMessage(inputRequest);
         this.inputDelegate =
           new PromiseDelegate<KernelMessage.IInputReplyMsg>();
         return await this.inputDelegate.promise;
       };
     } else {
-      this.worker.onmessage = e => {
-        this._processComlinkWorkerMessage(e.data);
-      };
       remote = wrap(this.worker) as Remote<IEmpackXeusWorkerKernel>;
     }
 
     return remote;
-  }
-
-  /**
-   * Process a message coming from the coincident web worker.
-   *
-   * @param msg The worker message to process.
-   */
-  private _processCoincidentWorkerMessage(msg: any): void {
-    if (!msg.data?.header) {
-      return;
-    }
-
-    msg.data.header.session = this.parentHeader?.session ?? '';
-    msg.data.session = this.parentHeader?.session ?? '';
-    this.sendMessage(msg.data);
-
-    // resolve promise
-    if (
-      msg.data.header.msg_type === 'status' &&
-      msg.data.content.execution_state === 'idle'
-    ) {
-      this.executeDelegate.resolve();
-    }
-  }
-
-  private _assignSession(msg: any) {
-    msg.header.session = this.parentHeader?.session ?? '';
-    msg.session = this.parentHeader?.session ?? '';
-    return msg;
-  }
-
-  /**
-   * Process a message coming from the comlink web worker.
-   *
-   * @param msg The worker message to process.
-   */
-  private _processComlinkWorkerMessage(msg: any): void {
-    if (!msg.header) {
-      if (msg?._stream) {
-        const parentHeaderValue = this.parentHeader;
-        const { name, text } = msg._stream;
-        if (name === 'stderr') {
-          const errorMessage =
-            KernelMessage.createMessage<KernelMessage.IExecuteReplyMsg>({
-              msgType: 'execute_reply',
-              channel: 'shell',
-              parentHeader:
-                parentHeaderValue as KernelMessage.IHeader<'execute_request'>,
-              session: parentHeaderValue?.session ?? '',
-              content: {
-                execution_count: msg._stream.executionCount,
-                status: 'error',
-                ename: msg._stream.ename,
-                evalue: msg._stream.evalue,
-                traceback: msg._stream.traceback.join('')
-              }
-            });
-          msg = this._assignSession(errorMessage);
-          this.sendMessage(msg);
-        }
-
-        const message = KernelMessage.createMessage<KernelMessage.IStreamMsg>({
-          channel: 'iopub',
-          msgType: 'stream',
-          session: parentHeaderValue?.session ?? '',
-          parentHeader: parentHeaderValue,
-          content: {
-            name,
-            text
-          }
-        });
-
-        msg = this._assignSession(message);
-        this.sendMessage(msg);
-      } else {
-        return;
-      }
-    } else {
-      this.sendMessage(this._assignSession(msg));
-    }
-
-    // resolve promise
-    if (
-      msg.header.msg_type === 'status' &&
-      msg.content.execution_state === 'idle'
-    ) {
-      this.executeDelegate.resolve();
-    }
   }
 }
 

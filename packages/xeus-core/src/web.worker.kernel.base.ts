@@ -68,6 +68,62 @@ export abstract class WebWorkerKernelBase implements IKernel {
     await this._sendMessageToWorker(msg);
   }
 
+  protected processWorkerMessage(msg: any) {
+    if (!msg.header) {
+      // Custom msg bypassing comlink/coincident protocol
+      if (msg._stream) {
+        const parentHeaderValue = this.parentHeader;
+        const { name, text } = msg._stream;
+        if (name === 'stderr') {
+          const errorMessage =
+            KernelMessage.createMessage<KernelMessage.IExecuteReplyMsg>({
+              msgType: 'execute_reply',
+              channel: 'shell',
+              parentHeader:
+                parentHeaderValue as KernelMessage.IHeader<'execute_request'>,
+              session: parentHeaderValue?.session ?? '',
+              content: {
+                execution_count: msg._stream.executionCount,
+                status: 'error',
+                ename: msg._stream.ename,
+                evalue: msg._stream.evalue,
+                traceback: msg._stream.traceback.join('')
+              }
+            });
+          this.sendMessage(errorMessage);
+        }
+
+        const message = KernelMessage.createMessage<KernelMessage.IStreamMsg>({
+          channel: 'iopub',
+          msgType: 'stream',
+          session: parentHeaderValue?.session ?? '',
+          parentHeader: parentHeaderValue,
+          content: {
+            name,
+            text
+          }
+        });
+
+        this.sendMessage(message);
+        return;
+      } else {
+        return;
+      }
+    }
+
+    msg.header.session = this.parentHeader?.session ?? '';
+    msg.session = this.parentHeader?.session ?? '';
+    this.sendMessage(msg);
+
+    // resolve promise
+    if (
+      msg.header.msg_type === 'status' &&
+      msg.content.execution_state === 'idle'
+    ) {
+      this.executeDelegate.resolve();
+    }
+  }
+
   private async _sendMessageToWorker(msg: any): Promise<void> {
     if (msg.header.msg_type === 'input_reply') {
       this._inputDelegate.resolve(msg);
