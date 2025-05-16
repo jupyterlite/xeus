@@ -20,7 +20,7 @@ import {
   ISolvedPackage
 } from '@emscripten-forge/mambajs';
 import { IUnpackJSAPI } from '@emscripten-forge/untarjs';
-import { XeusRemoteKernelBase } from './worker.base';
+import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
 
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url);

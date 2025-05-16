@@ -20,9 +20,9 @@ import {
   TDriveRequest
 } from '@jupyterlite/contents';
 
-import { IXeusWorkerKernel } from './interfaces';
+import { WebWorkerKernelBase, IXeusWorkerKernel } from '@jupyterlite/xeus-core';
 
-export class WebWorkerKernel implements IKernel {
+export class WebWorkerKernel extends WebWorkerKernelBase {
   /**
    * Instantiate a new WebWorkerKernel
    *

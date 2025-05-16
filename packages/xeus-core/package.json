@@ -1,0 +1,60 @@
+{
+    "name": "@jupyterlite/xeus-core",
+    "version": "4.0.0-a10",
+    "description": "JupyterLite Xeus core library",
+    "keywords": [
+        "jupyter",
+        "jupyterlab"
+    ],
+    "homepage": "https://github.com/jupyterlite/xeus",
+    "bugs": {
+        "url": "https://github.com/jupyterlite/xeus/issues"
+    },
+    "license": "BSD-3-Clause",
+    "author": "JupyterLite Contributors",
+    "files": [
+        "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}"
+    ],
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jupyterlite/xeus.git"
+    },
+    "scripts": {
+        "build": "jlpm build:lib",
+        "build:prod": "jlpm clean && jlpm build:lib:prod",
+        "build:lib": "tsc --sourceMap",
+        "build:lib:prod": "tsc",
+        "clean": "jlpm clean:lib",
+        "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+        "clean:all": "jlpm clean:lib",
+        "watch": "run-p watch:src",
+        "watch:src": "tsc -w --sourceMap"
+    },
+    "dependencies": {
+        "@emscripten-forge/mambajs": "^0.12.0",
+        "@jupyterlab/coreutils": "^6.4.2",
+        "@jupyterlab/services": "^7.4.2",
+        "@jupyterlite/contents": "^0.6.0-beta.0",
+        "@jupyterlite/kernel": "^0.6.0-beta.0",
+        "@jupyterlite/server": "^0.6.0-beta.0",
+        "@lumino/coreutils": "^2",
+        "@lumino/signaling": "^2"
+    },
+    "devDependencies": {
+        "@types/json-schema": "^7.0.11",
+        "@types/react": "^18.0.26",
+        "@types/react-addons-linked-state-mixin": "^0.14.22",
+        "npm-run-all": "^4.1.5",
+        "rimraf": "^5.0.1",
+        "source-map-loader": "^1.0.2",
+        "ts-loader": "^9.2.6",
+        "typescript": "^5.5",
+        "webpack": "^5.87.0",
+        "yjs": "^13.5.0"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}
