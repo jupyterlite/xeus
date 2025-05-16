@@ -1,5 +1,11 @@
 {
   "LiteBuildConfig": {
     "output_dir": "dist"
+  },
+  "XeusAddon": {
+    "environment_file": [
+      "env1.yml",
+      "env2.yml"
+    ]
   }
 }

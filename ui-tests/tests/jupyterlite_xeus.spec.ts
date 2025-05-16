@@ -25,7 +25,7 @@ test.describe('General Tests', () => {
   test('xeus-python should execute some code', async ({ page }) => {
     await page.goto('lab/index.html');
 
-    const xpython = page.locator('[title="Python 3.11 (XPython)"]').first();
+    const xpython = page.locator('[title="Python 3.13 (XPython) [env1]"]').first();
     await xpython.click();
 
     // Wait for kernel to be idle
@@ -44,11 +44,34 @@ test.describe('General Tests', () => {
     );
   });
 
+   test('should support the same kernel from a second environment', async ({ page }) => {
+    await page.goto('lab/index.html');
+
+    const xpython = page.locator('[title="Python 3.13 (XPython) [env2]"]').first();
+    await xpython.click();
+
+    // Wait for kernel to be idle
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
+    // xeus-python from env2 does not have bqplot installed.
+    await page.notebook.addCell('code', 'import bqplot');
+    await page.notebook.runCell(1);
+
+    // Wait for kernel to be idle
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
+    const cell = await page.notebook.getCellOutput(1);
+
+    expect(await cell?.screenshot()).toMatchSnapshot(
+      'jupyter-xeus-execute-env2.png'
+    );
+  });
+
   test('the kernel should have access to the file system', async ({ page }) => {
     await page.goto('lab/index.html');
 
     // Create a Python notebook
-    const xpython = page.locator('[title="Python 3.11 (XPython)"]').first();
+    const xpython = page.locator('[title="Python 3.13 (XPython) [env1]"]').first();
     await xpython.click();
 
     await page.notebook.save();
