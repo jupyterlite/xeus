@@ -19,6 +19,7 @@ import {
 
 import { WebWorkerKernelBase } from '@jupyterlite/xeus-core';
 import { IEmpackXeusWorkerKernel } from './interfaces';
+import { PageConfig } from '@jupyterlab/coreutils';
 
 export class WebWorkerKernel extends WebWorkerKernelBase {
   /**
@@ -93,6 +94,20 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
     }
 
     return remote;
+  }
+  /**
+   * Initialize the remote kernel
+   * @param options
+   */
+  protected async initRemote(options: WebWorkerKernel.IOptions) {
+    return (this.remoteKernel as IEmpackXeusWorkerKernel).initialize({
+      baseUrl: PageConfig.getBaseUrl(),
+      kernelId: this.id,
+      mountDrive: options.mountDrive,
+      kernelSpec: options.kernelSpec,
+      browsingContextId: options.browsingContextId,
+      empackEnvMetaLink: options.empackEnvMetaLink
+    });
   }
 }
 
