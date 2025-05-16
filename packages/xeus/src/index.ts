@@ -1,4 +1,4 @@
-export * from './interfaces';
-export * from './web_worker_kernel';
-export * from './worker.base';
+export * from './coincident.worker';
+export * from './comlink.worker';
+export * from './web.worker.kernel';
 export * from './worker';

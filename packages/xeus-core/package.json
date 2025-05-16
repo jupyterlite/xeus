@@ -1,11 +1,10 @@
 {
-    "name": "@jupyterlite/xeus",
+    "name": "@jupyterlite/xeus-core",
     "version": "4.0.0-a10",
-    "description": "JupyterLite Xeus kernels",
+    "description": "JupyterLite Xeus core library",
     "keywords": [
         "jupyter",
-        "jupyterlab",
-        "jupyterlab-extension"
+        "jupyterlab"
     ],
     "homepage": "https://github.com/jupyterlite/xeus",
     "bugs": {
@@ -23,10 +22,8 @@
         "url": "https://github.com/jupyterlite/xeus.git"
     },
     "scripts": {
-        "build": "jlpm build:lib && jlpm build:worker",
-        "build:prod": "jlpm clean && jlpm build:lib:prod && jlpm build:worker:prod",
-        "build:worker": "webpack --config worker.webpack.config.js --mode=development",
-        "build:worker:prod": "webpack --config worker.webpack.config.js --mode=production",
+        "build": "jlpm build:lib",
+        "build:prod": "jlpm clean && jlpm build:lib:prod",
         "build:lib": "tsc --sourceMap",
         "build:lib:prod": "tsc",
         "clean": "jlpm clean:lib",
@@ -42,11 +39,8 @@
         "@jupyterlite/contents": "^0.6.0-beta.0",
         "@jupyterlite/kernel": "^0.6.0-beta.0",
         "@jupyterlite/server": "^0.6.0-beta.0",
-        "@jupyterlite/xeus-core": "^4.0.0-a10",
         "@lumino/coreutils": "^2",
-        "@lumino/signaling": "^2",
-        "coincident": "^1.2.3",
-        "comlink": "^4.4.1"
+        "@lumino/signaling": "^2"
     },
     "devDependencies": {
         "@types/json-schema": "^7.0.11",
