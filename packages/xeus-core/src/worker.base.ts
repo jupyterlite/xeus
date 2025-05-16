@@ -116,7 +116,7 @@ export abstract class XeusRemoteKernelBase {
       // Should never be called as input_reply messages are handled by get_stdin
       // via SharedArrayBuffer or service worker.
     } else if (msg_type === 'execute_request') {
-      this._logger.executionCount += 1;
+      this.logger.executionCount += 1;
       event.msg.content.code = await this.processMagics(event.msg.content.code);
       this.xserver.notify_listener(event.msg);
     } else {
@@ -132,14 +132,10 @@ export abstract class XeusRemoteKernelBase {
     globalThis.Module = value;
   }
 
-  protected get logger() {
-    return this._logger;
-  }
-
   async initialize(options: IXeusWorkerKernel.IOptions): Promise<void> {
     const { baseUrl, browsingContextId, kernelSpec } = options;
 
-    this._logger = this.initializeLogger(options);
+    this.logger = this.initializeLogger(options);
 
     // when a toplevel cell uses an await, the cell is implicitly
     // wrapped in a async function. Since the webloop - eventloop
@@ -169,21 +165,21 @@ export abstract class XeusRemoteKernelBase {
       }
       this.xserver = this.xkernel.get_server();
       if (!this.xserver) {
-        this._logger.error('Failed to start kernel!');
+        this.logger.error('Failed to start kernel!');
       }
       this.xkernel.start();
     } catch (e) {
       if (typeof e === 'number') {
         const msg = this.Module.get_exception_message(e);
-        this._logger.error(msg);
+        this.logger.error(msg);
         throw new Error(msg);
       } else {
-        this._logger.error(e);
+        this.logger.error(e);
         throw e;
       }
     }
 
-    this._logger.log('Kernel successfuly started!');
+    this.logger.log('Kernel successfuly started!');
 
     this.setKernelReady();
   }
@@ -286,7 +282,7 @@ export abstract class XeusRemoteKernelBase {
 
   private _ready: Promise<void>;
 
-  private _logger: XeusWorkerLoggerBase;
+  protected logger: XeusWorkerLoggerBase;
 }
 
 export namespace XeusRemoteKernelBase {

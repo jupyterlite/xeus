@@ -95,6 +95,7 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
 
     return remote;
   }
+
   /**
    * Initialize the remote kernel
    * @param options
