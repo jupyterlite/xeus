@@ -9,9 +9,8 @@ import type { Remote } from 'comlink';
 
 import { PromiseDelegate } from '@lumino/coreutils';
 
-import { Contents, KernelMessage } from '@jupyterlab/services';
+import { KernelMessage } from '@jupyterlab/services';
 
-import { IKernel } from '@jupyterlite/kernel';
 import {
   DriveContentsProcessor,
   TDriveMethod,
@@ -26,27 +25,9 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
    *
    * @param options The instantiation options for a new WebWorkerKernel
    */
-  // constructor(options: WebWorkerKernel.IOptions) {
-  //   const {
-  //     id,
-  //     name,
-  //     sendMessage,
-  //     location,
-  //     kernelSpec,
-  //     contentsManager,
-  //     empackEnvMetaLink
-  //   } = options;
-  //   this._id = id;
-  //   this._name = name;
-  //   this._location = location;
-  //   this._kernelSpec = kernelSpec;
-  //   this._contentsManager = contentsManager;
-  //   this.sendMessage = sendMessage;
-  //   this._empackEnvMetaLink = empackEnvMetaLink;
-  //   this.worker = this.initWorker(options);
-  //   this._remoteKernel = this.initRemote(options);
-  //   this.initFileSystem(options);
-  // }
+  constructor(options: WebWorkerKernel.IOptions) {
+    super(options);
+  }
 
   /**
    * Load the worker.
@@ -209,11 +190,7 @@ export namespace WebWorkerKernel {
   /**
    * The instantiation options for a Pyodide kernel
    */
-  export interface IOptions extends IKernel.IOptions {
-    contentsManager: Contents.IManager;
-    mountDrive: boolean;
-    kernelSpec: any;
+  export interface IOptions extends WebWorkerKernelBase.IOptions {
     empackEnvMetaLink?: string | undefined;
-    browsingContextId: string;
   }
 }

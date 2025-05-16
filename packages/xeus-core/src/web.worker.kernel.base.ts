@@ -21,35 +21,22 @@ export abstract class WebWorkerKernelBase implements IKernel {
    * @param options The instantiation options for a new WebWorkerKernelBase
    */
   constructor(options: WebWorkerKernelBase.IOptions) {
-    const {
-      id,
-      name,
-      sendMessage,
-      location,
-      kernelSpec,
-      contentsManager,
-      empackEnvMetaLink
-    } = options;
+    const { id, name, sendMessage, location, contentsManager } = options;
     this._id = id;
     this._name = name;
     this._location = location;
-    this._kernelSpec = kernelSpec;
     this._contentsManager = contentsManager;
     this._contentsProcessor = new DriveContentsProcessor({
       contentsManager: this.contentsManager
     });
     this._sendMessage = sendMessage;
-    this._empackEnvMetaLink = empackEnvMetaLink;
     this._worker = this.initWorker(options);
     this._remoteKernel = this.initRemote(options);
     this._remoteKernel
       .initialize({
-        kernelId: this.id,
-        kernelSpec: this._kernelSpec,
         baseUrl: PageConfig.getBaseUrl(),
-        mountDrive: options.mountDrive,
-        empackEnvMetaLink: this._empackEnvMetaLink,
-        browsingContextId: options.browsingContextId
+        kernelId: this._id,
+        ...options
       })
       .then(this._ready.resolve.bind(this._ready));
     this.initFileSystem(options);
@@ -235,7 +222,6 @@ export abstract class WebWorkerKernelBase implements IKernel {
     }
   }
 
-  private _kernelSpec: any;
   private _id: string;
   private _name: string;
   private _location: string;
@@ -253,7 +239,6 @@ export abstract class WebWorkerKernelBase implements IKernel {
     | undefined = undefined;
   private _parent: KernelMessage.IMessage | undefined = undefined;
   private _ready = new PromiseDelegate<void>();
-  private _empackEnvMetaLink: string | undefined;
 }
 
 /**
@@ -267,7 +252,6 @@ export namespace WebWorkerKernelBase {
     contentsManager: Contents.IManager;
     mountDrive: boolean;
     kernelSpec: any;
-    empackEnvMetaLink?: string | undefined;
     browsingContextId: string;
   }
 }

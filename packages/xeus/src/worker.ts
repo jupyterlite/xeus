@@ -24,6 +24,10 @@ import {
   IXeusWorkerKernel
 } from '@jupyterlite/xeus-core';
 
+export interface IEmpackKernelOptions extends IXeusWorkerKernel.IOptions {
+  empackEnvMetaLink?: string | undefined;
+}
+
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url);
   if (!response.ok) {
@@ -73,7 +77,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   }
 
   protected async initializeFileSystem(
-    options: IXeusWorkerKernel.IOptions
+    options: IEmpackKernelOptions
   ): Promise<any> {
     const { baseUrl, kernelSpec, empackEnvMetaLink } = options;
 

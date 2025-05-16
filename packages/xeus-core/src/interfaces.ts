@@ -98,7 +98,6 @@ export namespace IXeusWorkerKernel {
     kernelId: string;
     kernelSpec: any;
     mountDrive: boolean;
-    empackEnvMetaLink?: string;
     browsingContextId: string;
   }
 }
