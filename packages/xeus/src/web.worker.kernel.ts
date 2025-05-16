@@ -96,14 +96,6 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
   }
 
   /**
-   * Initialize the remote kernel
-   * @param options
-   */
-  protected async initRemote(options: WebWorkerKernel.IOptions) {
-    return super.initRemote(options);
-  }
-
-  /**
    * Process a message coming from the coincident web worker.
    *
    * @param msg The worker message to process.
