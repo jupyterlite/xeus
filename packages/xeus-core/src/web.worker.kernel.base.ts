@@ -10,19 +10,17 @@ import { PageConfig } from '@jupyterlab/coreutils';
 import { Contents, KernelMessage } from '@jupyterlab/services';
 
 import { IKernel } from '@jupyterlite/kernel';
-import {
-  DriveContentsProcessor,
-} from '@jupyterlite/contents';
+import { DriveContentsProcessor } from '@jupyterlite/contents';
 
 import { IXeusWorkerKernel } from './interfaces';
 
 export abstract class WebWorkerKernelBase implements IKernel {
   /**
-   * Instantiate a new WebWorkerKernel
+   * Instantiate a new WebWorkerKernelBase
    *
-   * @param options The instantiation options for a new WebWorkerKernel
+   * @param options The instantiation options for a new WebWorkerKernelBase
    */
-  constructor(options: WebWorkerKernel.IOptions) {
+  constructor(options: WebWorkerKernelBase.IOptions) {
     const {
       id,
       name,
@@ -37,6 +35,9 @@ export abstract class WebWorkerKernelBase implements IKernel {
     this._location = location;
     this._kernelSpec = kernelSpec;
     this._contentsManager = contentsManager;
+    this._contentsProcessor = new DriveContentsProcessor({
+      contentsManager: this.contentsManager
+    });
     this._sendMessage = sendMessage;
     this._empackEnvMetaLink = empackEnvMetaLink;
     this._worker = this.initWorker(options);
@@ -57,13 +58,13 @@ export abstract class WebWorkerKernelBase implements IKernel {
   /**
    * Load the worker.
    */
-  abstract initWorker(options: WebWorkerKernel.IOptions): Worker;
+  abstract initWorker(options: WebWorkerKernelBase.IOptions): Worker;
 
   /**
    * Initialize the remote kernel.
    */
   abstract initRemote(
-    options: WebWorkerKernel.IOptions
+    options: WebWorkerKernelBase.IOptions
   ): IXeusWorkerKernel | Remote<IXeusWorkerKernel>;
 
   async handleMessage(msg: KernelMessage.IMessage): Promise<void> {
@@ -113,6 +114,29 @@ export abstract class WebWorkerKernelBase implements IKernel {
   }
 
   /**
+   * Promise that gets resolved upon execution
+   */
+  protected get executeDelegate() {
+    return this._executeDelegate;
+  }
+
+  /**
+   * Promise that gets resolved upon input response
+   */
+  protected set inputDelegate(
+    value: PromiseDelegate<KernelMessage.IInputReplyMsg>
+  ) {
+    this._inputDelegate = value;
+  }
+
+  /**
+   * Promise that gets resolved upon input response
+   */
+  protected get inputDelegate() {
+    return this._inputDelegate;
+  }
+
+  /**
    * A promise that is fulfilled when the kernel is ready.
    */
   get ready(): Promise<void> {
@@ -136,15 +160,22 @@ export abstract class WebWorkerKernelBase implements IKernel {
   /**
    * Get the content manager
    */
-  get contentsManager() {
+  protected get contentsManager() {
     return this._contentsManager;
   }
 
   /**
    * Get the content processor
    */
-  get contentsProcessor() {
+  protected get contentsProcessor() {
     return this._contentsProcessor;
+  }
+
+  /**
+   * Get the worker
+   */
+  protected get worker() {
+    return this._worker;
   }
 
   /**
@@ -175,7 +206,7 @@ export abstract class WebWorkerKernelBase implements IKernel {
     return this._name;
   }
 
-  private async initFileSystem(options: WebWorkerKernel.IOptions) {
+  private async initFileSystem(options: WebWorkerKernelBase.IOptions) {
     let driveName: string;
     let localPath: string;
 
@@ -209,7 +240,7 @@ export abstract class WebWorkerKernelBase implements IKernel {
   private _name: string;
   private _location: string;
   private _contentsManager: Contents.IManager;
-  private _contentsProcessor: DriveContentsProcessor | undefined = undefined;
+  private _contentsProcessor: DriveContentsProcessor;
   private _remoteKernel: IXeusWorkerKernel | Remote<IXeusWorkerKernel>;
   private _isDisposed = false;
   private _disposed = new Signal<this, void>(this);
@@ -226,9 +257,9 @@ export abstract class WebWorkerKernelBase implements IKernel {
 }
 
 /**
- * A namespace for WebWorkerKernel statics.
+ * A namespace for WebWorkerKernelBase statics.
  */
-export namespace WebWorkerKernel {
+export namespace WebWorkerKernelBase {
   /**
    * The instantiation options for a Pyodide kernel
    */

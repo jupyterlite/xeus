@@ -42,6 +42,7 @@
         "@jupyterlite/contents": "^0.6.0-beta.0",
         "@jupyterlite/kernel": "^0.6.0-beta.0",
         "@jupyterlite/server": "^0.6.0-beta.0",
+        "@jupyterlite/xeus-core": "^4.0.0-a10",
         "@lumino/coreutils": "^2",
         "@lumino/signaling": "^2",
         "coincident": "^1.2.3",

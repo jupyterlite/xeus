@@ -4,7 +4,6 @@
 
 import { URLExt } from '@jupyterlab/coreutils';
 
-import { IXeusWorkerKernel } from './interfaces';
 import {
   IEmpackEnvMeta,
   bootstrapEmpackPackedEnvironment,
@@ -20,7 +19,10 @@ import {
   ISolvedPackage
 } from '@emscripten-forge/mambajs';
 import { IUnpackJSAPI } from '@emscripten-forge/untarjs';
-import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
+import {
+  XeusRemoteKernelBase,
+  IXeusWorkerKernel
+} from '@jupyterlite/xeus-core';
 
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url);
