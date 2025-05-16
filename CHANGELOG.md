@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.0.0a11
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@4.0.0-a10...b4f1230b0dd29d93bb31144a782a6218d7529c56))
+
+### Enhancements made
+
+- Update mambajs: fix %pip install command [#230](https://github.com/jupyterlite/xeus/pull/230) ([@martinRenou](https://github.com/martinRenou))
+- Introduce @jupyterlite/xeus-core pure typescript library [#228](https://github.com/jupyterlite/xeus/pull/228) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-05-15&to=2025-05-16&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-05-15..2025-05-16&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.0.0a10
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@4.0.0-a9...9e3510d2ad9dd143e8a349daf9e4a5abf1748123))
@@ -15,8 +32,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-05-15&to=2025-05-15&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-05-15..2025-05-15&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.0.0a9
 
