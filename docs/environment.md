@@ -91,7 +91,7 @@ dependencies:
   - pillow
   - ipywidgets
   - pip:
-    - ipycanvas
+      - ipycanvas
 ```
 
 You can also install a local Python package, this is very practical if you want to embed
@@ -105,5 +105,5 @@ channels:
 dependencies:
   - xeus-python
   - pip:
-    - ..
+      - ..
 ```

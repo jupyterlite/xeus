@@ -153,3 +153,58 @@ files
 advanced
 changelog
 ```
+
+## Features
+
+### Dynamic install of packages
+
+Starting with jupyterlite-xeus v4.0.0a11, you can use the `%pip` magic or the `%mamba` magics to install packages dynamically once the kernel started:
+
+```
+%pip install my_package
+```
+
+or
+
+```
+%mamba install my_package
+```
+
+### stdin
+
+Starting with jupyterlite-xeus v4.0.0a8, latest jupyterlite 0.6.0, and latest xeus kernels (tested in Python, C++, lua), blocking stdin is now supported:
+
+```python
+name = input("what's your name")
+```
+
+### Multiple kernels
+
+To create a deployment with multiple kernels, you can simply add them to the `environment.yml` file:
+
+```yaml
+name: xeus-lite-wasm
+channels:
+  - https://repo.prefix.dev/emscripten-forge-dev
+  - https://repo.prefix.dev/conda-forge
+dependencies:
+  - xeus-python
+  - xeus-lua
+  - xeus-sqlite
+  - numpy
+```
+
+Learn more in [](./environment.md)
+
+### Mounting additional files
+
+To copy additional files and directories into the virtual filesystem of the xeus-lite kernels you can use the `--XeusAddon.mount` option.
+Each mount is specified as a pair of paths separated by a colon `:`. The first path is the path to the file or directory on the host machine, the second path is the path to the file or directory in the virtual filesystem of the kernel.
+
+```bash
+jupyter lite build \
+    --XeusAddon.environment_file=environment.yml \
+    --XeusAddon.mounts=/some/path/on/host_machine:/some/path/in/virtual/filesystem
+```
+
+Learn more in [](./files.md)
