@@ -92,4 +92,51 @@ test.describe('General Tests', () => {
     const name = 'Untitled.ipynb';
     expect(cellContent).toContain(name);
   });
+
+  test('Stdin using python kernel', async ({ page }) => {
+    // Create a Python notebook
+    const xpython = page
+      .locator('[title="Python 3.13 (XPython) [env2]"]')
+      .first();
+    await xpython.click();
+
+    await page.notebook.save();
+
+    await page.notebook.setCell(0, 'code', 'name = input("Prompt:")');
+    const cell0 = await page.notebook.runCell(0);
+
+    // Run cell containing `input`.
+    await page.locator('.jp-Stdin >> text=Prompt:').waitFor();
+    await page.keyboard.insertText('My Name');
+    await page.keyboard.press('Enter');
+    await cell0; // await end of cell.
+
+    const output = await page.notebook.getCellTextOutput(0);
+    expect(output![0]).toEqual('Prompt: My Name\n');
+  });
+
+  test('pip install using python kernel', async ({ page }) => {
+    // Create a Python notebook
+    const xpython = page
+      .locator('[title="Python 3.13 (XPython) [env2]"]')
+      .first();
+    await xpython.click();
+
+    await page.notebook.save();
+
+    await page.notebook.setCell(0, 'code', 'import ipycanvas');
+    await page.notebook.runCell(0);
+
+    let output = await page.notebook.getCellTextOutput(0);
+    expect(output![0]).toContain('ModuleNotFoundError');
+
+    await page.notebook.setCell(1, 'code', '%pip install ipycanvas');
+    await page.notebook.runCell(1);
+
+    await page.notebook.setCell(2, 'code', 'import ipycanvas');
+    await page.notebook.runCell(2);
+
+    output = await page.notebook.getCellTextOutput(2);
+    expect(output![0]).not.toContain('ModuleNotFoundError');
+  });
 });
