@@ -143,4 +143,31 @@ test.describe('General Tests', () => {
     output = await page.notebook.getCellTextOutput(2);
     expect(output![0]).not.toContain('ModuleNotFoundError');
   });
+
+  test('conda install using python kernel', async ({ page }) => {
+    await page.goto('lab/index.html');
+
+    // Create a Python notebook
+    const xpython = page
+      .locator('[title="Python 3.13 (XPython) [env2]"]')
+      .first();
+    await xpython.click();
+
+    await page.notebook.save();
+
+    await page.notebook.setCell(0, 'code', 'import ipycanvas');
+    await page.notebook.runCell(0);
+
+    let output = await page.notebook.getCellTextOutput(0);
+    expect(output![0]).toContain('ModuleNotFoundError');
+
+    await page.notebook.setCell(1, 'code', '%conda install ipycanvas');
+    await page.notebook.runCell(1);
+
+    await page.notebook.setCell(2, 'code', 'import ipycanvas');
+    await page.notebook.runCell(2);
+
+    output = await page.notebook.getCellTextOutput(2);
+    expect(output![0]).not.toContain('ModuleNotFoundError');
+  });
 });
