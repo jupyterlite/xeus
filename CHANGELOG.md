@@ -2,6 +2,33 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.0.0b0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.0.0-a11...01df8b4d1e8cd609a32a26613e41376b61f07e8b))
+
+### Bugs fixed
+
+- Fix missing labextensions settings [#234](https://github.com/jupyterlite/xeus/pull/234) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Add UI tests for stdin and dynamic package install [#235](https://github.com/jupyterlite/xeus/pull/235) ([@martinRenou](https://github.com/martinRenou))
+- Install micromamba 2.0.5 in update-snapshots gha [#231](https://github.com/jupyterlite/xeus/pull/231) ([@ianthomas23](https://github.com/ianthomas23))
+- Add UI test for multiple python kernels in different environments [#229](https://github.com/jupyterlite/xeus/pull/229) ([@ianthomas23](https://github.com/ianthomas23))
+
+### Documentation improvements
+
+- Docs: Push down the doc tree on the main page [#233](https://github.com/jupyterlite/xeus/pull/233) ([@martinRenou](https://github.com/martinRenou))
+- Update docs for coming 4.0.0 release [#232](https://github.com/jupyterlite/xeus/pull/232) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-05-16&to=2025-05-19&type=c))
+
+[@ianthomas23](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aianthomas23+updated%3A2025-05-16..2025-05-19&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-05-16..2025-05-19&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.0.0a11
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@4.0.0-a10...b4f1230b0dd29d93bb31144a782a6218d7529c56))
@@ -16,8 +43,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-05-15&to=2025-05-16&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-05-15..2025-05-16&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.0.0a10
 
