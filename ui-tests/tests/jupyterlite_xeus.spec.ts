@@ -94,6 +94,8 @@ test.describe('General Tests', () => {
   });
 
   test('Stdin using python kernel', async ({ page }) => {
+    await page.goto('lab/index.html');
+
     // Create a Python notebook
     const xpython = page
       .locator('[title="Python 3.13 (XPython) [env2]"]')
@@ -116,6 +118,8 @@ test.describe('General Tests', () => {
   });
 
   test('pip install using python kernel', async ({ page }) => {
+    await page.goto('lab/index.html');
+
     // Create a Python notebook
     const xpython = page
       .locator('[title="Python 3.13 (XPython) [env2]"]')
