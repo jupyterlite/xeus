@@ -105,7 +105,7 @@ test.describe('General Tests', () => {
     await page.notebook.save();
 
     await page.notebook.setCell(0, 'code', 'name = input("Prompt:")');
-    const cell0 = await page.notebook.runCell(0);
+    const cell0 = page.notebook.runCell(0); // Do not await yet.
 
     // Run cell containing `input`.
     await page.locator('.jp-Stdin >> text=Prompt:').waitFor();
