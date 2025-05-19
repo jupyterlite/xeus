@@ -124,7 +124,7 @@ pip install jupyterlite-xeus
 
 Once installed, you can create an `environment.yml` file at the root of your jupyterlite build directory containing the following:
 
-```yml
+```yaml
 name: xeus-kernels
 channels:
   - https://repo.prefix.dev/emscripten-forge-dev
