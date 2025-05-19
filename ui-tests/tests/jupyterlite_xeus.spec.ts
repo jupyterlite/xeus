@@ -137,7 +137,7 @@ test.describe('General Tests', () => {
     await page.notebook.setCell(1, 'code', '%pip install py2vega');
     await page.notebook.runCell(1);
 
-    await page.notebook.setCell(2, 'code', 'import py2vega');
+    await page.notebook.setCell(2, 'code', 'import py2vega; print("ok")');
     await page.notebook.runCell(2);
 
     output = await page.notebook.getCellTextOutput(2);
@@ -164,7 +164,7 @@ test.describe('General Tests', () => {
     await page.notebook.setCell(1, 'code', '%conda install ipycanvas');
     await page.notebook.runCell(1);
 
-    await page.notebook.setCell(2, 'code', 'import ipycanvas');
+    await page.notebook.setCell(2, 'code', 'import ipycanvas; print("ok")');
     await page.notebook.runCell(2);
 
     output = await page.notebook.getCellTextOutput(2);
