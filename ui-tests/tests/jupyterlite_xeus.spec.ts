@@ -105,7 +105,7 @@ test.describe('General Tests', () => {
     await page.notebook.save();
 
     await page.notebook.setCell(0, 'code', 'name = input("Prompt:")');
-    const cell0 = page.notebook.runCell(0); // Do not await yet.
+    let cell0 = page.notebook.runCell(0); // Do not await yet.
 
     // Run cell containing `input`.
     await page.locator('.jp-Stdin >> text=Prompt:').waitFor();
@@ -113,8 +113,20 @@ test.describe('General Tests', () => {
     await page.keyboard.press('Enter');
     await cell0; // await end of cell.
 
-    const output = await page.notebook.getCellTextOutput(0);
+    let output = await page.notebook.getCellTextOutput(0);
     expect(output![0]).toEqual('Prompt: My Name\n');
+
+    await page.notebook.setCell(0, 'code', 'import getpass; pw = getpass.getpass("Password:")');
+    cell0 = page.notebook.runCell(0); // Do not await yet.
+
+    // Run cell containing `input`.
+    await page.locator('.jp-Stdin >> text=Password:').waitFor();
+    await page.keyboard.insertText('hidden123');
+    await page.keyboard.press('Enter');
+    await cell0; // await end of cell.
+
+    output = await page.notebook.getCellTextOutput(0);
+    expect(output![0]).toEqual('Password: ········\n');
   });
 
   test('pip install using python kernel', async ({ page }) => {
