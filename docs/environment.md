@@ -13,8 +13,8 @@ Say you want to install `NumPy`, `Matplotlib` and `ipycanvas`, it can be done by
 ```yaml
 name: xeus-python-kernel
 channels:
-  - https://repo.mamba.pm/emscripten-forge
-  - conda-forge
+  - https://repo.prefix.dev/emscripten-forge-dev
+  - https://repo.prefix.dev/conda-forge
 dependencies:
   - xeus-python
   - numpy
@@ -56,22 +56,6 @@ Then those packages are usable directly:
    plt.show();
 ```
 
-### Python 3.13 support
-
-If you specify the emscripten-forge mirror published on [prefix.dev](https://prefix.dev), you will be able to use Python 3.13 in your deployment.
-
-⚠ This is still a work-in-progress feature and some packages may be missing ⚠
-
-```yaml
-name: xeus-python-kernel
-channels:
-  - https://repo.prefix.dev/emscripten-forge-dev
-  - conda-forge
-dependencies:
-  - xeus-python
-  - numpy
-```
-
 ### Multi environment support
 
 Starting with jupyterlite-xeus v4.0.0a0, you can now pass multiple environment files or prefixes.
@@ -80,7 +64,7 @@ Starting with jupyterlite-xeus v4.0.0a0, you can now pass multiple environment f
 jupyter lite build --XeusAddon.environment_file=environment-python.yml --XeusAddon.environment_file=environment-r.yml
 ```
 
-⚠ This feature is experimental, installing the same kernel in two environments does not work currently. This feature is only useful for e.g. splitting a R environment from a Python environment ⚠
+This allows e.g. to make multiple xeus-python kernels available, with a different set of packages.
 
 ### pip packages
 
@@ -99,8 +83,8 @@ For example, if you were to install `ipycanvas` from PyPI, you would need to ins
 ```yaml
 name: xeus-python-kernel
 channels:
-  - https://repo.mamba.pm/emscripten-forge
-  - conda-forge
+  - https://repo.prefix.dev/emscripten-forge-dev
+  - https://repo.prefix.dev/conda-forge
 dependencies:
   - xeus-python
   - numpy
@@ -116,8 +100,8 @@ a jupyterlite deployment in your Package documentation, allowing to test the ver
 ```yaml
 name: xeus-python-kernel
 channels:
-  - https://repo.mamba.pm/emscripten-forge
-  - conda-forge
+  - https://repo.prefix.dev/emscripten-forge-dev
+  - https://repo.prefix.dev/conda-forge
 dependencies:
   - xeus-python
   - pip:
