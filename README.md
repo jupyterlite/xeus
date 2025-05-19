@@ -2,66 +2,87 @@
 
 [![Github Actions Status](https://github.com/jupyterlite/xeus/workflows/Build/badge.svg)](https://github.com/jupyterlite/xeus/actions/workflows/build.yml)
 
-JupyterLite loader for Xeus kernels
+`jupyterlite-xeus` is an extension for JupyterLite that enables fully client-side Jupyter environments powered by xeus kernels compiled to WebAssembly (Wasm). It allows users to create statically-served Jupyter deployments with custom pre-built environments — no server required.
+
+The core feature of `jupyterlite-xeus` is its integration with [emscripten-forge](https://github.com/emscripten-forge), a conda package distribution tailored for WebAssembly. This makes it possible to bundle your favorite scientific or data analysis packages directly into the browser-based environment, delivering a reproducible computing experience with zero backend dependencies.
+
+Ideal for demos, educational resources, and offline computing. Use it in combination with [Voici](https://github.com/voila-dashboards/voici)!
+
+Currently supported kernels are:
+
+- [xeus-python](https://github.com/jupyter-xeus/xeus-python)
+- [xeus-lua](https://github.com/jupyter-xeus/xeus-lua)
+- [xeus-r](https://github.com/jupyter-xeus/xeus-r)
+- [xeus-cpp](https://github.com/compiler-research/xeus-cpp)
+- [xeus-nelson](https://github.com/jupyter-xeus/xeus-nelson)
+- [xeus-javascript](https://github.com/jupyter-xeus/xeus-javascript)
 
 ## Requirements
 
 - JupyterLab >= 4.0.0
 
-## Install
+## Installation
 
-To install the extension, execute:
+You can install `jupyterlite-xeus` with conda/mamba
 
-```bash
-pip install jupyterlite_xeus
+```
+mamba install -c conda-forge jupyterlite-xeus
+```
+
+Or with `pip` (you must install micromamba 2.0.5):
+
+```
+pip install jupyterlite-xeus
 ```
 
 ## Usage
 
-### From environment.yml
+Once installed, you can create an `environment.yml` file at the root of your jupyterlite build directory containing the following:
 
-#### xeus-python kernel
-
-To load a `xeus-python` kernel with a custom environment, create an `environment.yml` file with `xeus-python` and the desired dependencies. Here is an example with `numpy` as a additional dependency:
-
-```yaml
-name: xeus-lite-wasm
+```yml
+name: xeus-kernels
 channels:
-  - https://repo.mamba.pm/emscripten-forge
-  - conda-forge
+  - https://repo.prefix.dev/emscripten-forge-dev
+  - https://repo.prefix.dev/conda-forge
 dependencies:
   - xeus-python
-  - numpy
-```
-
-To build JupyterLite, run the following command where `environment.yml` is the path to the file you just created
-
-```bash
-jupyter lite build --XeusAddon.environment_file=some_path/to/environment.yml
-```
-
-#### xeus-lua / xeus-sqlite / xeus-\<mylang\>
-
-To load a `xeus-lua` or `xeus-sqlite` kernel you can
-do the same as above, just with
-
-```yaml
-dependencies:
   - xeus-lua
+  - xeus-nelson
+  - numpy
+  - matplotlib
+  - pillow
+  - ipywidgets
+  - pip:
+      - ipycanvas
+```
+
+You can then run the usual `jupyter lite build` or `voici my-notebook.ipynb`. The `environment.yml` file will be picked-up automatically by `jupyterlite-xeus`, installing `xeus-python`, `xeus-lua`, `xeus-nelson` and some useful Python packages into the user environment.
+
+```{toctree}
+:caption: Usage
+:maxdepth: 2
+
+deploy
+environment
+files
+advanced
+changelog
+```
+
+## Features
+
+#### Dynamic install of packages
+
+You can use the `%pip` magic or the `%mamba` magics to install packages dynamically once the kernel started:
+
+```
+%pip install my_package
 ```
 
 or
 
-```yaml
-dependencies:
-  - xeus-sqlite
 ```
-
-Note that `xeus-sqlite` and `xeus-lua` do not support additional dependencies yet.
-To build JupyterLite, run again:
-
-```bash
-jupyter lite build --XeusAddon.environment_file=environment.yml
+%mamba install my_package
 ```
 
 #### Multiple kernels
@@ -71,81 +92,13 @@ To create a deployment with multiple kernels, you can simply add them to the `en
 ```yaml
 name: xeus-lite-wasm
 channels:
-  - https://repo.mamba.pm/emscripten-forge
-  - conda-forge
+  - https://repo.prefix.dev/emscripten-forge-dev
+  - https://repo.prefix.dev/conda-forge
 dependencies:
   - xeus-python
   - xeus-lua
   - xeus-sqlite
   - numpy
-```
-
-### From local environment / prefix
-
-When developing a xeus-kernel, it is very useful to be able to test it in JupyterLite without having to publish the kernel to emscripten-forge. Therefore, you can also use a local environment / prefix to build JupyterLite with a custom kernel.
-
-#### Create a local environment / prefix
-
-This workflow usually starts with creating a local conda environment / prefix for the `emscripten-wasm32` platform with all the dependencies required to build your kernel (here we install dependencies for `xeus-python`).
-
-```bash
-micromamba create -n xeus-python-dev \
-    --platform=emscripten-wasm32 \
-    -c https://repo.mamba.pm/emscripten-forge \
-    -c conda-forge \
-    --yes \
-    "python>=3.11" pybind11 nlohmann_json pybind11_json numpy pytest \
-    bzip2 sqlite zlib libffi xtl pyjs \
-    xeus xeus-lite
-```
-
-#### Build the kernel
-
-This depends on your kernel, but it will look something like this:
-
-```bash
-# path to your emscripten emsdk
-source $EMSDK_DIR/emsdk_env.sh
-
-WASM_ENV_NAME=xeus-python-dev
-WASM_ENV_PREFIX=$MAMBA_ROOT_PREFIX/envs/$WASM_ENV_NAME
-
-# let cmake know where the env is
-export PREFIX=$WASM_ENV_PREFIX
-export CMAKE_PREFIX_PATH=$PREFIX
-export CMAKE_SYSTEM_PREFIX_PATH=$PREFIX
-
-cd /path/to/your/kernel/src
-mkdir build_wasm
-cd build_wasm
-emcmake cmake \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ON \
-    -DCMAKE_INSTALL_PREFIX=$PREFIX \
-    ..
-emmake make -j8 install
-```
-
-#### Build the JupyterLite site
-
-You will need to create a new environment with the dependencies to build the JupyterLite site.
-
-```bash
-# create new environment
-micromamba create -n xeus-lite-host \
-    jupyterlite-core
-
-# activate the environment
-micromamba activate xeus-lite-host
-
-# install jupyterlite_xeus via pip
-python -m pip install jupyterlite-xeus
-```
-
-When running `jupyter lite build`, we pass the `prefix` option and point it to the local environment / prefix we just created:
-
-```bash
-jupyter lite build --XeusAddon.prefix=$WASM_ENV_PREFIX
 ```
 
 ### Mounting additional files

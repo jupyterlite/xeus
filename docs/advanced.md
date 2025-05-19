@@ -34,3 +34,69 @@ jupyter lite build --XeusAddon.empack_config=empack_config.yaml
 ```{note}
 Filtering files helps reduce the size of the assets to download and as a consequence reduce network traffic.
 ```
+
+### Build your xeus-kernel locally
+
+#### Create a local environment / prefix
+
+This workflow usually starts with creating a local conda environment / prefix for the `emscripten-wasm32` platform with all the dependencies required to build your kernel (here we install dependencies for `xeus-python`).
+
+```bash
+micromamba create -n xeus-python-dev \
+    --platform=emscripten-wasm32 \
+    -c https://repo.prefix.dev/emscripten-forge-dev \
+    -c https://repo.prefix.dev/conda-forge \
+    --yes \
+    "python>=3.11" pybind11 nlohmann_json pybind11_json numpy pytest \
+    bzip2 sqlite zlib libffi xtl pyjs \
+    xeus xeus-lite
+```
+
+#### Build the kernel
+
+This depends on your kernel, but it will look something like this:
+
+```bash
+# path to your emscripten emsdk
+source $EMSDK_DIR/emsdk_env.sh
+
+WASM_ENV_NAME=xeus-python-dev
+WASM_ENV_PREFIX=$MAMBA_ROOT_PREFIX/envs/$WASM_ENV_NAME
+
+# let cmake know where the env is
+export PREFIX=$WASM_ENV_PREFIX
+export CMAKE_PREFIX_PATH=$PREFIX
+export CMAKE_SYSTEM_PREFIX_PATH=$PREFIX
+
+cd /path/to/your/kernel/src
+mkdir build_wasm
+cd build_wasm
+emcmake cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ON \
+    -DCMAKE_INSTALL_PREFIX=$PREFIX \
+    ..
+emmake make -j8 install
+```
+
+#### Build the JupyterLite site
+
+You will need to create a new environment with the dependencies to build the JupyterLite site.
+
+```bash
+# create new environment
+micromamba create -n xeus-lite-host \
+    jupyterlite-core
+
+# activate the environment
+micromamba activate xeus-lite-host
+
+# install jupyterlite_xeus via pip
+python -m pip install jupyterlite-xeus
+```
+
+When running `jupyter lite build`, we pass the `prefix` option and point it to the local environment / prefix we just created:
+
+```bash
+jupyter lite build --XeusAddon.prefix=$WASM_ENV_PREFIX
+```

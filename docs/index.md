@@ -2,7 +2,11 @@
 
 ![Xeus logo](./xeus.svg)
 
-jupyterlite-xeus is a facility tool bringing xeus kernels into JupyterLite and Voici.
+`jupyterlite-xeus` is an extension for JupyterLite that enables fully client-side Jupyter environments powered by xeus kernels compiled to WebAssembly (Wasm). It allows users to create statically-served Jupyter deployments with custom pre-built environments — no server required.
+
+The core feature of `jupyterlite-xeus` is its integration with [emscripten-forge](https://github.com/emscripten-forge), a conda package distribution tailored for WebAssembly. This makes it possible to bundle your favorite scientific or data analysis packages directly into the browser-based environment, delivering a reproducible computing experience with zero backend dependencies.
+
+Ideal for demos, educational resources, and offline computing. Use it in combination with [Voici](https://github.com/voila-dashboards/voici)!
 
 Currently supported kernels are:
 
@@ -110,7 +114,7 @@ You can install `jupyterlite-xeus` with conda/mamba
 mamba install -c conda-forge jupyterlite-xeus
 ```
 
-Or with `pip`:
+Or with `pip` (you must install micromamba 2.0.5):
 
 ```
 pip install jupyterlite-xeus
@@ -123,8 +127,8 @@ Once installed, you can create an `environment.yml` file at the root of your jup
 ```yml
 name: xeus-kernels
 channels:
-  - https://repo.mamba.pm/emscripten-forge
-  - conda-forge
+  - https://repo.prefix.dev/emscripten-forge-dev
+  - https://repo.prefix.dev/conda-forge
 dependencies:
   - xeus-python
   - xeus-lua
