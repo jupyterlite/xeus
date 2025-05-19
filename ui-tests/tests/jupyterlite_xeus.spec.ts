@@ -116,7 +116,11 @@ test.describe('General Tests', () => {
     let output = await page.notebook.getCellTextOutput(0);
     expect(output![0]).toEqual('Prompt: My Name\n');
 
-    await page.notebook.setCell(0, 'code', 'import getpass; pw = getpass.getpass("Password:")');
+    await page.notebook.setCell(
+      0,
+      'code',
+      'import getpass; pw = getpass.getpass("Password:")'
+    );
     cell0 = page.notebook.runCell(0); // Do not await yet.
 
     // Run cell containing `input`.
