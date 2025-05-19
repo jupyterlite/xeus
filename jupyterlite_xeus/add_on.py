@@ -14,6 +14,7 @@ import requests
 
 from jupyterlite_core.addons.federated_extensions import FederatedExtensionAddon
 from jupyterlite_core.constants import (
+    ALL_FEDERATED_JSON,
     FEDERATED_EXTENSIONS,
     JUPYTERLITE_JSON,
     LAB_EXTENSIONS,
@@ -438,20 +439,42 @@ class XeusAddon(FederatedExtensionAddon):
         )
 
     def copy_jupyterlab_extensions_from_prefix(self, prefix):
+        federated_extensions = self.env_extensions(Path(prefix) / SHARE_LABEXTENSIONS)
+
         # Find the federated extensions in the emscripten-env and install them
-        for pkg_json in self.env_extensions(Path(prefix) / SHARE_LABEXTENSIONS):
+        for pkg_json in federated_extensions:
             yield from self.safe_copy_jupyterlab_extension(pkg_json)
 
-        lab_extensions_root = self.manager.output_dir / LAB_EXTENSIONS
-        lab_extensions = self.env_extensions(lab_extensions_root)
         jupyterlite_json = self.manager.output_dir / JUPYTERLITE_JSON
 
         yield dict(
             name=f"patch:xeus:{prefix}",
             doc=f"ensure {JUPYTERLITE_JSON} includes the federated_extensions",
-            file_dep=[*lab_extensions, jupyterlite_json],
+            file_dep=[*federated_extensions, jupyterlite_json],
             actions=[(self.patch_jupyterlite_json, [jupyterlite_json])],
         )
+
+        app_schemas = self.manager.output_dir / "build" / "schemas"
+        all_federated_json = app_schemas / ALL_FEDERATED_JSON
+
+        if app_schemas.is_dir():
+            yield self.task(
+                name=f"patch:xeus:federated_settings:{prefix}",
+                doc=f"ensure {ALL_FEDERATED_JSON} includes the settings of federated extensions",
+                file_dep=[*federated_extensions],
+                actions=[
+                    (self.patch_federated_settings, [self.manager, federated_extensions, all_federated_json])
+                ],
+            )
+
+    def patch_federated_settings(self, manager, lab_extensions, all_federated_json):
+        """ensure settings from federated extensions are aggregated in a single file"""
+        federated_settings = [
+            setting for p in lab_extensions for setting in self.get_federated_settings(p.parent)
+        ]
+        current_json = json.loads(all_federated_json.read_text())
+        current_json = current_json + federated_settings
+        all_federated_json.write_text(json.dumps(current_json), **UTF8)
 
     def safe_copy_jupyterlab_extension(self, pkg_json):
         """Copy a labextension, and overwrite it
