@@ -124,7 +124,7 @@ pip install jupyterlite-xeus
 
 Once installed, you can create an `environment.yml` file at the root of your jupyterlite build directory containing the following:
 
-```yml
+```yaml
 name: xeus-kernels
 channels:
   - https://repo.prefix.dev/emscripten-forge-dev
@@ -142,17 +142,6 @@ dependencies:
 ```
 
 You can then run the usual `jupyter lite build` or `voici my-notebook.ipynb`. The `environment.yml` file will be picked-up automatically by `jupyterlite-xeus`, installing `xeus-python`, `xeus-lua`, `xeus-nelson` and some useful Python packages into the user environment.
-
-```{toctree}
-:caption: Usage
-:maxdepth: 2
-
-deploy
-environment
-files
-advanced
-changelog
-```
 
 ## Features
 
@@ -208,3 +197,15 @@ jupyter lite build \
 ```
 
 Learn more in [](./files.md)
+
+## Learn more
+
+```{toctree}
+:maxdepth: 2
+
+deploy
+environment
+files
+advanced
+changelog
+```
