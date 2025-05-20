@@ -132,7 +132,11 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
         }
       });
     }
-    await app.serviceManager.kernelspecs.refreshSpecs();
+
+    // @ts-expect-error: refreshSpecs() is not doing what it says it does, so we don't use it
+    await app.serviceManager.kernelspecs._specsChanged.emit(
+      app.serviceManager.kernelspecs.specs
+    );
 
     // Kernel logs
     if (loggerRegistry) {
