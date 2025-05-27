@@ -105,9 +105,11 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         name: pkg.name,
         version: pkg.version,
         repo_url: pkg.channel ? pkg.channel : '',
-        url: pkg.url ? pkg.url : '',
+        url: pkg.url ? pkg.url : pkg.channel,
         repo_name: pkg.channel ? pkg.channel : '',
-        build_string: pkg.build
+        build_string: pkg.build,
+        subdir:'',
+        depends:[]
       };
     });
 
