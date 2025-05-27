@@ -3,7 +3,11 @@
 // Distributed under the terms of the Modified BSD License.
 
 import { IXeusWorkerKernel } from './interfaces';
-import { waitRunDependencies, ILogger, parse } from '@emscripten-forge/mambajs-core';
+import {
+  waitRunDependencies,
+  ILogger,
+  parse
+} from '@emscripten-forge/mambajs-core';
 
 declare function createXeusModule(options: any): any;
 
