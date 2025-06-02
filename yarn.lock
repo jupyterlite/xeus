@@ -331,14 +331,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.12.1":
-  version: 0.12.1
-  resolution: "@emscripten-forge/mambajs@npm:0.12.1"
+"@emscripten-forge/mambajs-core@npm:^0.13.0":
+  version: 0.13.0
+  resolution: "@emscripten-forge/mambajs-core@npm:0.13.0"
   dependencies:
-    "@baszalmstra/rattler": ^0.2.1
     "@emscripten-forge/untarjs": ^5.3.0
     yaml: ^2.7.0
-  checksum: 94707e91443ef59b2c7a03fde68a66c54465e08db7ab69f6b912bbff22463e91b9877822b4323b60947df817ce4928e8ff34cae86d09a8a79779fe3356002ff6
+  checksum: c6a72d1ea114614077aa5977a15ec569e6279d82c80640ef1ec326ff72b49d945ee5f54d2321726dde9382a429150cd9c8c13bd33c2cc4e99923ae13d3f0b8f0
+  languageName: node
+  linkType: hard
+
+"@emscripten-forge/mambajs@npm:^0.13.0":
+  version: 0.13.0
+  resolution: "@emscripten-forge/mambajs@npm:0.13.0"
+  dependencies:
+    "@baszalmstra/rattler": ^0.2.1
+    "@emscripten-forge/mambajs-core": ^0.13.0
+    comlink: ^4.4.2
+    yaml: ^2.7.0
+  checksum: fb1fd0d31b68cc43806a99736dcb12f3a3166c4fc481660ae4d78f8da76142a1369a628ae4f28389e50d1d609ea1460ef10f902499241c684d98e2eb5f6037f4
   languageName: node
   linkType: hard
 
@@ -1269,11 +1280,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlite/xeus-core@^4.0.0-b0, @jupyterlite/xeus-core@workspace:packages/xeus-core":
+"@jupyterlite/xeus-core@^4.0.0-b1, @jupyterlite/xeus-core@workspace:packages/xeus-core":
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus-core@workspace:packages/xeus-core"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.12.1
+    "@emscripten-forge/mambajs-core": ^0.13.0
     "@jupyterlab/coreutils": ^6.4.2
     "@jupyterlab/services": ^7.4.2
     "@jupyterlite/contents": ^0.6.0-beta.0
@@ -1306,7 +1317,7 @@ __metadata:
     "@jupyterlite/contents": ^0.6.0-beta.0
     "@jupyterlite/kernel": ^0.6.0-beta.0
     "@jupyterlite/server": ^0.6.0-beta.0
-    "@jupyterlite/xeus": ^4.0.0-b0
+    "@jupyterlite/xeus": ^4.0.0-b1
     "@lumino/coreutils": ^2
     "@types/json-schema": ^7.0.11
     "@types/react": ^18.0.26
@@ -1339,17 +1350,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupyterlite/xeus@^4.0.0-b0, @jupyterlite/xeus@workspace:packages/xeus":
+"@jupyterlite/xeus@^4.0.0-b1, @jupyterlite/xeus@workspace:packages/xeus":
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.12.1
+    "@emscripten-forge/mambajs": ^0.13.0
     "@jupyterlab/coreutils": ^6.4.2
     "@jupyterlab/services": ^7.4.2
     "@jupyterlite/contents": ^0.6.0-beta.0
     "@jupyterlite/kernel": ^0.6.0-beta.0
     "@jupyterlite/server": ^0.6.0-beta.0
-    "@jupyterlite/xeus-core": ^4.0.0-b0
+    "@jupyterlite/xeus-core": ^4.0.0-b1
     "@lumino/coreutils": ^2
     "@lumino/signaling": ^2
     "@types/json-schema": ^7.0.11
@@ -3671,7 +3682,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"comlink@npm:^4.3.1, comlink@npm:^4.4.1":
+"comlink@npm:^4.3.1, comlink@npm:^4.4.1, comlink@npm:^4.4.2":
   version: 4.4.2
   resolution: "comlink@npm:4.4.2"
   checksum: 35313f26fdd78c202be21be49a7607f57e9e91963399b524676742ee0cf7db589be500d923ed0809b53f37996461186fb345bf867d93236be22bfae3cb7bd07e

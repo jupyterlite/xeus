@@ -7,7 +7,7 @@ const wasmPath = [
   '..',
   'node_modules',
   '@emscripten-forge',
-  'mambajs',
+  'mambajs-core',
   'lib',
   '*.wasm'
 ];

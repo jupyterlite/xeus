@@ -1,6 +1,6 @@
 {
     "name": "@jupyterlite/xeus-core",
-    "version": "4.0.0-b0",
+    "version": "4.0.0-b1",
     "description": "JupyterLite Xeus core library",
     "keywords": [
         "jupyter",
@@ -33,7 +33,7 @@
         "watch:src": "tsc -w --sourceMap"
     },
     "dependencies": {
-        "@emscripten-forge/mambajs": "^0.12.1",
+        "@emscripten-forge/mambajs-core": "^0.13.0",
         "@jupyterlab/coreutils": "^6.4.2",
         "@jupyterlab/services": "^7.4.2",
         "@jupyterlite/contents": "^0.6.0-beta.0",
