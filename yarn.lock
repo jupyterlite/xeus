@@ -341,15 +341,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.13.0":
-  version: 0.13.0
-  resolution: "@emscripten-forge/mambajs@npm:0.13.0"
+"@emscripten-forge/mambajs@npm:^0.13.1":
+  version: 0.13.1
+  resolution: "@emscripten-forge/mambajs@npm:0.13.1"
   dependencies:
     "@baszalmstra/rattler": ^0.2.1
     "@emscripten-forge/mambajs-core": ^0.13.0
-    comlink: ^4.4.2
     yaml: ^2.7.0
-  checksum: fb1fd0d31b68cc43806a99736dcb12f3a3166c4fc481660ae4d78f8da76142a1369a628ae4f28389e50d1d609ea1460ef10f902499241c684d98e2eb5f6037f4
+  checksum: eb7e084a4d77c13fa44243ba58e888fb2d388cc14761c5001f84b2ec9220ff5e7f53681e972229e5df80063ce47594d1d2663544bfe5dac71ddfa23816c3578f
   languageName: node
   linkType: hard
 
@@ -1354,7 +1353,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.13.0
+    "@emscripten-forge/mambajs": ^0.13.1
     "@jupyterlab/coreutils": ^6.4.2
     "@jupyterlab/services": ^7.4.2
     "@jupyterlite/contents": ^0.6.0-beta.0
@@ -3682,7 +3681,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"comlink@npm:^4.3.1, comlink@npm:^4.4.1, comlink@npm:^4.4.2":
+"comlink@npm:^4.3.1, comlink@npm:^4.4.1":
   version: 4.4.2
   resolution: "comlink@npm:4.4.2"
   checksum: 35313f26fdd78c202be21be49a7607f57e9e91963399b524676742ee0cf7db589be500d923ed0809b53f37996461186fb345bf867d93236be22bfae3cb7bd07e
