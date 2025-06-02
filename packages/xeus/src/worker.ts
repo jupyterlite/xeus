@@ -165,7 +165,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   ) {
     if (specs.length || pipSpecs.length) {
       try {
-        this.logger.log(`Collecting ${(specs || pipSpecs)?.join(',')}`);
         const newPackages = await solve({
           ymlOrSpecs: specs,
           installedPackages: this._installedPackages,
