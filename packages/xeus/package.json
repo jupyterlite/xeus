@@ -1,6 +1,6 @@
 {
     "name": "@jupyterlite/xeus",
-    "version": "4.0.0-rc0",
+    "version": "4.0.0",
     "description": "JupyterLite Xeus kernels",
     "keywords": [
         "jupyter",
@@ -42,7 +42,7 @@
         "@jupyterlite/contents": "^0.6.0",
         "@jupyterlite/kernel": "^0.6.0",
         "@jupyterlite/server": "^0.6.0",
-        "@jupyterlite/xeus-core": "^4.0.0-rc0",
+        "@jupyterlite/xeus-core": "^4.0.0",
         "@lumino/coreutils": "^2",
         "@lumino/signaling": "^2",
         "coincident": "^1.2.3",

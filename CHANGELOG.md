@@ -2,6 +2,92 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.0.0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.1.1...5950a5bbe2c73b6d111a2eacd55b4512c78cdb97))
+
+### Highlights of 4.0.0
+
+This major release brings many new features and improvements:
+
+- Blocking `input` support, no need to `await input` anymore! ⭐
+- Dynamic installation of `pip` and `conda` packages using the new magics 📦
+- Multi-environment support, you can now provide multiple environment files to `jupyterlite-xeus`, exposing kernels with different set of available packages. 💪🏽
+- Defaults to using Python 3.13 and the new `emscripten-forge` channel from https://prefix.dev 🐍
+
+![Screenshot From 2025-06-03 09-07-45](https://github.com/user-attachments/assets/a8966e80-5f70-4823-8267-6f2c50b20404)
+
+### Enhancements made
+
+- Bump jupyterlite 0.6.0 [#245](https://github.com/jupyterlite/xeus/pull/245) ([@martinRenou](https://github.com/martinRenou))
+- Improve pip install support [#244](https://github.com/jupyterlite/xeus/pull/244) ([@martinRenou](https://github.com/martinRenou))
+- Update mambajs: fix %pip install command [#230](https://github.com/jupyterlite/xeus/pull/230) ([@martinRenou](https://github.com/martinRenou))
+- Introduce @jupyterlite/xeus-core pure typescript library [#228](https://github.com/jupyterlite/xeus/pull/228) ([@martinRenou](https://github.com/martinRenou))
+- Support the same kernel in multiple environments [#225](https://github.com/jupyterlite/xeus/pull/225) ([@ianthomas23](https://github.com/ianthomas23))
+- Separate deployment directory for each xeus environment [#223](https://github.com/jupyterlite/xeus/pull/223) ([@ianthomas23](https://github.com/ianthomas23))
+- Making the kernel worker more extensible [#222](https://github.com/jupyterlite/xeus/pull/222) ([@martinRenou](https://github.com/martinRenou))
+- Use `/api/stdin/kernel` for stdin requests via service worker [#220](https://github.com/jupyterlite/xeus/pull/220) ([@ianthomas23](https://github.com/ianthomas23))
+- Add fallback for kernel constructor when argv is not accepted [#218](https://github.com/jupyterlite/xeus/pull/218) ([@anutosh491](https://github.com/anutosh491))
+- Support stdin via SharedArrayBuffer [#217](https://github.com/jupyterlite/xeus/pull/217) ([@ianthomas23](https://github.com/ianthomas23))
+- Expose sendMessage to subclasses [#214](https://github.com/jupyterlite/xeus/pull/214) ([@martinRenou](https://github.com/martinRenou))
+- Support stdin via service worker [#212](https://github.com/jupyterlite/xeus/pull/212) ([@ianthomas23](https://github.com/ianthomas23))
+- Enable Kernels to be built on top of kernlSpec arguments [#210](https://github.com/jupyterlite/xeus/pull/210) ([@anutosh491](https://github.com/anutosh491))
+- Install packages dynamically [#208](https://github.com/jupyterlite/xeus/pull/208) ([@AnastasiaSliusar](https://github.com/AnastasiaSliusar))
+- Bring back mount points as list [#203](https://github.com/jupyterlite/xeus/pull/203) ([@martinRenou](https://github.com/martinRenou))
+- Micromamba dependency and proper prefix relocation [#200](https://github.com/jupyterlite/xeus/pull/200) ([@martinRenou](https://github.com/martinRenou))
+- Report kernel status on startup [#197](https://github.com/jupyterlite/xeus/pull/197) ([@martinRenou](https://github.com/martinRenou))
+- Installing xeus-cpp from prefix-dev [#191](https://github.com/jupyterlite/xeus/pull/191) ([@martinRenou](https://github.com/martinRenou))
+- Bump mambajs: prefix relocation + untarjs speedup [#180](https://github.com/jupyterlite/xeus/pull/180) ([@martinRenou](https://github.com/martinRenou))
+- Multi envs support [#164](https://github.com/jupyterlite/xeus/pull/164) ([@martinRenou](https://github.com/martinRenou))
+- Adding xeus-cpp in the docs [#162](https://github.com/jupyterlite/xeus/pull/162) ([@anutosh491](https://github.com/anutosh491))
+
+### Bugs fixed
+
+- Do not use refreshSpecs [#236](https://github.com/jupyterlite/xeus/pull/236) ([@martinRenou](https://github.com/martinRenou))
+- Fix missing labextensions settings [#234](https://github.com/jupyterlite/xeus/pull/234) ([@martinRenou](https://github.com/martinRenou))
+- Do not export comlink worker as part of the library [#226](https://github.com/jupyterlite/xeus/pull/226) ([@martinRenou](https://github.com/martinRenou))
+- Fix cwd for Notebooks [#187](https://github.com/jupyterlite/xeus/pull/187) ([@martinRenou](https://github.com/martinRenou))
+- Non-hardcoded python version [#177](https://github.com/jupyterlite/xeus/pull/177) ([@martinRenou](https://github.com/martinRenou))
+- Fix cwd when building the environment [#169](https://github.com/jupyterlite/xeus/pull/169) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Update to use new mambajs-core [#240](https://github.com/jupyterlite/xeus/pull/240) ([@martinRenou](https://github.com/martinRenou))
+- Add UI tests for stdin and dynamic package install [#235](https://github.com/jupyterlite/xeus/pull/235) ([@martinRenou](https://github.com/martinRenou))
+- Install micromamba 2.0.5 in update-snapshots gha [#231](https://github.com/jupyterlite/xeus/pull/231) ([@ianthomas23](https://github.com/ianthomas23))
+- Add UI test for multiple python kernels in different environments [#229](https://github.com/jupyterlite/xeus/pull/229) ([@ianthomas23](https://github.com/ianthomas23))
+- Update JupyterLite and JupyterLab - stdin support + use kernel logs UI [#221](https://github.com/jupyterlite/xeus/pull/221) ([@martinRenou](https://github.com/martinRenou))
+- Update mambajs 0.10.0 [#213](https://github.com/jupyterlite/xeus/pull/213) ([@martinRenou](https://github.com/martinRenou))
+- Update jupyterlite + mambajs [#211](https://github.com/jupyterlite/xeus/pull/211) ([@martinRenou](https://github.com/martinRenou))
+- Remove unused code [#209](https://github.com/jupyterlite/xeus/pull/209) ([@martinRenou](https://github.com/martinRenou))
+- Update mambajs [#205](https://github.com/jupyterlite/xeus/pull/205) ([@martinRenou](https://github.com/martinRenou))
+- Update jupyterlite 0.6.0-alpha.3: remove split liteextension/labextension [#204](https://github.com/jupyterlite/xeus/pull/204) ([@martinRenou](https://github.com/martinRenou))
+- Update to a newer `jupyterlite-core` in the docs environment [#194](https://github.com/jupyterlite/xeus/pull/194) ([@jtpio](https://github.com/jtpio))
+- Snapshot the notebook section of the launcher only [#192](https://github.com/jupyterlite/xeus/pull/192) ([@jtpio](https://github.com/jtpio))
+- Use Python version from environment [#174](https://github.com/jupyterlite/xeus/pull/174) ([@davidbrochart](https://github.com/davidbrochart))
+- Rebuild with latest jupyterlite [#171](https://github.com/jupyterlite/xeus/pull/171) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Docs: Push down the doc tree on the main page [#233](https://github.com/jupyterlite/xeus/pull/233) ([@martinRenou](https://github.com/martinRenou))
+- Update docs for coming 4.0.0 release [#232](https://github.com/jupyterlite/xeus/pull/232) ([@martinRenou](https://github.com/martinRenou))
+- Add docs for multi-env support [#202](https://github.com/jupyterlite/xeus/pull/202) ([@martinRenou](https://github.com/martinRenou))
+- Debug docs [#198](https://github.com/jupyterlite/xeus/pull/198) ([@martinRenou](https://github.com/martinRenou))
+- Python 3.13 on docs [#179](https://github.com/jupyterlite/xeus/pull/179) ([@martinRenou](https://github.com/martinRenou))
+- Adding xeus-cpp in the docs [#162](https://github.com/jupyterlite/xeus/pull/162) ([@anutosh491](https://github.com/anutosh491))
+
+### Other merged PRs
+
+- Revert "Use Python version from environment" [#176](https://github.com/jupyterlite/xeus/pull/176) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-27&to=2025-06-03&type=c))
+
+[@AnastasiaSliusar](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AAnastasiaSliusar+updated%3A2025-01-27..2025-06-03&type=Issues) | [@anutosh491](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aanutosh491+updated%3A2025-01-27..2025-06-03&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Adavidbrochart+updated%3A2025-01-27..2025-06-03&type=Issues) | [@ianthomas23](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aianthomas23+updated%3A2025-01-27..2025-06-03&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2025-01-27..2025-06-03&type=Issues) | [@lumberbot-app](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Alumberbot-app+updated%3A2025-01-27..2025-06-03&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-27..2025-06-03&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.0.0rc0
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.0.0-b1...09601084da2fe78607e711a2298a3b9196a7af5e))
@@ -15,8 +101,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-05-27&to=2025-06-02&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-05-27..2025-06-02&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.0.0b1
 
