@@ -58,6 +58,11 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
           return URLExt.join(kernelRootUrl, kernelSpec.name, file);
         }
 
+        // Special case for libxeus
+        if (file in ['libxeus.so']) {
+          return URLExt.join(kernelRootUrl, kernelSpec.name, file);
+        }
+
         if (file.endsWith('.wasm')) {
           return binaryWASM;
         } else if (file.endsWith('.data')) {

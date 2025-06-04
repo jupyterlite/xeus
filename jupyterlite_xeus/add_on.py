@@ -263,6 +263,23 @@ class XeusAddon(FederatedExtensionAddon):
                     ],
                 )
 
+            # Copy libxeus shared lib file in the output
+            filename = "libxeus.so"
+            location = "lib/libxeus.so"
+            if (Path(prefix) / location).exists():
+                yield dict(
+                    name=f"copy:{env_name}:{kernel_dir.name}:{filename}",
+                    actions=[
+                        (
+                            self.copy_one,
+                            [
+                                Path(prefix) / location,
+                                self.xeus_output_dir / env_name / kernel_dir.name / filename,
+                            ],
+                        ),
+                    ],
+                )
+
         # write to temp file
         kernel_json = Path(self.cwd_name) / env_name / f"{kernel_dir.name}_kernel.json"
         kernel_json.parent.mkdir(parents=True, exist_ok=True)
