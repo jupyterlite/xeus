@@ -266,7 +266,8 @@ class XeusAddon(FederatedExtensionAddon):
             # Copy libxeus shared lib file in the output
             filename = "libxeus.so"
             location = "lib/libxeus.so"
-            if (Path(prefix) / location).exists():
+            target_location = self.xeus_output_dir / env_name / kernel_dir.name / filename
+            if (Path(prefix) / location).exists() and not target_location.exists():
                 yield dict(
                     name=f"copy:{env_name}:{kernel_dir.name}:{filename}",
                     actions=[
@@ -274,7 +275,7 @@ class XeusAddon(FederatedExtensionAddon):
                             self.copy_one,
                             [
                                 Path(prefix) / location,
-                                self.xeus_output_dir / env_name / kernel_dir.name / filename,
+                                target_location,
                             ],
                         ),
                     ],
