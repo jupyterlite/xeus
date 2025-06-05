@@ -59,7 +59,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         }
 
         // Special case for libxeus
-        if (file in ['libxeus.so']) {
+        if (['libxeus.so'].includes(file)) {
           return URLExt.join(kernelRootUrl, kernelSpec.name, file);
         }
 
