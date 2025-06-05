@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.0.1
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.0.0...3794a6ae06cbf189b257ae7dd28197f03363891e))
+
+### Enhancements made
+
+- Handle shared lib of xeus [#250](https://github.com/jupyterlite/xeus/pull/250) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-06-03&to=2025-06-05&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-06-03..2025-06-05&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.0.0
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-extension@3.1.1...5950a5bbe2c73b6d111a2eacd55b4512c78cdb97))
@@ -85,8 +101,6 @@ This major release brings many new features and improvements:
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-01-27&to=2025-06-03&type=c))
 
 [@AnastasiaSliusar](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AAnastasiaSliusar+updated%3A2025-01-27..2025-06-03&type=Issues) | [@anutosh491](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aanutosh491+updated%3A2025-01-27..2025-06-03&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Adavidbrochart+updated%3A2025-01-27..2025-06-03&type=Issues) | [@ianthomas23](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aianthomas23+updated%3A2025-01-27..2025-06-03&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2025-01-27..2025-06-03&type=Issues) | [@lumberbot-app](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Alumberbot-app+updated%3A2025-01-27..2025-06-03&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-01-27..2025-06-03&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.0.0rc0
 
