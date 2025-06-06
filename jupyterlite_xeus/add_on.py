@@ -208,6 +208,23 @@ class XeusAddon(FederatedExtensionAddon):
                 # take care of each kernel
                 yield from self.copy_kernel(env_name, prefix, kernel_dir, kernel_wasm, kernel_js, kernel_data)
 
+        # Copy libxeus shared lib file in the output
+        filename = "libxeus.so"
+        location = "lib/libxeus.so"
+        if (Path(prefix) / location).exists():
+            yield dict(
+                name=f"copy:{env_name}:{filename}",
+                actions=[
+                    (
+                        self.copy_one,
+                        [
+                            Path(prefix) / location,
+                            self.xeus_output_dir / env_name / filename,
+                        ],
+                    ),
+                ],
+            )
+
         # pack prefix packages
         yield from self.pack_prefix(env_name, prefix)
 
@@ -258,24 +275,6 @@ class XeusAddon(FederatedExtensionAddon):
                             [
                                 Path(prefix) / location,
                                 self.xeus_output_dir / env_name / kernel_dir.name / filename,
-                            ],
-                        ),
-                    ],
-                )
-
-            # Copy libxeus shared lib file in the output
-            filename = "libxeus.so"
-            location = "lib/libxeus.so"
-            target_location = self.xeus_output_dir / env_name / kernel_dir.name / filename
-            if (Path(prefix) / location).exists() and not target_location.exists():
-                yield dict(
-                    name=f"copy:{env_name}:{kernel_dir.name}:{filename}",
-                    actions=[
-                        (
-                            self.copy_one,
-                            [
-                                Path(prefix) / location,
-                                target_location,
                             ],
                         ),
                     ],
