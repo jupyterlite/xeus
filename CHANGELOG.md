@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.0.2
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.0.1...9083019e2ef7c5ae4f6f08de5598725e8fe3d586))
+
+### Bugs fixed
+
+- Handling shared lib of xeus: Check if target location exist [#251](https://github.com/jupyterlite/xeus/pull/251) ([@SylvainCorlay](https://github.com/SylvainCorlay))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-06-05&to=2025-06-06&type=c))
+
+[@SylvainCorlay](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3ASylvainCorlay+updated%3A2025-06-05..2025-06-06&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.0.1
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.0.0...3794a6ae06cbf189b257ae7dd28197f03363891e))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-06-03&to=2025-06-05&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-06-03..2025-06-05&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.0.0
 
