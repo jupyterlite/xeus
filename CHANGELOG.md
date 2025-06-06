@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.0.3
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.0.2...be73c55bf0c08370b0b4ae8eaded28751d2b8807))
+
+### Bugs fixed
+
+- Fix possible duplication of libxeus [#252](https://github.com/jupyterlite/xeus/pull/252) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-06-06&to=2025-06-06&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-06-06..2025-06-06&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.0.2
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.0.1...9083019e2ef7c5ae4f6f08de5598725e8fe3d586))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-06-05&to=2025-06-06&type=c))
 
 [@SylvainCorlay](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3ASylvainCorlay+updated%3A2025-06-05..2025-06-06&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.0.1
 
