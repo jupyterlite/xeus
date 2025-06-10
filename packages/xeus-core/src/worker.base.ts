@@ -121,7 +121,10 @@ export abstract class XeusRemoteKernelBase {
       // via SharedArrayBuffer or service worker.
     } else if (msg_type === 'execute_request') {
       this.logger.executionCount += 1;
-      event.msg.content.code = await this.processMagics(event.msg.content.code);
+      event.msg.content.code = await this.processMagics(
+        event.msg.content.code,
+        this.logger
+      );
       this.xserver.notify_listener(event.msg);
     } else {
       this.xserver.notify_listener(event.msg);
@@ -255,7 +258,7 @@ export abstract class XeusRemoteKernelBase {
    * Process magics prior to executing code
    * @returns the runnable code without magics
    */
-  protected async processMagics(code: string) {
+  protected async processMagics(code: string, logger?: ILogger) {
     const { commands, run } = parse(code);
     for (const command of commands) {
       switch (command.type) {
@@ -273,6 +276,7 @@ export abstract class XeusRemoteKernelBase {
           await this.listInstalledPackages();
           break;
         default:
+          logger?.error('Unrecognized magic command');
           break;
       }
     }
