@@ -196,7 +196,27 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     return Promise.resolve();
   }
 
-  private async _reloadPackagesInFS(newInstalledPackages: ISolvedPackages) {
+  protected async uninstall(specs: string[], env: string[]): Promise<void> {
+    try {
+      const newPackages = await solveEnv(
+        specs,
+        env,
+        this._installedPackages,
+        this.logger
+      );
+      await this._reloadPackagesInFS({
+        ...newPackages.condaPackages,
+        ...newPackages.pipPackages,
+      }, env);
+    } catch (error: any) {
+      this.logger?.error(error.stack);
+    }
+  }
+
+  private async _reloadPackagesInFS(
+    newInstalledPackages: ISolvedPackages,
+    prefix: string[]
+  ) {
     const removedPackages: ISolvedPackages = {};
     const newPackages: ISolvedPackages = {};
 
@@ -246,6 +266,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       removedPackages,
       Module: this.Module,
       paths: this._paths,
+      prefix,
       logger: this.logger
     });
 
