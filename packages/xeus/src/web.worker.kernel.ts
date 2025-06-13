@@ -4,7 +4,7 @@
 
 import coincident from 'coincident';
 
-import { wrap } from 'comlink';
+import { wrap, transfer } from 'comlink';
 import type { Remote } from 'comlink';
 
 import { PromiseDelegate } from '@lumino/coreutils';
@@ -91,6 +91,16 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
       };
     } else {
       remote = wrap(this.worker) as Remote<IEmpackXeusWorkerKernel>;
+
+      // we want to call  await proxy.initCanvas(Comlink.transfer(offscreen, [offscreen])); on the widget side
+      // but we want it to be a single liner on globalThis, ie something like
+      // globalThis.initCanvas = (offscreen: OffscreenCanvas) => remote.initCanvas(Comlink.transfer(offscreen, [offscreen]));
+      (globalThis as any).initCanvas = (offscreen: OffscreenCanvas) => {
+        return (remote as any).initCanvas(
+         transfer(offscreen, [offscreen])
+        );
+      }
+      
     }
 
     return remote;

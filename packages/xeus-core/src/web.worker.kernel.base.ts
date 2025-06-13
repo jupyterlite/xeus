@@ -31,6 +31,17 @@ export abstract class WebWorkerKernelBase implements IKernel {
     });
     this.sendMessage = sendMessage;
     this.worker = this.initWorker(options);
+
+    // store the worker in the globalThis s.t. it can be used EVERYWHERE
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (globalThis as any).worker = this.worker;
+    // create the remote kernel
+
+    // store _sendMessageToWorker in the globalThis s.t. it can be used EVERYWHERE
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (globalThis as any)._customSendMessageToWorker = this._sendMessageToWorker.bind(this);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     this.remoteKernel = this.createRemote(options);
     this.initRemote(options).then(this._ready.resolve.bind(this._ready));
     this.initFileSystem(options);
