@@ -4,7 +4,7 @@
 
 import coincident from 'coincident';
 
-import { wrap } from 'comlink';
+import { wrap, transfer } from 'comlink';
 import type { Remote } from 'comlink';
 
 import { PromiseDelegate } from '@lumino/coreutils';
@@ -91,6 +91,13 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
       };
     } else {
       remote = wrap(this.worker) as Remote<IEmpackXeusWorkerKernel>;
+
+      (globalThis as any).initCanvas = (offscreen: OffscreenCanvas) => {
+        return (remote as any).initCanvas(
+         transfer(offscreen, [offscreen])
+        );
+      }
+      
     }
 
     return remote;
