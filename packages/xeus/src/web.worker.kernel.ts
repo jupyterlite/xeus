@@ -92,10 +92,9 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
     } else {
       remote = wrap(this.worker) as Remote<IEmpackXeusWorkerKernel>;
 
-      (globalThis as any).initCanvas = (offscreen: OffscreenCanvas) => {
-        return (remote as any).initCanvas(
-         transfer(offscreen, [offscreen])
-        );
+      // make a global function to store objects in the global scope
+      (globalThis as any).storeAsGlobal = (object: any, name: string) => {
+        return (remote as any).storeAsGlobal(transfer(object, [object]), name);
       }
       
     }

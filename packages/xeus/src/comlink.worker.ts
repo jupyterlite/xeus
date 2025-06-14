@@ -43,10 +43,15 @@ export class XeusComlinkKernel extends EmpackedXeusRemoteKernel {
     FS.mount(drive, {}, mountpoint);
     FS.chdir(mountpoint);
   }
-  async initCanvas(canvas: OffscreenCanvas): Promise<void> {
-    console.log("received canvas in worker", canvas);
+
+  // 
+  async storeAsGlobal(object: any, name: string): Promise<void> {
+    console.log("recieved object to store as global:", name, object);
     // store canvas in the globalThis object
-    globalThis.canvas = canvas;
+    if (typeof globalThis[name] !== 'undefined') {
+      console.warn(`Global variable ${name} already exists, overwriting.`);
+    }
+    globalThis[name] = object;
   }
 
   protected initializeStdin(baseUrl: string, browsingContextId: string): void {
