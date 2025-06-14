@@ -53,6 +53,49 @@ export class XeusComlinkKernel extends EmpackedXeusRemoteKernel {
     }
     globalThis[name] = object;
   }
+  async callGloba(
+    methodName: string,
+    ...args: any[]
+  ): Promise<any> {
+
+    // get the function from the globalThis object
+    if (typeof globalThis[methodName] !== 'function') {
+      throw new Error(`Global function ${methodName} does not exist.`);
+    }
+    const func = globalThis[methodName];
+    console.log(`Calling global function ${methodName} with args:`, args);
+    // call the function with the provided arguments
+    try {
+      const result = await func(...args);
+      console.log(`Result from global function ${methodName}:`, result);
+      return result;
+    } catch (error) {
+      console.error(`Error calling global function ${methodName}:`, error);
+      throw error;
+    }
+  }
+    
+
+  // async storeOffscreenCanvas(
+  //   offscreenCanvas: OffscreenCanvas,
+  //   name: string,
+  //   event_handler_name : string,
+  //   event_handler : (event: Event) => void 
+  // ): Promise<void> {
+  //   console.log("recieved offscreen canvas to store as global:", name, offscreenCanvas);
+  //   // store offscreen canvas in the globalThis object
+  //   if (typeof globalThis[name] !== 'undefined') {
+  //     console.warn(`Global variable ${name} already exists, overwriting.`);
+  //   }
+  //   globalThis[name] = offscreenCanvas;
+
+  //   // get the function to handle events
+  //   if (typeof globalThis[event_handler_name] !== 'undefined') {
+  //     console.warn(`Global event handler ${event_handler_name} already exists, overwriting.`);
+  //   }
+  //   globalThis[event_handler_name] = event_handler;
+    
+  // }
 
   protected initializeStdin(baseUrl: string, browsingContextId: string): void {
     globalThis.get_stdin = (inputRequest: any): any => {

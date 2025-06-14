@@ -93,8 +93,18 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
       remote = wrap(this.worker) as Remote<IEmpackXeusWorkerKernel>;
 
       // make a global function to store objects in the global scope
+      // for instance, to store an OffscreenCanvas
       (globalThis as any).storeAsGlobal = (object: any, name: string) => {
         return (remote as any).storeAsGlobal(transfer(object, [object]), name);
+      }
+
+      // make a global function to call functions in the global scope
+      // for instance to forward events from the main thread to the worker
+      (globalThis as any).callGlobal = async (
+        methodName: string,
+        ...args: any[]
+      ): Promise<any> => {
+        return await (remote as any).callGlobal(methodName, ...transfer(args, args));
       }
       
     }
