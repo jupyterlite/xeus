@@ -112,7 +112,9 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         repo_url: pkg.channel ? pkg.channel : '',
         url: pkg.url ? pkg.url : '',
         repo_name: pkg.channel ? pkg.channel : '',
-        build_string: pkg.build
+        build_string: pkg.build,
+        subdir: pkg.subdir? pkg.subdir: '',
+        depends: pkg.depends? pkg.depends: []
       };
     });
 
@@ -218,7 +220,9 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       if (
         installedPkg.name in newInstalledPackagesMap &&
         installedPkg.build_string ===
-          newInstalledPackagesMap[installedPkg.name].build_string
+          newInstalledPackagesMap[installedPkg.name].build_string &&
+        installedPkg.version ===
+          newInstalledPackagesMap[installedPkg.name].version
       ) {
         continue;
       }
@@ -234,7 +238,8 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       if (
         newPkg.name in oldInstalledPackagesMap &&
         newPkg.build_string ===
-          oldInstalledPackagesMap[newPkg.name].build_string
+          oldInstalledPackagesMap[newPkg.name].build_string &&
+        newPkg.version === oldInstalledPackagesMap[newPkg.name].version
       ) {
         continue;
       }
