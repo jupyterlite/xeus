@@ -253,7 +253,7 @@ export abstract class XeusRemoteKernelBase {
    */
   protected abstract listInstalledPackages(): Promise<void>;
 
-  protected abstract uninstall(specs: string[], env: string[]): Promise<void>;
+  protected abstract uninstall(specs: string[], env: string[] | undefined, type: string): Promise<void>;
 
   /**
    * Process magics prior to executing code
@@ -280,7 +280,7 @@ export abstract class XeusRemoteKernelBase {
         case 'remove':
         case 'uninstall':
           const { specs, env } = command.data as IUninstallationCommandOptions;
-          await this.uninstall(specs, env);
+          await this.uninstall(specs, env, command.type);
           break;
         default:
           break;
