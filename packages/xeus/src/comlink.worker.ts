@@ -53,24 +53,20 @@ export class XeusComlinkKernel extends EmpackedXeusRemoteKernel {
     }
     globalThis[name] = object;
   }
-  async callGloba(
+
+
+  async callGlobalReciver(
+    reciverName: string,
     methodName: string,
     ...args: any[]
-  ): Promise<any> {
+  ): Promise<void> {
 
-    // get the function from the globalThis object
-    if (typeof globalThis[methodName] !== 'function') {
-      throw new Error(`Global function ${methodName} does not exist.`);
+    try{
+      const reciver = globalThis[reciverName];
+      reciver[methodName](...args);
     }
-    const func = globalThis[methodName];
-    console.log(`Calling global function ${methodName} with args:`, args);
-    // call the function with the provided arguments
-    try {
-      const result = await func(...args);
-      console.log(`Result from global function ${methodName}:`, result);
-      return result;
-    } catch (error) {
-      console.error(`Error calling global function ${methodName}:`, error);
+    catch (error) {
+      console.error(`Error calling global receiver ${reciverName} method ${methodName}:`, error);
       throw error;
     }
   }

@@ -100,11 +100,12 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
 
       // make a global function to call functions in the global scope
       // for instance to forward events from the main thread to the worker
-      (globalThis as any).callGlobal = async (
+      (globalThis as any).callGlobalReciver = async (
+        reciverName: string,
         methodName: string,
         ...args: any[]
       ): Promise<any> => {
-        return await (remote as any).callGlobal(methodName, ...transfer(args, args));
+        return await (remote as any).callGlobalReciver(reciverName, methodName, ...args);
       }
       
     }
