@@ -253,7 +253,11 @@ export abstract class XeusRemoteKernelBase {
    */
   protected abstract listInstalledPackages(): Promise<void>;
 
-  protected abstract uninstall(specs: string[], env: string[] | undefined, type: string): Promise<void>;
+  protected abstract uninstall(
+    specs: string[],
+    env: string[] | undefined,
+    type: string
+  ): Promise<void>;
 
   /**
    * Process magics prior to executing code

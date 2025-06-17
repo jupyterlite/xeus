@@ -75,6 +75,22 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     };
   }
 
+  protected setupCurrentSpecs(empackEnvMeta: IEmpackEnvMeta) {
+    const specs: string[] = empackEnvMeta.specs ? empackEnvMeta.specs : [];
+    empackEnvMeta.packages.forEach((pkg: any) => {
+      specs.map((spec: string) => {
+        const specName = this.getPackageName(spec);
+        if (pkg.name === specName) {
+          if (pkg.channel === 'PyPi') {
+            this._currentPipSpecs[pkg.name] = spec;
+          } else {
+            this._currentSpecs[pkg.name] = spec;
+          }
+        }
+      });
+    });
+  }
+
   protected async initializeFileSystem(
     options: IEmpackXeusWorkerKernel.IOptions
   ): Promise<any> {
@@ -102,10 +118,11 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       `xeus/${kernelSpec.envName}/kernel_packages`
     );
     const empackEnvMeta = (await fetchJson(packagesJsonUrl)) as IEmpackEnvMeta;
+    this.setupCurrentSpecs(empackEnvMeta);
 
     // Initialize installed packages from empack env meta
     this._installedPackages = {};
-    console.log('empackEnvMeta',empackEnvMeta);
+    console.log('empackEnvMeta', empackEnvMeta);
     empackEnvMeta.packages.map(pkg => {
       this._installedPackages[pkg.filename] = {
         name: pkg.name,
@@ -114,6 +131,8 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         url: pkg.url ? pkg.url : '',
         repo_name: pkg.channel ? pkg.channel : '',
         build_string: pkg.build,
+        subdir: pkg.subdir ? pkg.subdir : '',
+        depends: pkg.depends ? pkg.depends : []
       };
     });
 
@@ -212,26 +231,26 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     }
   }
 
-  protected async solvEnv(channels: string []){
+  protected async solvEnv(channels: string[]) {
     try {
-        const newPackages = await solve({
-          ymlOrSpecs: Object.values(this._currentSpecs),
-          installedPackages: this._installedPackages,
-          pipSpecs: Object.values(this._currentPipSpecs),
-          channels,
-          logger: this.logger
-        });
+      const newPackages = await solve({
+        ymlOrSpecs: Object.values(this._currentSpecs),
+        installedPackages: this._installedPackages,
+        pipSpecs: Object.values(this._currentPipSpecs),
+        channels,
+        logger: this.logger
+      });
 
-        await this._reloadPackagesInFS(
-          {
-            ...newPackages.condaPackages,
-            ...newPackages.pipPackages
-          },
-          []
-        );
-      } catch (error: any) {
-        this.logger?.error(error.stack);
-      }
+      await this._reloadPackagesInFS(
+        {
+          ...newPackages.condaPackages,
+          ...newPackages.pipPackages
+        },
+        []
+      );
+    } catch (error: any) {
+      this.logger?.error(error.stack);
+    }
   }
 
   protected async install(
@@ -309,7 +328,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       if (
         newPkg.name in oldInstalledPackagesMap &&
         newPkg.build_string ===
-          oldInstalledPackagesMap[newPkg.name].build_string  &&
+          oldInstalledPackagesMap[newPkg.name].build_string &&
         newPkg.version === oldInstalledPackagesMap[newPkg.name].version
       ) {
         continue;
