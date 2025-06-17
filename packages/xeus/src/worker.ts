@@ -185,14 +185,12 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
 
   protected deleteFromInstalledPackages(pkgName: string) {
     const newInstalledPkgs: ISolvedPackages = {};
-    Object.keys(this._installedPackages).map(
-      (filename: string) => {
-        const installedPkg = this._installedPackages[filename];
-        if (pkgName !== installedPkg.name) {
-          newInstalledPkgs[filename] = installedPkg;
-        }
+    Object.keys(this._installedPackages).map((filename: string) => {
+      const installedPkg = this._installedPackages[filename];
+      if (pkgName !== installedPkg.name) {
+        newInstalledPkgs[filename] = installedPkg;
       }
-    );
+    });
     console.log('newInstalledPkgs', newInstalledPkgs);
     return newInstalledPkgs;
   }
@@ -236,7 +234,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         for (const newInstalledPkg of Object.values(this._installedPackages)) {
           newInstalledPackagesMap[newInstalledPkg.name] = newInstalledPkg;
         }
-console.log('newInstalledPackagesMap',newInstalledPackagesMap);
+        console.log('newInstalledPackagesMap', newInstalledPackagesMap);
         specs.forEach((spec: string) => {
           const pkgName = this.getPackageName(spec);
           if (pkgName && !newInstalledPackagesMap[pkgName]) {
@@ -246,13 +244,15 @@ console.log('newInstalledPackagesMap',newInstalledPackagesMap);
               if (this._currentSpecs[pkgName]) {
                 delete this._currentSpecs[pkgName];
               } else {
-                this._installedPackages = this.deleteFromInstalledPackages(pkgName);
+                this._installedPackages =
+                  this.deleteFromInstalledPackages(pkgName);
               }
             } else if (pkgName && type === 'uninstall') {
               if (this._currentPipSpecs[pkgName]) {
                 delete this._currentPipSpecs[pkgName];
               } else {
-                this._installedPackages = this.deleteFromInstalledPackages(pkgName);
+                this._installedPackages =
+                  this.deleteFromInstalledPackages(pkgName);
               }
             }
           }
