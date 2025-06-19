@@ -264,25 +264,38 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   }
 
   protected async solvEnv(channels: string[]) {
-    try {
-      console.log('_installedPackages', this._installedPackages);
-      const newPackages = await solve({
-        ymlOrSpecs: Object.values(this._currentSpecs),
-        installedPackages: this._installedPackages,
-        pipSpecs: Object.values(this._currentPipSpecs),
-        channels,
+    if (
+      !Object.keys(this._currentSpecs).length &&
+      Object.keys(this._installedPackages).length
+    ) {
+      await removePackagesFromEmscriptenFS({
+        removedPackages: this._installedPackages,
+        Module: this.Module,
+        paths: { ...this._paths },
         logger: this.logger
       });
-      console.log('solved', newPackages);
-      await this._reloadPackagesInFS(
-        {
-          ...newPackages.condaPackages,
-          ...newPackages.pipPackages
-        },
-        []
-      );
-    } catch (error: any) {
-      this.logger?.error(error.stack);
+      this._installedPackages = {};
+    } else {
+      try {
+        console.log('_installedPackages', this._installedPackages);
+        const newPackages = await solve({
+          ymlOrSpecs: Object.values(this._currentSpecs),
+          installedPackages: this._installedPackages,
+          pipSpecs: Object.values(this._currentPipSpecs),
+          channels,
+          logger: this.logger
+        });
+        console.log('solved', newPackages);
+        await this._reloadPackagesInFS(
+          {
+            ...newPackages.condaPackages,
+            ...newPackages.pipPackages
+          },
+          []
+        );
+      } catch (error: any) {
+        this.logger?.error(error.stack);
+      }
     }
   }
 
@@ -301,8 +314,13 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
    * Implements dynamic installation of packages
    */
   protected listInstalledPackages(): Promise<void> {
+    if (Object.keys(this._installedPackages).length) {
     showPackagesList(this._installedPackages, this.logger);
     return Promise.resolve();
+    } else {
+      this.logger.log('Please install packages, an environment is empty');
+      return Promise.resolve();
+    }
   }
 
   protected async uninstall(
@@ -369,15 +387,14 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
 
       newPackages[filename] = newPkg;
     }
-    console.log('removedPackages', removedPackages);
-    console.log('newInstalledPackages', newInstalledPackages);
-    await removePackagesFromEmscriptenFS({
+   
+    const newPath = await removePackagesFromEmscriptenFS({
       removedPackages,
       Module: this.Module,
       paths: this._paths,
       logger: this.logger
     });
-
+   
     const { sharedLibs, paths } = await installPackagesToEmscriptenFS({
       packages: newPackages,
       pkgRootUrl: this._pkgRootUrl,
@@ -386,7 +403,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       untarjs: this._untarjs,
       logger: this.logger
     });
-    this._paths = { ...this._paths, ...paths };
+    this._paths = { ...newPath, ...paths };
 
     await loadShareLibs({
       sharedLibs,
