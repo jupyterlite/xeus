@@ -235,6 +235,10 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         this.logger.log(`Package ${pkgName} is not in the installed list`);
       } else {
         if (pkgName) {
+          // the special case when a user deletes pip
+          if (pkgName === 'pip') {
+            this.logger.log('Be aware of pip is being removed');
+          }
           if (updatedCurrentSpecs[pkgName]) {
             delete updatedCurrentSpecs[pkgName];
             if (type === 'uninstall') {
@@ -297,7 +301,11 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       case 'initial':
       case 'install':
         newSpecs = this.addSpecs(specs, newSpecs);
-        newPipSpecs = this.addSpecs(pipSpecs, newPipSpecs);
+        if (!newInstalledPackagesMap['pip'] && pipSpecs.length) {
+          this.logger.error('Cannot run "pip install": pip is not installed');
+        } else if (pipSpecs.length) {
+          newPipSpecs = this.addSpecs(pipSpecs, newPipSpecs);
+        }
         break;
       case 'uninstall':
       case 'remove':
