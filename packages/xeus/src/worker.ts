@@ -122,7 +122,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
 
     // Initialize installed packages from empack env meta
     this._installedPackages = {};
-    console.log('empackEnvMeta', empackEnvMeta);
     empackEnvMeta.packages.map(pkg => {
       this._installedPackages[pkg.filename] = {
         name: pkg.name,
@@ -194,7 +193,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         newInstalledPkgs[filename] = installedPkg;
       }
     });
-    console.log('newInstalledPkgs', newInstalledPkgs);
     return newInstalledPkgs;
   }
 
@@ -206,32 +204,75 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     }
 
     const packageName = nameMatch[1];
-    console.log('packageName', packageName);
     return packageName;
   }
 
-  protected addSpecs(
-    specs: string[],
-    currentSpecs: any,
-    newInstalledPackagesMap: { [name: string]: ISolvedPackage }
-  ) {
+  protected addSpecs(specs: string[], currentSpecs: any) {
     const updatedCurrentSpecs = { ...currentSpecs };
+
     specs.forEach((spec: string) => {
       const pkgName = this.getPackageName(spec);
       if (pkgName) {
-        if (newInstalledPackagesMap[pkgName]) {
-          if (
-            updatedCurrentSpecs[pkgName] &&
-            updatedCurrentSpecs[pkgName] !== spec
-          ) {
-            updatedCurrentSpecs[pkgName] = spec;
-          }
-        } else if (!updatedCurrentSpecs[pkgName]) {
-          updatedCurrentSpecs[pkgName] = spec;
-        }
+        updatedCurrentSpecs[pkgName] = spec;
       }
     });
     return updatedCurrentSpecs;
+  }
+
+  protected deleteSpecs(
+    specs: string[],
+    currentSpecs: any,
+    newInstalledPackagesMap: any,
+    updatedInstalled: any,
+    type: string
+  ) {
+    const updatedCurrentSpecs = { ...currentSpecs };
+    let updatedInstalledPkgs = { ...updatedInstalled };
+
+    specs.forEach((spec: string) => {
+      const pkgName = this.getPackageName(spec);
+      if (pkgName && !newInstalledPackagesMap[pkgName]) {
+        this.logger.log(`Package ${pkgName} is not in the installed list`);
+      } else {
+        if (pkgName) {
+          if (updatedCurrentSpecs[pkgName]) {
+            delete updatedCurrentSpecs[pkgName];
+            if (type === 'uninstall') {
+              updatedInstalledPkgs = this.deleteFromInstalledPackages(
+                pkgName,
+                updatedInstalledPkgs
+              );
+            }
+          } else {
+            updatedInstalledPkgs = this.deleteFromInstalledPackages(
+              pkgName,
+              updatedInstalledPkgs
+            );
+          }
+        }
+      }
+    });
+
+    return { specs: updatedCurrentSpecs, installed: updatedInstalledPkgs };
+  }
+
+  protected identifySpecs(
+    specs: string[],
+    currentSpecs: any,
+    currentPipSpecs: any
+  ) {
+    let result = { fromCondaPkgs: false, fromPipPkgs: false };
+    specs.forEach((spec: string) => {
+      const pkgName = this.getPackageName(spec);
+      if (pkgName) {
+        if (currentSpecs[pkgName]) {
+          result.fromCondaPkgs = true;
+        } else if (currentPipSpecs[pkgName]) {
+          result.fromPipPkgs = true;
+        }
+      }
+    });
+    return result;
   }
 
   protected updateCurrentSpecs(
@@ -243,10 +284,10 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     pipSpecs: {};
     installed: ISolvedPackages;
   } {
-    //copy data before making manupulations
+    // copy data before making manupulations
     let newSpecs = { ...this._currentSpecs };
     let newPipSpecs = { ...this._currentPipSpecs };
-    let cpInstalledPkgs: ISolvedPackages = { ...this._installedPackages };
+    let updatedInstalled: ISolvedPackages = { ...this._installedPackages };
     const newInstalledPackagesMap: { [name: string]: ISolvedPackage } = {};
     for (const newInstalledPkg of Object.values(this._installedPackages)) {
       newInstalledPackagesMap[newInstalledPkg.name] = newInstalledPkg;
@@ -255,43 +296,40 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     switch (type) {
       case 'initial':
       case 'install':
-        newSpecs = this.addSpecs(specs, newSpecs, newInstalledPackagesMap);
-        newPipSpecs = this.addSpecs(
-          pipSpecs,
-          newPipSpecs,
-          newInstalledPackagesMap
-        );
+        newSpecs = this.addSpecs(specs, newSpecs);
+        newPipSpecs = this.addSpecs(pipSpecs, newPipSpecs);
         break;
       case 'uninstall':
       case 'remove':
-        console.log('newInstalledPackagesMap', newInstalledPackagesMap);
+        const tmpSpecs = specs.length ? specs : pipSpecs.length ? pipSpecs : [];
+        const { fromCondaPkgs, fromPipPkgs } = this.identifySpecs(
+          tmpSpecs,
+          newSpecs,
+          newPipSpecs
+        );
+        if (fromCondaPkgs) {
+          const data = this.deleteSpecs(
+            tmpSpecs,
+            newSpecs,
+            newInstalledPackagesMap,
+            updatedInstalled,
+            'remove'
+          );
+          newSpecs = data.specs;
+          updatedInstalled = data.installed;
+        }
+        if (fromPipPkgs) {
+          const data = this.deleteSpecs(
+            tmpSpecs,
+            newPipSpecs,
+            newInstalledPackagesMap,
+            updatedInstalled,
+            'uninstall'
+          );
+          newPipSpecs = data.specs;
+          updatedInstalled = data.installed;
+        }
 
-        specs.forEach((spec: string) => {
-          const pkgName = this.getPackageName(spec);
-          if (pkgName && !newInstalledPackagesMap[pkgName]) {
-            this.logger.log(`Package ${pkgName} is not in the installed list`);
-          } else {
-            if (pkgName && type === 'remove') {
-              if (newSpecs[pkgName]) {
-                delete newSpecs[pkgName];
-              } else {
-                cpInstalledPkgs = this.deleteFromInstalledPackages(
-                  pkgName,
-                  cpInstalledPkgs
-                );
-              }
-            } else if (pkgName && type === 'uninstall') {
-              if (newPipSpecs[pkgName]) {
-                delete newPipSpecs[pkgName];
-              } else {
-                cpInstalledPkgs = this.deleteFromInstalledPackages(
-                  pkgName,
-                  cpInstalledPkgs
-                );
-              }
-            }
-          }
-        });
         break;
       default:
         break;
@@ -300,7 +338,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     return {
       specs: newSpecs,
       pipSpecs: newPipSpecs,
-      installed: cpInstalledPkgs
+      installed: updatedInstalled
     };
   }
 
@@ -310,12 +348,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     channels: string[],
     installedPackages: ISolvedPackages
   ) {
-    console.log('specs', specs);
-    console.log('pipSpecs', pipSpecs);
-    console.log('channels', channels);
-    console.log('installedPackages', installedPackages);
     try {
-      console.log('installedPackages', installedPackages);
       const newPackages = await solve({
         ymlOrSpecs: Object.values(specs),
         installedPackages,
@@ -323,7 +356,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         channels,
         logger: this.logger
       });
-      console.log('solved', newPackages);
       await this._reloadPackagesInFS(
         {
           ...newPackages.condaPackages,
