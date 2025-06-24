@@ -25,9 +25,7 @@ test.describe('General Tests', () => {
   test('xeus-javascript should execute some code', async ({ page }) => {
     await page.goto('lab/index.html');
 
-    const xjs = page
-      .locator('[title="JavaScript')
-      .first();
+    const xjs = page.locator('[title="JavaScript').first();
     await xjs.click();
 
     // Wait for kernel to be idle

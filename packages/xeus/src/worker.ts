@@ -84,7 +84,9 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       this.Module.FS === undefined ||
       this.Module.loadDynamicLibrary === undefined
     ) {
-      console.warn(`Cannot initialize the file-system of ${kernelSpec.dir} since it wasn't compiled with FS support.`)
+      console.warn(
+        `Cannot initialize the file-system of ${kernelSpec.dir} since it wasn't compiled with FS support.`
+      );
     }
 
     // location of the kernel binary on the server
