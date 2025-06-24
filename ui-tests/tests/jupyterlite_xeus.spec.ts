@@ -11,15 +11,32 @@ test.describe('General Tests', () => {
     });
   });
 
-  test('Launcher should contain xeus-python and xeus-lua kernels', async ({
-    page
-  }) => {
+  test('xeus-javascript should execute some code', async ({ page }) => {
     await page.goto('lab/index.html');
 
-    const notebookSection = page.locator('.jp-Launcher-section').first();
-    expect(await notebookSection.screenshot()).toMatchSnapshot(
-      'jupyter-xeus-launcher.png'
-    );
+    const xjs = page.locator('[title="JavaScript (xjavascript)"]').first();
+    await xjs.click();
+
+    // Wait for kernel to be idle
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
+    await page.notebook.addCell('code', 'console.log("hello from javascript")');
+    await page.notebook.runCell(1);
+
+    // Wait for kernel to be idle
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
+    const cell = await page.notebook.getCellOutput(1);
+
+    const text = await cell?.textContent();
+
+    if (!text) {
+      throw new Error('Failed to get cell output');
+    }
+
+    if (!/hello from javascript/.test(text)) {
+      throw new Error('Cell output does not contain expected value');
+    }
   });
 
   test('xeus-python should execute some code', async ({ page }) => {
