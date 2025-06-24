@@ -87,6 +87,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       console.warn(
         `Cannot initialize the file-system of ${kernelSpec.dir} since it wasn't compiled with FS support.`
       );
+      return;
     }
 
     // location of the kernel binary on the server
