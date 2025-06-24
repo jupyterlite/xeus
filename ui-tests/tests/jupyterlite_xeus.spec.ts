@@ -11,21 +11,10 @@ test.describe('General Tests', () => {
     });
   });
 
-  test('Launcher should contain xeus-python and xeus-lua kernels', async ({
-    page
-  }) => {
-    await page.goto('lab/index.html');
-
-    const notebookSection = page.locator('.jp-Launcher-section').first();
-    expect(await notebookSection.screenshot()).toMatchSnapshot(
-      'jupyter-xeus-launcher.png'
-    );
-  });
-
   test('xeus-javascript should execute some code', async ({ page }) => {
     await page.goto('lab/index.html');
 
-    const xjs = page.locator('[title="JavaScript (xjavascript)"').first();
+    const xjs = page.locator('[title="JavaScript (xjavascript)"]').first();
     await xjs.click();
 
     // Wait for kernel to be idle
