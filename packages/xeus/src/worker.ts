@@ -366,8 +366,8 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   }
 
   protected async solvEnv(
-    specs: {},
-    pipSpecs: {},
+    specs: { [key: string]: string },
+    pipSpecs: { [key: string]: string },
     channels: string[],
     installedPackages: ISolvedPackages
   ) {
