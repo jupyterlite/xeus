@@ -318,7 +318,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         }
         break;
       case 'uninstall':
-      case 'remove':
+      case 'remove': {
         const tmpSpecs: string[] = specs.length
           ? specs
           : pipSpecs.length
@@ -353,6 +353,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         }
 
         break;
+      }
       default:
         break;
     }
