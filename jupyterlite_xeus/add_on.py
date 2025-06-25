@@ -181,8 +181,8 @@ class XeusAddon(FederatedExtensionAddon):
 
     def getPackages(self, prefix):
         if isinstance(prefix, str):
-            test = Path(prefix)
-        path = test / "conda-meta" / "history"
+            history_file_path = Path(prefix)
+        path = history_file_path / "conda-meta" / "history"
         specs = []
         with open(path, "r") as f:
             for line in f:

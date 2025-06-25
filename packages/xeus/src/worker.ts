@@ -207,7 +207,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     return packageName;
   }
 
-  protected addSpecs(specs: string[], currentSpecs: any) {
+  protected addSpecs(specs: string[], currentSpecs: { [key: string]: string }) {
     const updatedCurrentSpecs = { ...currentSpecs };
 
     specs.forEach((spec: string) => {
@@ -221,9 +221,9 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
 
   protected deleteSpecs(
     specs: string[],
-    currentSpecs: any,
-    newInstalledPackagesMap: any,
-    updatedInstalled: any,
+    currentSpecs: { [key: string]: string },
+    newInstalledPackagesMap: { [name: string]: ISolvedPackage },
+    updatedInstalled: ISolvedPackages,
     type: string
   ) {
     const updatedCurrentSpecs = { ...currentSpecs };
@@ -262,10 +262,10 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
 
   protected identifySpecs(
     specs: string[],
-    currentSpecs: any,
-    currentPipSpecs: any
+    currentSpecs: { [key: string]: string },
+    currentPipSpecs: { [key: string]: string }
   ) {
-    let result = { fromCondaPkgs: false, fromPipPkgs: false };
+    const result = { fromCondaPkgs: false, fromPipPkgs: false };
     specs.forEach((spec: string) => {
       const pkgName = this.getPackageName(spec);
       if (pkgName) {
@@ -284,8 +284,8 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     pipSpecs: string[],
     type: string
   ): {
-    specs: {};
-    pipSpecs: {};
+    specs: { [key: string]: string };
+    pipSpecs: { [key: string]: string };
     installed: ISolvedPackages;
   } {
     // copy data before making manupulations
@@ -407,7 +407,13 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     env: string[] | undefined,
     type: string
   ): Promise<void> {
-    let data: any = {};
+    let data:
+      | {
+          specs: { [key: string]: string };
+          pipSpecs: { [key: string]: string };
+          installed: ISolvedPackages;
+        }
+      | undefined;
     if (type === 'uninstall') {
       data = this.updateCurrentSpecs([], specs, type);
     } else {
@@ -521,8 +527,8 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   private _paths = {};
 
   private _untarjs: IUnpackJSAPI | undefined;
-  private _currentSpecs = {};
-  private _currentPipSpecs = {};
+  private _currentSpecs: { [key: string]: string } = {};
+  private _currentPipSpecs: { [key: string]: string } = {};
 }
 
 export namespace XeusRemoteKernel {
