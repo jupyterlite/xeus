@@ -319,7 +319,11 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         break;
       case 'uninstall':
       case 'remove':
-        const tmpSpecs = specs.length ? specs : pipSpecs.length ? pipSpecs : [];
+        const tmpSpecs: string[] = specs.length
+          ? specs
+          : pipSpecs.length
+            ? pipSpecs
+            : [];
         const { fromCondaPkgs, fromPipPkgs } = this.identifySpecs(
           tmpSpecs,
           newSpecs,
