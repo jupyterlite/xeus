@@ -37,7 +37,7 @@ export class XeusWorkerLoggerBase implements ILogger {
     postMessage({
       _stream: {
         name: STREAM['warn'],
-        text: msg.join(' ') + '\n'
+        text: '\x1b[38;5;208m' + msg.join(' ') + '\x1b[0m' + '\n'
       }
     });
 

@@ -3,6 +3,6 @@
     "output_dir": "dist"
   },
   "XeusAddon": {
-    "environment_file": ["env1.yml", "env2.yml"]
+    "environment_file": ["env1.yml", "env2.yml", "env3.yml"]
   }
 }

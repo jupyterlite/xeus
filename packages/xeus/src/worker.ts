@@ -58,6 +58,11 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
           return URLExt.join(kernelRootUrl, kernelSpec.name, file);
         }
 
+        // Special case for libxeus
+        if (['libxeus.so'].includes(file)) {
+          return URLExt.join(kernelRootUrl, file);
+        }
+
         if (file.endsWith('.wasm')) {
           return binaryWASM;
         } else if (file.endsWith('.data')) {
@@ -79,7 +84,9 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       this.Module.FS === undefined ||
       this.Module.loadDynamicLibrary === undefined
     ) {
-      throw new Error('Cannot load kernel without a valid FS');
+      console.warn(
+        `Cannot initialize the file-system of ${kernelSpec.dir} since it wasn't compiled with FS support.`
+      );
     }
 
     // location of the kernel binary on the server
@@ -136,6 +143,14 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   protected async initializeInterpreter(
     options: IEmpackXeusWorkerKernel.IOptions
   ) {
+    if (
+      this.Module.FS === undefined ||
+      this.Module.loadDynamicLibrary === undefined
+    ) {
+      // Return early, we've already warned earlier
+      return;
+    }
+
     // Bootstrap Python, if it's xeus-python
     if (options.kernelSpec.name === 'xpython') {
       if (!this._pythonVersion) {
@@ -167,7 +182,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   ) {
     if (specs.length || pipSpecs.length) {
       try {
-        this.logger.log(`Collecting ${(specs || pipSpecs)?.join(',')}`);
         const newPackages = await solve({
           ymlOrSpecs: specs,
           installedPackages: this._installedPackages,
