@@ -203,7 +203,15 @@ class XeusAddon(FederatedExtensionAddon):
 
         env_name = yaml_content["name"]
         env_prefix = root_prefix / "envs" / env_name
-        self.specs[env_name] = yaml_content.get("dependencies", [])
+        dependencies = yaml_content.get("dependencies", [])
+        pip_packages = []
+        conda_packages = []
+        for item in dependencies:
+            if isinstance(item, dict) and "pip" in item:
+                pip_packages.extend(item["pip"])
+            elif isinstance(item, str):
+                conda_packages.append(item)
+        self.specs[env_name] = pip_packages + conda_packages
 
         create_conda_env_from_env_file(root_prefix, yaml_content, env_file.parent)
 

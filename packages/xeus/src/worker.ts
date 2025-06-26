@@ -309,7 +309,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     }
 
     switch (type) {
-      case 'initial':
       case 'install':
         newSpecs = this.addSpecs(specs, newSpecs);
         if (!newInstalledPackagesMap['pip'] && pipSpecs.length) {
@@ -366,7 +365,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     };
   }
 
-  protected async solvEnv(
+  protected async solveEnv(
     specs: { [key: string]: string },
     pipSpecs: { [key: string]: string },
     channels: string[],
@@ -401,7 +400,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   ) {
     if (specs.length || pipSpecs.length) {
       const data = this.updateCurrentSpecs(specs, pipSpecs, 'install');
-      this.solvEnv(data.specs, data.pipSpecs, channels, data.installed);
+      await this.solveEnv(data.specs, data.pipSpecs, channels, data.installed);
     }
   }
 
@@ -449,7 +448,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         });
         this._installedPackages = {};
       } else {
-        this.solvEnv(data.specs, data.pipSpecs, [], data.installed);
+        await this.solveEnv(data.specs, data.pipSpecs, [], data.installed);
       }
     }
   }
