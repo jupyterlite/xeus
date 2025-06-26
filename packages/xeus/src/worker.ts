@@ -18,6 +18,7 @@ import {
   TSharedLibsMap,
   ISolvedPackage
 } from '@emscripten-forge/mambajs';
+import { packageNameFromSpec } from '@emscripten-forge/mambajs-core';
 import { IUnpackJSAPI } from '@emscripten-forge/untarjs';
 import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
 import { IEmpackXeusWorkerKernel } from './interfaces';
@@ -75,11 +76,11 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     };
   }
 
-  protected setupCurrentSpecs(empackEnvMeta: IEmpackEnvMeta) {
+  protected initializeCurrentSpecs(empackEnvMeta: IEmpackEnvMeta) {
     const specs: string[] = empackEnvMeta.specs ? empackEnvMeta.specs : [];
     empackEnvMeta.packages.forEach((pkg: any) => {
       specs.map((spec: string) => {
-        const specName = this.getPackageName(spec);
+        const specName = packageNameFromSpec(spec);
         if (pkg.name === specName) {
           if (pkg.channel === 'PyPi') {
             this._currentPipSpecs[pkg.name] = spec;
@@ -120,7 +121,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       `xeus/${kernelSpec.envName}/kernel_packages`
     );
     const empackEnvMeta = (await fetchJson(packagesJsonUrl)) as IEmpackEnvMeta;
-    this.setupCurrentSpecs(empackEnvMeta);
+    this.initializeCurrentSpecs(empackEnvMeta);
 
     // Initialize installed packages from empack env meta
     this._installedPackages = {};
@@ -221,7 +222,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     const updatedCurrentSpecs = { ...currentSpecs };
 
     specs.forEach((spec: string) => {
-      const pkgName = this.getPackageName(spec);
+      const pkgName = packageNameFromSpec(spec);
       if (pkgName) {
         updatedCurrentSpecs[pkgName] = spec;
       }
@@ -240,7 +241,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     let updatedInstalledPkgs = { ...updatedInstalled };
 
     specs.forEach((spec: string) => {
-      const pkgName = this.getPackageName(spec);
+      const pkgName = packageNameFromSpec(spec);
       if (pkgName && !newInstalledPackagesMap[pkgName]) {
         this.logger.log(`Package ${pkgName} is not in the installed list`);
       } else {
@@ -277,7 +278,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   ) {
     const result = { fromCondaPkgs: false, fromPipPkgs: false };
     specs.forEach((spec: string) => {
-      const pkgName = this.getPackageName(spec);
+      const pkgName = packageNameFromSpec(spec);
       if (pkgName) {
         if (currentSpecs[pkgName]) {
           result.fromCondaPkgs = true;

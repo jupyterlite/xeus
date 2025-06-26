@@ -157,7 +157,7 @@ class XeusAddon(FederatedExtensionAddon):
                 if env_name in self.prefixes:
                     raise ValueError(f"Environment name '{env_name}' used more than once")
                 self.prefixes[env_name] = prefix
-                self.specs[env_name] = self.getPackages(prefix)
+                self.specs[env_name] = self.get_environment_specs(prefix)
             
 
         all_kernels = []
@@ -179,7 +179,7 @@ class XeusAddon(FederatedExtensionAddon):
             ],
         )
 
-    def getPackages(self, prefix):
+    def get_environment_specs(self, prefix):
         if isinstance(prefix, str):
             history_file_path = Path(prefix)
         path = history_file_path / "conda-meta" / "history"
@@ -189,7 +189,7 @@ class XeusAddon(FederatedExtensionAddon):
                 if line.startswith("# update specs:"):
                     spec_line = line.strip().replace("# update specs:", "").strip()
                     try:
-                        specs = ast.literal_eval(spec_line)
+                        specs += ast.literal_eval(spec_line)
                     except Exception as e:
                         print(f"Error parsing line: {spec_line} — {e}")
         return specs
