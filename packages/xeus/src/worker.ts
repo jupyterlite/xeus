@@ -290,6 +290,38 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     return result;
   }
 
+  protected canDelete(
+    specs: string[],
+    installedMap: { [name: string]: ISolvedPackage },
+    type: string
+  ) {
+    let result: any = [];
+    specs.forEach((spec: string) => {
+      const pkgName = packageNameFromSpec(spec);
+      let tmp = {
+        status: 1,
+        message: '',
+        spec
+      };
+      if (pkgName) {
+        const pkg = installedMap[pkgName];
+        if (type === 'uninstall') {
+          if (pkg.repo_name !== 'PyPi') {
+            (tmp.status = 0),
+              (tmp.message = `It is imposible to use "pip uninstall" for the package ${spec}, please use "conda remove" command for this`);
+          }
+        } else if (type === 'remove') {
+          if (pkg.repo_name === 'PyPi') {
+            (tmp.status = 0),
+              (tmp.message = `It is imposible to use "conda remove" for the package ${spec}, please use "pip uninstall" command for this`);
+          }
+        }
+        result.push(tmp);
+      }
+    });
+    return result;
+  }
+
   protected updateCurrentSpecs(
     specs: string[],
     pipSpecs: string[],
@@ -298,6 +330,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     specs: { [key: string]: string };
     pipSpecs: { [key: string]: string };
     installed: ISolvedPackages;
+    status: number;
   } {
     // copy data before making manupulations
     let newSpecs = { ...this._currentSpecs };
@@ -308,11 +341,15 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       newInstalledPackagesMap[newInstalledPkg.name] = newInstalledPkg;
     }
 
+    let status: number = 1;
+
     switch (type) {
       case 'install':
         newSpecs = this.addSpecs(specs, newSpecs);
         if (!newInstalledPackagesMap['pip'] && pipSpecs.length) {
           this.logger.error('Cannot run "pip install": pip is not installed');
+          status = 0;
+          throw new Error('Cannot run "pip install": pip is not installed');
         } else if (pipSpecs.length) {
           newPipSpecs = this.addSpecs(pipSpecs, newPipSpecs);
         }
@@ -324,32 +361,35 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
           : pipSpecs.length
             ? pipSpecs
             : [];
-        const { fromCondaPkgs, fromPipPkgs } = this.identifySpecs(
-          tmpSpecs,
-          newSpecs,
-          newPipSpecs
-        );
-        if (fromCondaPkgs) {
+        let preparedPkgs: any = [];
+        const tmpNewSpecs = type === 'remove' ? newSpecs : newPipSpecs;
+
+        preparedPkgs = this.canDelete(tmpSpecs, newInstalledPackagesMap, type);
+
+        let tmp: string[] = [];
+        preparedPkgs.forEach((pkgData: any) => {
+          if (pkgData.status) {
+            tmp.push(pkgData.spec);
+          } else {
+            this.logger.error(pkgData.message);
+          }
+        });
+        if (tmp.length) {
           const data = this.deleteSpecs(
-            tmpSpecs,
-            newSpecs,
+            tmp,
+            tmpNewSpecs,
             newInstalledPackagesMap,
             updatedInstalled,
-            'remove'
+            type
           );
-          newSpecs = data.specs;
+          if (type === 'remove') {
+            newSpecs = data.specs;
+          } else {
+            newPipSpecs = data.specs;
+          }
           updatedInstalled = data.installed;
-        }
-        if (fromPipPkgs) {
-          const data = this.deleteSpecs(
-            tmpSpecs,
-            newPipSpecs,
-            newInstalledPackagesMap,
-            updatedInstalled,
-            'uninstall'
-          );
-          newPipSpecs = data.specs;
-          updatedInstalled = data.installed;
+        } else {
+          status = 0;
         }
 
         break;
@@ -361,33 +401,29 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     return {
       specs: newSpecs,
       pipSpecs: newPipSpecs,
-      installed: updatedInstalled
+      installed: updatedInstalled,
+      status
     };
   }
 
   protected async solveEnv(
-    specs: { [key: string]: string },
-    pipSpecs: { [key: string]: string },
+    specs: string[],
+    pipSpecs: string[],
     channels: string[],
     installedPackages: ISolvedPackages
   ) {
     try {
       const newPackages = await solve({
-        ymlOrSpecs: Object.values(specs),
+        ymlOrSpecs: specs,
         installedPackages,
-        pipSpecs: Object.values(pipSpecs),
+        pipSpecs,
         channels,
         logger: this.logger
       });
-      await this._reloadPackagesInFS(
-        {
-          ...newPackages.condaPackages,
-          ...newPackages.pipPackages
-        },
-        []
-      );
-      this._currentSpecs = specs;
-      this._currentPipSpecs = pipSpecs;
+      await this._reloadPackagesInFS({
+        ...newPackages.condaPackages,
+        ...newPackages.pipPackages
+      });
     } catch (error: any) {
       this.logger?.error(error.stack);
     }
@@ -400,7 +436,15 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   ) {
     if (specs.length || pipSpecs.length) {
       const data = this.updateCurrentSpecs(specs, pipSpecs, 'install');
-      await this.solveEnv(data.specs, data.pipSpecs, channels, data.installed);
+      await this.solveEnv(
+        Object.values(data.specs),
+        pipSpecs,
+        channels,
+        data.installed
+      );
+      //todo
+      this._currentSpecs = data.specs;
+      this._currentPipSpecs = data.pipSpecs;
     }
   }
 
@@ -417,16 +461,13 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     }
   }
 
-  protected async uninstall(
-    specs: string[],
-    env: string[] | undefined,
-    type: string
-  ): Promise<void> {
+  protected async uninstall(specs: string[], type: string): Promise<void> {
     let data:
       | {
           specs: { [key: string]: string };
           pipSpecs: { [key: string]: string };
           installed: ISolvedPackages;
+          status: number;
         }
       | undefined;
     if (type === 'uninstall') {
@@ -435,28 +476,35 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       data = this.updateCurrentSpecs(specs, [], type);
     }
 
-    if (Object.keys(this._installedPackages).length) {
-      if (
-        !Object.keys(data.specs).length &&
-        !Object.keys(data.pipSpecs).length
-      ) {
-        await removePackagesFromEmscriptenFS({
-          removedPackages: this._installedPackages,
-          Module: this.Module,
-          paths: { ...this._paths },
-          logger: this.logger
-        });
-        this._installedPackages = {};
-      } else {
-        await this.solveEnv(data.specs, data.pipSpecs, [], data.installed);
+    if (data.status) {
+      if (Object.keys(this._installedPackages).length) {
+        if (
+          !Object.keys(data.specs).length &&
+          !Object.keys(data.pipSpecs).length
+        ) {
+          await removePackagesFromEmscriptenFS({
+            removedPackages: this._installedPackages,
+            Module: this.Module,
+            paths: { ...this._paths },
+            logger: this.logger
+          });
+          this._installedPackages = {};
+        } else {
+          await this.solveEnv(
+            Object.values(data.specs),
+            [],
+            [],
+            data.installed
+          );
+        }
       }
+      //todo
+      this._currentSpecs = data.specs;
+      this._currentPipSpecs = data.pipSpecs;
     }
   }
 
-  private async _reloadPackagesInFS(
-    newInstalledPackages: ISolvedPackages,
-    prefix: string[]
-  ) {
+  private async _reloadPackagesInFS(newInstalledPackages: ISolvedPackages) {
     const removedPackages: ISolvedPackages = {};
     const newPackages: ISolvedPackages = {};
 
