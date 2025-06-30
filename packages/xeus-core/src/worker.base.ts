@@ -278,10 +278,11 @@ export abstract class XeusRemoteKernelBase {
           await this.listInstalledPackages();
           break;
         case 'remove':
-        case 'uninstall':
+        case 'uninstall': {
           const { specs } = command.data as IUninstallationCommandOptions;
           await this.uninstall(specs, command.type);
           break;
+        }
         default:
           break;
       }

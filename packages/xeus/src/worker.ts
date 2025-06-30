@@ -295,10 +295,10 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     installedMap: { [name: string]: ISolvedPackage },
     type: string
   ) {
-    let result: any = [];
+    const result: any = [];
     specs.forEach((spec: string) => {
       const pkgName = packageNameFromSpec(spec);
-      let tmp = {
+      const specStatus = {
         status: 1,
         message: '',
         spec
@@ -307,16 +307,16 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         const pkg = installedMap[pkgName];
         if (type === 'uninstall') {
           if (pkg.repo_name !== 'PyPi') {
-            (tmp.status = 0),
-              (tmp.message = `It is imposible to use "pip uninstall" for the package ${spec}, please use "conda remove" command for this`);
+            (specStatus.status = 0),
+              (specStatus.message = `It is imposible to use "pip uninstall" for the package ${spec}, please use "conda remove" command for this`);
           }
         } else if (type === 'remove') {
           if (pkg.repo_name === 'PyPi') {
-            (tmp.status = 0),
-              (tmp.message = `It is imposible to use "conda remove" for the package ${spec}, please use "pip uninstall" command for this`);
+            (specStatus.status = 0),
+              (specStatus.message = `It is imposible to use "conda remove" for the package ${spec}, please use "pip uninstall" command for this`);
           }
         }
-        result.push(tmp);
+        result.push(specStatus);
       }
     });
     return result;
@@ -349,7 +349,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         if (!newInstalledPackagesMap['pip'] && pipSpecs.length) {
           this.logger.error('Cannot run "pip install": pip is not installed');
           status = 0;
-          throw new Error('Cannot run "pip install": pip is not installed');
         } else if (pipSpecs.length) {
           newPipSpecs = this.addSpecs(pipSpecs, newPipSpecs);
         }
@@ -366,17 +365,17 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
 
         preparedPkgs = this.canDelete(tmpSpecs, newInstalledPackagesMap, type);
 
-        let tmp: string[] = [];
+        const specsForDeleting: string[] = [];
         preparedPkgs.forEach((pkgData: any) => {
           if (pkgData.status) {
-            tmp.push(pkgData.spec);
+            specsForDeleting.push(pkgData.spec);
           } else {
             this.logger.error(pkgData.message);
           }
         });
-        if (tmp.length) {
+        if (specsForDeleting.length) {
           const data = this.deleteSpecs(
-            tmp,
+            specsForDeleting,
             tmpNewSpecs,
             newInstalledPackagesMap,
             updatedInstalled,
