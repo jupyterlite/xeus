@@ -283,7 +283,7 @@ export abstract class XeusRemoteKernelBase {
         case 'remove':
         case 'uninstall': {
           const { specs } = command.data as IUninstallationCommandOptions;
-          let type: 'pip' | 'conda' =
+          const type: 'pip' | 'conda' =
             command.type === 'remove' ? 'conda' : 'pip';
           await this.uninstall(specs, type);
           break;

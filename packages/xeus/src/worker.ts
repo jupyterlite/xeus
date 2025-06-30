@@ -498,8 +498,8 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     pipSpecs: { [key: string]: string }
   ): void {
     const newInstalledMap = this.getInstalledPackagesMap();
-    let newCurrentSpecs = {};
-    let newCurrentPipSpecs = {};
+    const newCurrentSpecs = {};
+    const newCurrentPipSpecs = {};
 
     Object.keys(specs).forEach((pkgName: string) => {
       if (
