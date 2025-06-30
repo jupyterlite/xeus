@@ -253,7 +253,10 @@ export abstract class XeusRemoteKernelBase {
    */
   protected abstract listInstalledPackages(): Promise<void>;
 
-  protected abstract uninstall(specs: string[], type: string): Promise<void>;
+  protected abstract uninstall(
+    specs: string[],
+    type: 'pip' | 'conda'
+  ): Promise<void>;
 
   /**
    * Process magics prior to executing code
@@ -280,7 +283,9 @@ export abstract class XeusRemoteKernelBase {
         case 'remove':
         case 'uninstall': {
           const { specs } = command.data as IUninstallationCommandOptions;
-          await this.uninstall(specs, command.type);
+          let type: 'pip' | 'conda' =
+            command.type === 'remove' ? 'conda' : 'pip';
+          await this.uninstall(specs, type);
           break;
         }
         default:
