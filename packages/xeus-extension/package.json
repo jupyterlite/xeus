@@ -76,7 +76,6 @@
     "styleModule": "style/index.js",
     "jupyterlab": {
         "extension": true,
-        "schemaDir": "schema",
         "outputDir": "../../jupyterlite_xeus/labextension",
         "webpackConfig": "lab.webpack.config.js",
         "sharedPackages": {
