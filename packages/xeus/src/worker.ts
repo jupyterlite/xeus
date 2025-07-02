@@ -457,7 +457,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         ) {
           try {
             if (!Object.keys(data.specs).length) {
-              let newInstalledPkgs = {};
+              const newInstalledPkgs = {};
               Object.keys(this._installedPackages).forEach(
                 (filename: string) => {
                   const pkg = this._installedPackages[filename];
