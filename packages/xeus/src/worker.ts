@@ -529,7 +529,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       const installedPkg = this._installedPackages[filename];
 
       // Exact same build of the package already installed
-      //?
       if (
         installedPkg.name in newInstalledPackagesMap &&
         installedPkg.build_string ===
