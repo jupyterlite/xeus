@@ -18,6 +18,7 @@ import {
   TSharedLibsMap,
   ISolvedPackage
 } from '@emscripten-forge/mambajs';
+import { packageNameFromSpec } from '@emscripten-forge/mambajs-core';
 import { IUnpackJSAPI } from '@emscripten-forge/untarjs';
 import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
 import { IEmpackXeusWorkerKernel } from './interfaces';
@@ -75,6 +76,20 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     };
   }
 
+  protected initializeCurrentSpecs(empackEnvMeta: IEmpackEnvMeta) {
+    const specs: string[] = empackEnvMeta.specs ? empackEnvMeta.specs : [];
+    empackEnvMeta.packages.forEach((pkg: any) => {
+      specs.map((spec: string) => {
+        const specName = packageNameFromSpec(spec);
+        if (pkg.name === specName) {
+          if (pkg.channel !== 'PyPi') {
+            this._currentSpecs[pkg.name] = spec;
+          }
+        }
+      });
+    });
+  }
+
   protected async initializeFileSystem(
     options: IEmpackXeusWorkerKernel.IOptions
   ): Promise<any> {
@@ -104,6 +119,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       `xeus/${kernelSpec.envName}/kernel_packages`
     );
     const empackEnvMeta = (await fetchJson(packagesJsonUrl)) as IEmpackEnvMeta;
+    this.initializeCurrentSpecs(empackEnvMeta);
 
     // Initialize installed packages from empack env meta
     this._installedPackages = {};
@@ -114,7 +130,9 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         repo_url: pkg.channel ? pkg.channel : '',
         url: pkg.url ? pkg.url : '',
         repo_name: pkg.channel ? pkg.channel : '',
-        build_string: pkg.build
+        build_string: pkg.build,
+        subdir: pkg.subdir ? pkg.subdir : '',
+        depends: pkg.depends ? pkg.depends : []
       };
     });
 
@@ -173,28 +191,251 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     });
   }
 
+  protected deleteFromInstalledPackages(
+    pkgName: string,
+    installed: ISolvedPackages
+  ) {
+    const newInstalledPkgs: ISolvedPackages = {};
+    Object.keys(installed).map((filename: string) => {
+      const installedPkg = installed[filename];
+      if (pkgName !== installedPkg.name) {
+        newInstalledPkgs[filename] = installedPkg;
+      }
+    });
+    return newInstalledPkgs;
+  }
+
+  protected addSpecs(specs: string[], currentSpecs: { [key: string]: string }) {
+    const updatedCurrentSpecs = { ...currentSpecs };
+
+    specs.forEach((spec: string) => {
+      const pkgName = packageNameFromSpec(spec);
+      if (pkgName) {
+        updatedCurrentSpecs[pkgName] = spec;
+      }
+    });
+    return updatedCurrentSpecs;
+  }
+
+  protected deleteSpecs(
+    specs: string[],
+    currentSpecs: { [key: string]: string },
+    newInstalledPackagesMap: { [name: string]: ISolvedPackage },
+    updatedInstalled: ISolvedPackages
+  ) {
+    const updatedCurrentSpecs = { ...currentSpecs };
+    let updatedInstalledPkgs = { ...updatedInstalled };
+
+    specs.forEach((spec: string) => {
+      const pkgName = packageNameFromSpec(spec);
+      if (pkgName && !newInstalledPackagesMap[pkgName]) {
+        this.logger.log(`Package ${pkgName} is not in the installed list`);
+      } else {
+        if (pkgName) {
+          if (updatedCurrentSpecs[pkgName]) {
+            delete updatedCurrentSpecs[pkgName];
+          } else {
+            updatedInstalledPkgs = this.deleteFromInstalledPackages(
+              pkgName,
+              updatedInstalledPkgs
+            );
+          }
+        }
+      }
+    });
+
+    return { specs: updatedCurrentSpecs, installed: updatedInstalledPkgs };
+  }
+
+  protected async deletePipPkgs(pipSpecs: string[]) {
+    const newInstalledPackagesMap: { [name: string]: ISolvedPackage } =
+      this.getInstalledPackagesMap();
+    let updatedInstalledPkgs = { ...this._installedPackages };
+    pipSpecs.forEach((spec: string) => {
+      const pkgName = packageNameFromSpec(spec);
+      if (pkgName && !newInstalledPackagesMap[pkgName]) {
+        this.logger.log(`Package ${pkgName} is not in the installed list`);
+      } else if (pkgName) {
+        updatedInstalledPkgs = this.deleteFromInstalledPackages(
+          pkgName,
+          updatedInstalledPkgs
+        );
+      }
+    });
+    await this._reloadPackagesInFS(updatedInstalledPkgs);
+  }
+
+  protected getPackagesList(specs: string[], type: 'pip' | 'conda'): string[] {
+    const newInstalledPackagesMap: { [name: string]: ISolvedPackage } =
+      this.getInstalledPackagesMap();
+    const preparedPkgs: any = this.canDelete(
+      specs,
+      newInstalledPackagesMap,
+      type
+    );
+    const specsForDeleting: string[] = [];
+    preparedPkgs.forEach((pkgData: any) => {
+      if (pkgData.status) {
+        specsForDeleting.push(pkgData.spec);
+      } else {
+        this.logger.error(pkgData.message);
+      }
+    });
+    return specsForDeleting;
+  }
+
+  protected canDelete(
+    specs: string[],
+    installedMap: { [name: string]: ISolvedPackage },
+    type?: 'pip' | 'conda'
+  ) {
+    const result: any = [];
+    specs.forEach((spec: string) => {
+      const pkgName = packageNameFromSpec(spec);
+      const specStatus = {
+        status: 0,
+        message: '',
+        spec
+      };
+      if (pkgName) {
+        const pkg = installedMap[pkgName];
+        if (pkg) {
+          if (type === 'pip') {
+            if (pkg.repo_name !== 'PyPi') {
+              specStatus.message = `It is imposible to use "pip uninstall" for the package ${spec}, please use "conda remove" command for this`;
+            } else {
+              specStatus.status = 1;
+            }
+          } else if (type === 'conda') {
+            if (pkg.repo_name === 'PyPi') {
+              specStatus.message = `It is imposible to use "conda remove" for the package ${spec}, please use "pip uninstall" command for this`;
+            } else {
+              specStatus.status = 1;
+            }
+          }
+        } else {
+          specStatus.message = `Package ${pkgName} is not in the installed list`;
+        }
+        result.push(specStatus);
+      }
+    });
+    return result;
+  }
+
+  protected getInstalledPackagesMap() {
+    const newInstalledPackagesMap: { [name: string]: ISolvedPackage } = {};
+    for (const newInstalledPkg of Object.values(this._installedPackages)) {
+      newInstalledPackagesMap[newInstalledPkg.name] = newInstalledPkg;
+    }
+    return newInstalledPackagesMap;
+  }
+
+  protected updateCurrentSpecs(
+    specs: string[],
+    command: 'install' | 'uninstall'
+  ): {
+    specs: { [key: string]: string };
+    installed: ISolvedPackages;
+    status: number;
+  } {
+    let newSpecs = { ...this._currentSpecs };
+
+    /* we need to collect requested pip specs to know when we need to delete all packages
+       if a user tried to install and after they decided to delete pip packages
+       and if specs array is empty and pip specs array is not, then we should not clean an enviroment
+    */
+    let updatedInstalled: ISolvedPackages = { ...this._installedPackages };
+    const newInstalledPackagesMap: { [name: string]: ISolvedPackage } =
+      this.getInstalledPackagesMap();
+
+    let status: number = 1;
+
+    switch (command) {
+      case 'install':
+        newSpecs = this.addSpecs(specs, newSpecs);
+        break;
+      case 'uninstall': {
+        if (specs.length) {
+          const data = this.deleteSpecs(
+            specs,
+            newSpecs,
+            newInstalledPackagesMap,
+            updatedInstalled
+          );
+          newSpecs = data.specs;
+          updatedInstalled = data.installed;
+        } else {
+          status = 0;
+        }
+
+        break;
+      }
+      default:
+        break;
+    }
+
+    return {
+      specs: newSpecs,
+      installed: updatedInstalled,
+      status
+    };
+  }
+
   protected async install(
     channels: string[],
     specs: string[],
     pipSpecs: string[]
   ) {
-    if (specs.length || pipSpecs.length) {
-      try {
-        const newPackages = await solve({
-          ymlOrSpecs: specs,
-          installedPackages: this._installedPackages,
-          pipSpecs,
-          channels,
-          logger: this.logger
-        });
+    let data: {
+      specs: { [key: string]: string };
+      installed: ISolvedPackages;
+      status: number;
+    } = {
+      specs: {},
+      installed: this._installedPackages,
+      status: 1
+    };
+    if (specs.length) {
+      data = this.updateCurrentSpecs(specs, 'install');
+    }
 
-        await this._reloadPackagesInFS({
-          ...newPackages.condaPackages,
-          ...newPackages.pipPackages
-        });
-      } catch (error: any) {
-        this.logger?.error(error.stack);
+    const command = specs?.length ? 'conda' : 'pip';
+    let newPackages: {
+      condaPackages: ISolvedPackages;
+      pipPackages: ISolvedPackages;
+    };
+
+    try {
+      switch (command) {
+        case 'conda': {
+          newPackages = await solve({
+            ymlOrSpecs: Object.values(data.specs),
+            installedPackages: data.installed,
+            channels,
+            logger: this.logger
+          });
+          break;
+        }
+        case 'pip': {
+          console.log('pip install');
+          newPackages = await solve({
+            installedPackages: this._installedPackages,
+            pipSpecs,
+            logger: this.logger
+          });
+          break;
+        }
       }
+
+      await this._reloadPackagesInFS({
+        ...newPackages.condaPackages,
+        ...newPackages.pipPackages
+      });
+      if (specs.length) {
+        this.filterCurrentSpecs(data.specs);
+      }
+    } catch (error: any) {
+      this.logger?.error(error.stack);
     }
   }
 
@@ -202,8 +443,90 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
    * Implements dynamic installation of packages
    */
   protected listInstalledPackages(): Promise<void> {
-    showPackagesList(this._installedPackages, this.logger);
-    return Promise.resolve();
+    if (Object.keys(this._installedPackages).length) {
+      showPackagesList(this._installedPackages, this.logger);
+      return Promise.resolve();
+    } else {
+      this.logger.log('Please install packages, an environment is empty');
+      return Promise.resolve();
+    }
+  }
+
+  protected async uninstall(
+    condaPipspecs: string[],
+    type: 'pip' | 'conda'
+  ): Promise<void> {
+    let data:
+      | {
+          specs: { [key: string]: string };
+          installed: ISolvedPackages;
+          status: number;
+        }
+      | undefined;
+
+    const newCondaPipSpecs = this.getPackagesList(condaPipspecs, type);
+    if (newCondaPipSpecs.length) {
+      if (type === 'conda') {
+        data = this.updateCurrentSpecs(condaPipspecs, 'uninstall');
+
+        if (
+          data &&
+          data.status &&
+          Object.keys(this._installedPackages).length
+        ) {
+          try {
+            if (!Object.keys(data.specs).length) {
+              const newInstalledPkgs = {};
+              Object.keys(this._installedPackages).forEach(
+                (filename: string) => {
+                  const pkg = this._installedPackages[filename];
+                  if (pkg.repo_name === 'PyPi') {
+                    newInstalledPkgs[filename] = pkg;
+                  }
+                }
+              );
+
+              await this._reloadPackagesInFS(newInstalledPkgs);
+              this._currentSpecs = {};
+            } else {
+              const newPackages = await solve({
+                ymlOrSpecs: Object.values(data.specs),
+                installedPackages: data.installed,
+                pipSpecs: [],
+                channels: [],
+                logger: this.logger
+              });
+              await this._reloadPackagesInFS({
+                ...newPackages.condaPackages,
+                ...newPackages.pipPackages
+              });
+              this.filterCurrentSpecs(data.specs);
+            }
+          } catch (error: any) {
+            this.logger?.error(error.stack);
+          }
+        }
+      } else {
+        await this.deletePipPkgs(newCondaPipSpecs);
+      }
+    }
+  }
+
+  protected filterCurrentSpecs(specs: { [key: string]: string }): void {
+    const newInstalledMap = this.getInstalledPackagesMap();
+    const newCurrentSpecs = {};
+
+    Object.keys(specs).forEach((pkgName: string) => {
+      if (
+        newInstalledMap[pkgName] &&
+        newInstalledMap[pkgName].repo_name !== 'PyPi'
+      ) {
+        newCurrentSpecs[pkgName] = specs[pkgName];
+      }
+    });
+    if (Object.keys(newCurrentSpecs).length) {
+      this._currentSpecs = { ...newCurrentSpecs };
+    }
   }
 
   private async _reloadPackagesInFS(newInstalledPackages: ISolvedPackages) {
@@ -228,7 +551,9 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       if (
         installedPkg.name in newInstalledPackagesMap &&
         installedPkg.build_string ===
-          newInstalledPackagesMap[installedPkg.name].build_string
+          newInstalledPackagesMap[installedPkg.name].build_string &&
+        installedPkg.version ===
+          newInstalledPackagesMap[installedPkg.name].version
       ) {
         continue;
       }
@@ -244,7 +569,8 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       if (
         newPkg.name in oldInstalledPackagesMap &&
         newPkg.build_string ===
-          oldInstalledPackagesMap[newPkg.name].build_string
+          oldInstalledPackagesMap[newPkg.name].build_string &&
+        newPkg.version === oldInstalledPackagesMap[newPkg.name].version
       ) {
         continue;
       }
@@ -252,7 +578,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       newPackages[filename] = newPkg;
     }
 
-    await removePackagesFromEmscriptenFS({
+    const newPath = await removePackagesFromEmscriptenFS({
       removedPackages,
       Module: this.Module,
       paths: this._paths,
@@ -267,7 +593,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       untarjs: this._untarjs,
       logger: this.logger
     });
-    this._paths = { ...this._paths, ...paths };
+    this._paths = { ...newPath, ...paths };
 
     await loadShareLibs({
       sharedLibs,
@@ -289,6 +615,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   private _paths = {};
 
   private _untarjs: IUnpackJSAPI | undefined;
+  private _currentSpecs: { [key: string]: string } = {};
 }
 
 export namespace XeusRemoteKernel {

@@ -96,8 +96,8 @@ def test_mount_point():
     addon = XeusAddon(manager)
     addon.environment_file = "environment-1.yml"
     addon.mounts = [
-        f"{(Path(__file__).parent / "environment-1.yml").resolve()}:/share",
-        f"{(Path(__file__).parent / "test_package").resolve()}:/share/test_package",
+        f"{(Path(__file__).parent / 'environment-1.yml').resolve()}:/share",
+        f"{(Path(__file__).parent / 'test_package').resolve()}:/share/test_package",
     ]
 
     for step in addon.post_build(manager):
@@ -187,12 +187,18 @@ def test_multiple_envs():
     action = steps[f"copy:{env_name_cpp}:xcpp20:data"]["actions"][0][1]
     assert action[1] == target_path / env_name_cpp / "bin" / "xcpp.data"
 
-    # empack_env_meta.json (one per env)
-    action = steps[f"xeus:{env_name_py_lua}:copy_env_file:empack_env_meta.json"]["actions"][0][1]
-    assert action[1] == target_path / env_name_py_lua / "empack_env_meta.json"
+    for env_name_tmp in [env_name_py_lua, env_name_cpp]:
+        update_cp_env_steps = steps.get(f"xeus:{env_name_tmp}:update_env_file:empack_env_meta.json")
+        assert update_cp_env_steps is not None
 
-    action = steps[f"xeus:{env_name_cpp}:copy_env_file:empack_env_meta.json"]["actions"][0][1]
-    assert action[1] == target_path / env_name_cpp / "empack_env_meta.json"
+        update_action_args = update_cp_env_steps["actions"][0][1]
+        expected_tmp_path = update_action_args[0]
+        assert expected_tmp_path.name == "empack_env_meta.json"
+        assert isinstance(update_action_args[1], dict)
+        assert "specs" in update_action_args[1]
+
+        copy_action_args = update_cp_env_steps["actions"][1][1]
+        assert copy_action_args[1] == target_path / env_name_tmp / "empack_env_meta.json"
 
     # kernel_packages (one directory per env)
     ## packages that are in py_lua env but not cpp env

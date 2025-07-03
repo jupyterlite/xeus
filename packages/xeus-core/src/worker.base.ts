@@ -6,7 +6,9 @@ import { IXeusWorkerKernel } from './interfaces';
 import {
   waitRunDependencies,
   ILogger,
-  parse
+  parse,
+  IInstallationCommandOptions,
+  IUninstallationCommandOptions
 } from '@emscripten-forge/mambajs-core';
 
 declare function createXeusModule(options: any): any;
@@ -251,6 +253,11 @@ export abstract class XeusRemoteKernelBase {
    */
   protected abstract listInstalledPackages(): Promise<void>;
 
+  protected abstract uninstall(
+    specs: string[],
+    type: 'pip' | 'conda'
+  ): Promise<void>;
+
   /**
    * Process magics prior to executing code
    * @returns the runnable code without magics
@@ -261,7 +268,8 @@ export abstract class XeusRemoteKernelBase {
       switch (command.type) {
         case 'install':
           if (command.data) {
-            const { channels, specs, pipSpecs } = command.data;
+            const { channels, specs, pipSpecs } =
+              command.data as IInstallationCommandOptions;
             await this.install(
               channels,
               specs as string[],
@@ -272,6 +280,14 @@ export abstract class XeusRemoteKernelBase {
         case 'list':
           await this.listInstalledPackages();
           break;
+        case 'remove':
+        case 'uninstall': {
+          const { specs } = command.data as IUninstallationCommandOptions;
+          const type: 'pip' | 'conda' =
+            command.type === 'remove' ? 'conda' : 'pip';
+          await this.uninstall(specs, type);
+          break;
+        }
         default:
           break;
       }
