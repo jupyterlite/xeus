@@ -399,14 +399,33 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       data = this.updateCurrentSpecs(specs, 'install');
     }
 
+    const command = specs?.length ? 'conda' : 'pip';
+    let newPackages: {
+      condaPackages: ISolvedPackages;
+      pipPackages: ISolvedPackages;
+    };
+
     try {
-      const newPackages = await solve({
-        ymlOrSpecs: Object.values(data.specs),
-        installedPackages: data.installed,
-        pipSpecs,
-        channels,
-        logger: this.logger
-      });
+      switch (command) {
+        case 'conda': {
+          newPackages = await solve({
+            ymlOrSpecs: Object.values(data.specs),
+            installedPackages: data.installed,
+            channels,
+            logger: this.logger
+          });
+          break;
+        }
+        case 'pip': {
+          console.log('pip install');
+          newPackages = await solve({
+            installedPackages: this._installedPackages,
+            pipSpecs,
+            logger: this.logger
+          });
+          break;
+        }
+      }
 
       await this._reloadPackagesInFS({
         ...newPackages.condaPackages,

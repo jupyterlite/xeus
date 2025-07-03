@@ -23,13 +23,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@baszalmstra/rattler@npm:^0.2.1":
-  version: 0.2.1
-  resolution: "@baszalmstra/rattler@npm:0.2.1"
-  checksum: 4ed9a10c61f73eb5187914c9bb68c72b7612ac0a8b6f2ce16e97aa5dcdd3dfcda7ae1b74d1a94a63f09562f7b4a7681b31df516664cb7534b12c5c2fda92b0f2
-  languageName: node
-  linkType: hard
-
 "@codemirror/autocomplete@npm:^6.0.0, @codemirror/autocomplete@npm:^6.18.6, @codemirror/autocomplete@npm:^6.3.2, @codemirror/autocomplete@npm:^6.7.1":
   version: 6.18.6
   resolution: "@codemirror/autocomplete@npm:6.18.6"
@@ -296,6 +289,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@conda-org/rattler@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@conda-org/rattler@npm:0.3.1"
+  checksum: 17511c7ae1cf729f16cc587089d8991dae948779ffd203a502fd8af7982b5bd05433ca7c5c9acd25c6a5b2c00d535f9f8c69940d5db5c1fcbb1f793fca346416
+  languageName: node
+  linkType: hard
+
 "@discoveryjs/json-ext@npm:^0.5.0":
   version: 0.5.7
   resolution: "@discoveryjs/json-ext@npm:0.5.7"
@@ -331,24 +331,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs-core@npm:^0.13.0":
-  version: 0.13.0
-  resolution: "@emscripten-forge/mambajs-core@npm:0.13.0"
+"@emscripten-forge/mambajs-core@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "@emscripten-forge/mambajs-core@npm:0.14.0"
   dependencies:
     "@emscripten-forge/untarjs": ^5.3.0
     yaml: ^2.7.0
-  checksum: c6a72d1ea114614077aa5977a15ec569e6279d82c80640ef1ec326ff72b49d945ee5f54d2321726dde9382a429150cd9c8c13bd33c2cc4e99923ae13d3f0b8f0
+  checksum: bac1095871b1e14f3d9b26d816713e586db9424929b6737e0de6d90f37f1dcd553ac4c15a2ee040b4f30f76d4adc5aef16a98f587d41b7a53c3141b9df62f5ed
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.13.1":
-  version: 0.13.1
-  resolution: "@emscripten-forge/mambajs@npm:0.13.1"
+"@emscripten-forge/mambajs@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "@emscripten-forge/mambajs@npm:0.14.0"
   dependencies:
-    "@baszalmstra/rattler": ^0.2.1
-    "@emscripten-forge/mambajs-core": ^0.13.0
+    "@conda-org/rattler": ^0.3.1
+    "@emscripten-forge/mambajs-core": ^0.14.0
     yaml: ^2.7.0
-  checksum: eb7e084a4d77c13fa44243ba58e888fb2d388cc14761c5001f84b2ec9220ff5e7f53681e972229e5df80063ce47594d1d2663544bfe5dac71ddfa23816c3578f
+  checksum: 476c5c877609cb99a51e8e5d4b55dbadf5de71f807737bc09afa9021a7f5623b09da2e0d3fb176893e40c001c273db2e1b1a8d08b7adbaad119b56eeeae289bd
   languageName: node
   linkType: hard
 
@@ -1370,7 +1370,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus-core@workspace:packages/xeus-core"
   dependencies:
-    "@emscripten-forge/mambajs-core": ^0.13.0
+    "@emscripten-forge/mambajs-core": ^0.14.0
     "@jupyterlab/coreutils": ^6.4.2
     "@jupyterlab/services": ^7.4.2
     "@jupyterlite/contents": ^0.6.0
@@ -1440,7 +1440,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.13.1
+    "@emscripten-forge/mambajs": ^0.14.0
     "@jupyterlab/coreutils": ^6.4.2
     "@jupyterlab/services": ^7.4.2
     "@jupyterlite/contents": ^0.6.0
