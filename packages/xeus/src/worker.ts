@@ -229,7 +229,9 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     specs.forEach((spec: string) => {
       const pkgName = packageNameFromSpec(spec);
       if (pkgName && !newInstalledPackagesMap[pkgName]) {
-        this.logger.log(`Package ${pkgName} is not in the installed list`);
+        this.logger.log(
+          `Failure: package to remove not found in the environment: ${pkgName}`
+        );
       } else {
         if (pkgName) {
           if (updatedCurrentSpecs[pkgName]) {
@@ -254,7 +256,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     pipSpecs.forEach((spec: string) => {
       const pkgName = packageNameFromSpec(spec);
       if (pkgName && !newInstalledPackagesMap[pkgName]) {
-        this.logger.log(`Package ${pkgName} is not in the installed list`);
+        this.logger.log(`WARNING: Skipping ${pkgName} as it is not installed.`);
       } else if (pkgName) {
         updatedInstalledPkgs = this.deleteFromInstalledPackages(
           pkgName,
