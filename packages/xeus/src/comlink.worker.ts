@@ -66,8 +66,8 @@ export class XeusComlinkKernel extends EmpackedXeusRemoteKernel {
       reciver[methodName](...args);
     }
     catch (error) {
-      console.error(`Error calling global receiver ${reciverName} method ${methodName}:`, error);
-      throw error;
+      // console.error(`Error calling global receiver ${reciverName} method ${methodName}:`, error);
+      throw new Error('Something bad happened in the worker!');
     }
   }
     
