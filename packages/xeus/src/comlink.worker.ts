@@ -60,15 +60,8 @@ export class XeusComlinkKernel extends EmpackedXeusRemoteKernel {
     methodName: string,
     ...args: any[]
   ): Promise<void> {
-
-    try{
-      const reciver = globalThis[reciverName];
-      reciver[methodName](...args);
-    }
-    catch (error) {
-      // console.error(`Error calling global receiver ${reciverName} method ${methodName}:`, error);
-      throw new Error('Something bad happened in the worker!');
-    }
+    const reciver = globalThis[reciverName];
+    reciver[methodName](...args);
   }
     
 
