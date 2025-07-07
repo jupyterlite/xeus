@@ -18,7 +18,11 @@ import {
   TSharedLibsMap,
   ISolvedPackage
 } from '@emscripten-forge/mambajs';
-import { packageNameFromSpec } from '@emscripten-forge/mambajs-core';
+import {
+  IInstallationCommandOptions,
+  IUninstallationCommandOptions,
+  packageNameFromSpec
+} from '@emscripten-forge/mambajs-core';
 import { IUnpackJSAPI } from '@emscripten-forge/untarjs';
 import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
 import { IEmpackXeusWorkerKernel } from './interfaces';
@@ -381,11 +385,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     };
   }
 
-  protected async install(
-    channels: string[],
-    specs: string[],
-    pipSpecs: string[]
-  ) {
+  protected async install(options: IInstallationCommandOptions) {
     let data: {
       specs: { [key: string]: string };
       installed: ISolvedPackages;
@@ -395,32 +395,30 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       installed: this._installedPackages,
       status: 1
     };
-    if (specs.length) {
-      data = this.updateCurrentSpecs(specs, 'install');
+    if (options.specs.length) {
+      data = this.updateCurrentSpecs(options.specs, 'install');
     }
 
-    const command = specs?.length ? 'conda' : 'pip';
     let newPackages: {
       condaPackages: ISolvedPackages;
       pipPackages: ISolvedPackages;
     };
 
     try {
-      switch (command) {
+      switch (options.type) {
         case 'conda': {
           newPackages = await solve({
             ymlOrSpecs: Object.values(data.specs),
             installedPackages: data.installed,
-            channels,
+            channels: options.channels,
             logger: this.logger
           });
           break;
         }
         case 'pip': {
-          console.log('pip install');
           newPackages = await solve({
             installedPackages: this._installedPackages,
-            pipSpecs,
+            pipSpecs: options.specs,
             logger: this.logger
           });
           break;
@@ -431,7 +429,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         ...newPackages.condaPackages,
         ...newPackages.pipPackages
       });
-      if (specs.length) {
+      if (options.specs.length) {
         this.filterCurrentSpecs(data.specs);
       }
     } catch (error: any) {
@@ -453,8 +451,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   }
 
   protected async uninstall(
-    condaPipspecs: string[],
-    type: 'pip' | 'conda'
+    options: IUninstallationCommandOptions
   ): Promise<void> {
     let data:
       | {
@@ -464,10 +461,10 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         }
       | undefined;
 
-    const newCondaPipSpecs = this.getPackagesList(condaPipspecs, type);
+    const newCondaPipSpecs = this.getPackagesList(options.specs, options.type);
     if (newCondaPipSpecs.length) {
-      if (type === 'conda') {
-        data = this.updateCurrentSpecs(condaPipspecs, 'uninstall');
+      if (options.type === 'conda') {
+        data = this.updateCurrentSpecs(options.specs, 'uninstall');
 
         if (
           data &&

@@ -8,7 +8,8 @@ import {
   ILogger,
   parse,
   IInstallationCommandOptions,
-  IUninstallationCommandOptions
+  IUninstallationCommandOptions,
+  ICommandData
 } from '@emscripten-forge/mambajs-core';
 
 declare function createXeusModule(options: any): any;
@@ -243,9 +244,7 @@ export abstract class XeusRemoteKernelBase {
    * Implements dynamic installation of packages
    */
   protected abstract install(
-    channels: string[],
-    specs: string[],
-    pipSpecs: string[]
+    options: IInstallationCommandOptions
   ): Promise<void>;
 
   /**
@@ -254,8 +253,7 @@ export abstract class XeusRemoteKernelBase {
   protected abstract listInstalledPackages(): Promise<void>;
 
   protected abstract uninstall(
-    specs: string[],
-    type: 'pip' | 'conda'
+    options: IUninstallationCommandOptions
   ): Promise<void>;
 
   /**
@@ -263,29 +261,25 @@ export abstract class XeusRemoteKernelBase {
    * @returns the runnable code without magics
    */
   protected async processMagics(code: string) {
-    const { commands, run } = parse(code);
+    let magicData: ICommandData;
+    try {
+      magicData = parse(code);
+    } catch(e) {
+      this.logger.error(e);
+      return '';
+    }
+
+    const { commands, run } = magicData;
     for (const command of commands) {
       switch (command.type) {
         case 'install':
-          if (command.data) {
-            const { channels, specs, pipSpecs } =
-              command.data as IInstallationCommandOptions;
-            await this.install(
-              channels,
-              specs as string[],
-              pipSpecs as string[]
-            );
-          }
+          await this.install(command.data as IInstallationCommandOptions);
           break;
         case 'list':
           await this.listInstalledPackages();
           break;
-        case 'remove':
-        case 'uninstall': {
-          const { specs } = command.data as IUninstallationCommandOptions;
-          const type: 'pip' | 'conda' =
-            command.type === 'remove' ? 'conda' : 'pip';
-          await this.uninstall(specs, type);
+        case 'remove': {
+          await this.uninstall(command.data as IUninstallationCommandOptions);
           break;
         }
         default:
