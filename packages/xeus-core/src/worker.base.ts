@@ -264,7 +264,7 @@ export abstract class XeusRemoteKernelBase {
     let magicData: ICommandData;
     try {
       magicData = parse(code);
-    } catch(e) {
+    } catch (e) {
       this.logger.error(e);
       return '';
     }
