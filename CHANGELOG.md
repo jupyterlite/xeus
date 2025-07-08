@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.1.0a1
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.1.0-a0...7d95c2001a32490cc92e7394ae84cfefc450e01b))
+
+### Enhancements made
+
+- Update mambajs: homogenize install and uninstall methods [#262](https://github.com/jupyterlite/xeus/pull/262) ([@martinRenou](https://github.com/martinRenou))
+- Match real pip's error message for uninstalling non-installed pkg [#261](https://github.com/jupyterlite/xeus/pull/261) ([@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- Fix support for kernels from the old beta.mamba.pm channel [#258](https://github.com/jupyterlite/xeus/pull/258) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-07-03&to=2025-07-08&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-07-03..2025-07-08&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.1.0a0
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.0.5...99e5a27b552615cf63e5ff7531801a484e9d499c))
@@ -15,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-06-30&to=2025-07-03&type=c))
 
 [@AnastasiaSliusar](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AAnastasiaSliusar+updated%3A2025-06-30..2025-07-03&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.0.5
 
