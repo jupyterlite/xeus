@@ -261,7 +261,9 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     pipSpecs.forEach((spec: string) => {
       const pkgName = packageNameFromSpec(spec);
       if (pkgName && !newInstalledPackagesMap[pkgName]) {
-        this.logger.log(`WARNING: Skipping ${pkgName} as it is not installed.`);
+        this.logger.warn(
+          `WARNING: Skipping ${pkgName} as it is not installed.`
+        );
       } else if (pkgName) {
         updatedInstalledPkgs = this.deleteFromInstalledPackages(
           pkgName,
