@@ -87,13 +87,16 @@ export interface IXeusWorkerKernel extends IWorkerKernel {
 
   /**
    * Store an object in the global scope
+   * This is useful to move/transfer objects like OffscreenCanvas
+   * from the main thread to the worker.
    * @param object The object to store
    * @param name The name to store the object under
    */
   storeAsGlobal(object: any, name: string): Promise<void>;
 
   /**
-   * Call a method on a global receiver
+   * Call a method on a an global object in the workers global scope
+   * This is usefull to forward events from the main thread to the worker
    * @param reciverName The name of the receiver
    * @param methodName The name of the method to call
    * @param args The arguments to pass to the method

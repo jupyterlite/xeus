@@ -65,8 +65,6 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
     };
 
     if (crossOriginIsolated) {
-      // const { Worker, polyfill, transfer } = coincident(this.worker);
-      // Use coincident to transfer the worker API
       remote = coincident(this.worker) as IEmpackXeusWorkerKernel;
       // The coincident worker uses its own filesystem API:
       (remote.processDriveRequest as any) = async <T extends TDriveMethod>(
@@ -93,7 +91,8 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
       };
 
       // make a global function to store objects in the global scope
-      // for instance, to store an OffscreenCanvas
+      // of the worker. This is useful to move/transfer objects
+      // like OffscreenCanvas from the main thread to the worker.
       (globalThis as any).storeAsGlobal = async (object: any, name: string) => {
         // use coincident to transfer the object
         await (remote as any).storeAsGlobal(
@@ -111,8 +110,9 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
         await (remote as any).storeAsGlobal(transfer(object, [object]), name);
       };
     }
-    // make a global function to call functions in the global scope
-    // for instance to forward events from the main thread to the worker
+    // this global function can be called in the frontend code of
+    // widgets, for instance to forward events from the main thread
+    // to the worker.
     (globalThis as any).callGlobalReciver = async (
       reciverName: string,
       methodName: string,
