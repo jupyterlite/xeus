@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.1.0a2
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.1.0-a1...d6ee3596ae75bcb562b027322e128da7a508c65a))
+
+### Enhancements made
+
+- Proper warning for pip uninstall of non-installed pkg [#263](https://github.com/jupyterlite/xeus/pull/263) ([@martinRenou](https://github.com/martinRenou))
+- Add ability to expose global variables to the worker [#255](https://github.com/jupyterlite/xeus/pull/255) ([@DerThorsten](https://github.com/DerThorsten))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-07-08&to=2025-07-15&type=c))
+
+[@DerThorsten](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3ADerThorsten+updated%3A2025-07-08..2025-07-15&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-07-08..2025-07-15&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.1.0a1
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.1.0-a0...7d95c2001a32490cc92e7394ae84cfefc450e01b))
@@ -20,8 +37,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-07-03&to=2025-07-08&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-07-03..2025-07-08&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.1.0a0
 
