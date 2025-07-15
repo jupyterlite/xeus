@@ -97,3 +97,8 @@ workerAPI.ready = worker.ready.bind(worker);
 workerAPI.cd = worker.cd.bind(worker);
 workerAPI.isDir = worker.isDir.bind(worker);
 workerAPI.processMessage = worker.processMessage.bind(worker);
+
+// @ts-ignore
+workerAPI.storeAsGlobal = worker.storeAsGlobal.bind(worker);
+// @ts-ignore
+workerAPI.callGlobalReciver = worker.callGlobalReciver.bind(worker);
