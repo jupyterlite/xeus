@@ -97,6 +97,5 @@ workerAPI.ready = worker.ready.bind(worker);
 workerAPI.cd = worker.cd.bind(worker);
 workerAPI.isDir = worker.isDir.bind(worker);
 workerAPI.processMessage = worker.processMessage.bind(worker);
-
 workerAPI.storeAsGlobal = worker.storeAsGlobal.bind(worker);
 workerAPI.callGlobalReceiver = worker.callGlobalReceiver.bind(worker);
