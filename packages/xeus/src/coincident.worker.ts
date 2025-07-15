@@ -98,7 +98,5 @@ workerAPI.cd = worker.cd.bind(worker);
 workerAPI.isDir = worker.isDir.bind(worker);
 workerAPI.processMessage = worker.processMessage.bind(worker);
 
-// @ts-expect-error quick and dirty way to add coincident support
 workerAPI.storeAsGlobal = worker.storeAsGlobal.bind(worker);
-// @ts-expect-error quick and dirty way to add coincident support
 workerAPI.callGlobalReciver = worker.callGlobalReciver.bind(worker);

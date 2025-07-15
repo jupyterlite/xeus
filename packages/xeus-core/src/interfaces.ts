@@ -84,6 +84,26 @@ export interface IXeusWorkerKernel extends IWorkerKernel {
    * @param path The path to check
    */
   isDir(path: string): Promise<boolean>;
+
+
+  /**
+   * Store an object in the global scope
+   * @param object The object to store
+   * @param name The name to store the object under
+   */
+  storeAsGlobal(object: any, name: string): Promise<void>;
+
+  /**
+   * Call a method on a global receiver
+   * @param reciverName The name of the receiver
+   * @param methodName The name of the method to call
+   * @param args The arguments to pass to the method
+   */
+  callGlobalReciver(
+    reciverName: string,
+    methodName: string,
+    ...args: any[]
+  ): Promise<void>;
 }
 
 /**
