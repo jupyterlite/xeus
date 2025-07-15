@@ -44,7 +44,6 @@ export class XeusComlinkKernel extends EmpackedXeusRemoteKernel {
     FS.chdir(mountpoint);
   }
 
-
   async storeAsGlobal(object: any, name: string): Promise<void> {
     globalThis[name] = object;
   }
@@ -57,7 +56,7 @@ export class XeusComlinkKernel extends EmpackedXeusRemoteKernel {
     const reciver = globalThis[reciverName];
     reciver[methodName](...args);
   }
-    
+
   protected initializeStdin(baseUrl: string, browsingContextId: string): void {
     globalThis.get_stdin = (inputRequest: any): any => {
       // Send a input request to the front-end via the service worker and block until
