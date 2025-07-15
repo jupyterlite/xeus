@@ -4,7 +4,7 @@
 
 import coincident from 'coincident';
 
-import { wrap } from 'comlink';
+import { wrap, transfer } from 'comlink';
 import type { Remote } from 'comlink';
 
 import { PromiseDelegate } from '@lumino/coreutils';
@@ -89,10 +89,41 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
           new PromiseDelegate<KernelMessage.IInputReplyMsg>();
         return await this.inputDelegate.promise;
       };
+
+      // make a global function to store objects in the global scope
+      // of the worker. This is useful to move/transfer objects
+      // like OffscreenCanvas from the main thread to the worker.
+      (globalThis as any).storeAsGlobal = async (object: any, name: string) => {
+        // use coincident to transfer the object
+        await (remote as any).storeAsGlobal(
+          object,
+          name,
+          coincident.transfer(object)
+        );
+      };
     } else {
       remote = wrap(this.worker) as Remote<IEmpackXeusWorkerKernel>;
-    }
 
+      // make a global function to store objects in the global scope
+      // for instance, to store an OffscreenCanvas
+      (globalThis as any).storeAsGlobal = async (object: any, name: string) => {
+        await (remote as any).storeAsGlobal(transfer(object, [object]), name);
+      };
+    }
+    // this global function can be called in the frontend code of
+    // widgets, for instance to forward events from the main thread
+    // to the worker.
+    (globalThis as any).callGlobalReceiver = async (
+      receiverName: string,
+      methodName: string,
+      ...args: any[]
+    ): Promise<any> => {
+      return await (remote as any).callGlobalReceiver(
+        receiverName,
+        methodName,
+        ...args
+      );
+    };
     return remote;
   }
 

@@ -74,6 +74,19 @@ export class XeusCoincidentKernel extends EmpackedXeusRemoteKernel {
     ): KernelMessage.IInputReplyMsg =>
       workerAPI.processStdinRequest(inputRequest);
   }
+
+  async storeAsGlobal(object: any, name: string): Promise<void> {
+    globalThis[name] = object;
+  }
+
+  async callGlobalReceiver(
+    receiverName: string,
+    methodName: string,
+    ...args: any[]
+  ): Promise<void> {
+    const receiver = globalThis[receiverName];
+    receiver[methodName](...args);
+  }
 }
 
 const worker = new XeusCoincidentKernel();
@@ -84,3 +97,5 @@ workerAPI.ready = worker.ready.bind(worker);
 workerAPI.cd = worker.cd.bind(worker);
 workerAPI.isDir = worker.isDir.bind(worker);
 workerAPI.processMessage = worker.processMessage.bind(worker);
+workerAPI.storeAsGlobal = worker.storeAsGlobal.bind(worker);
+workerAPI.callGlobalReceiver = worker.callGlobalReceiver.bind(worker);
