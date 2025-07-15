@@ -97,12 +97,12 @@ export interface IXeusWorkerKernel extends IWorkerKernel {
   /**
    * Call a method on a an global object in the workers global scope
    * This is usefull to forward events from the main thread to the worker
-   * @param reciverName The name of the receiver
+   * @param receiverName The name of the receiver
    * @param methodName The name of the method to call
    * @param args The arguments to pass to the method
    */
-  callGlobalReciver(
-    reciverName: string,
+  callGlobalReceiver(
+    receiverName: string,
     methodName: string,
     ...args: any[]
   ): Promise<void>;

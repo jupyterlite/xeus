@@ -48,13 +48,13 @@ export class XeusComlinkKernel extends EmpackedXeusRemoteKernel {
     globalThis[name] = object;
   }
 
-  async callGlobalReciver(
-    reciverName: string,
+  async callGlobalReceiver(
+    receiverName: string,
     methodName: string,
     ...args: any[]
   ): Promise<void> {
-    const reciver = globalThis[reciverName];
-    reciver[methodName](...args);
+    const receiver = globalThis[receiverName];
+    receiver[methodName](...args);
   }
 
   protected initializeStdin(baseUrl: string, browsingContextId: string): void {

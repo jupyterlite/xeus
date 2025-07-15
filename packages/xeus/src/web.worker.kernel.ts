@@ -113,13 +113,13 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
     // this global function can be called in the frontend code of
     // widgets, for instance to forward events from the main thread
     // to the worker.
-    (globalThis as any).callGlobalReciver = async (
-      reciverName: string,
+    (globalThis as any).callGlobalReceiver = async (
+      receiverName: string,
       methodName: string,
       ...args: any[]
     ): Promise<any> => {
-      return await (remote as any).callGlobalReciver(
-        reciverName,
+      return await (remote as any).callGlobalReceiver(
+        receiverName,
         methodName,
         ...args
       );
