@@ -85,7 +85,6 @@ export interface IXeusWorkerKernel extends IWorkerKernel {
    */
   isDir(path: string): Promise<boolean>;
 
-
   /**
    * Store an object in the global scope
    * @param object The object to store
