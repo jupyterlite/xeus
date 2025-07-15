@@ -65,7 +65,6 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
     };
 
     if (crossOriginIsolated) {
-
       // const { Worker, polyfill, transfer } = coincident(this.worker);
       // Use coincident to transfer the worker API
       remote = coincident(this.worker) as IEmpackXeusWorkerKernel;
@@ -95,9 +94,13 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
 
       // make a global function to store objects in the global scope
       // for instance, to store an OffscreenCanvas
-      (globalThis as any).storeAsGlobal =  async (object: any, name: string) => {
+      (globalThis as any).storeAsGlobal = async (object: any, name: string) => {
         // use coincident to transfer the object
-        await (remote as any).storeAsGlobal(object, name , coincident.transfer(object));
+        await (remote as any).storeAsGlobal(
+          object,
+          name,
+          coincident.transfer(object)
+        );
       };
     } else {
       remote = wrap(this.worker) as Remote<IEmpackXeusWorkerKernel>;
