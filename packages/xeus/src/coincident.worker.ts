@@ -79,13 +79,13 @@ export class XeusCoincidentKernel extends EmpackedXeusRemoteKernel {
     globalThis[name] = object;
   }
 
-  async callGlobalReceiver(
-    receiverName: string,
+  async callGlobalReciver(
+    reciverName: string,
     methodName: string,
     ...args: any[]
   ): Promise<void> {
-    const receiver = globalThis[receiverName];
-    receiver[methodName](...args);
+    const reciver = globalThis[reciverName];
+    reciver[methodName](...args);
   }
 }
 
