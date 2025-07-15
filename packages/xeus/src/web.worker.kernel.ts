@@ -89,6 +89,15 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
           new PromiseDelegate<KernelMessage.IInputReplyMsg>();
         return await this.inputDelegate.promise;
       };
+
+      
+      // make a global function to store objects in the global scope
+      // for instance, to store an OffscreenCanvas
+      (globalThis as any).storeAsGlobal = (object: any, name: string) => {
+        // use coincident to transfer the object
+        return (remote as any).storeAsGlobal(object, name, [object]);
+      }
+
     } else {
       remote = wrap(this.worker) as Remote<IEmpackXeusWorkerKernel>;
 
@@ -97,19 +106,17 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
       (globalThis as any).storeAsGlobal = (object: any, name: string) => {
         return (remote as any).storeAsGlobal(transfer(object, [object]), name);
       }
-
-      // make a global function to call functions in the global scope
-      // for instance to forward events from the main thread to the worker
-      (globalThis as any).callGlobalReciver = async (
-        reciverName: string,
-        methodName: string,
-        ...args: any[]
-      ): Promise<any> => {
-        return await (remote as any).callGlobalReciver(reciverName, methodName, ...args);
-      }
       
     }
-
+    // make a global function to call functions in the global scope
+    // for instance to forward events from the main thread to the worker
+    (globalThis as any).callGlobalReciver = async (
+      reciverName: string,
+      methodName: string,
+      ...args: any[]
+    ): Promise<any> => {
+      return await (remote as any).callGlobalReciver(reciverName, methodName, ...args);
+    }
     return remote;
   }
 

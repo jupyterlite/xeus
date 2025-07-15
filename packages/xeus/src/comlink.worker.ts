@@ -44,16 +44,10 @@ export class XeusComlinkKernel extends EmpackedXeusRemoteKernel {
     FS.chdir(mountpoint);
   }
 
-  // 
+
   async storeAsGlobal(object: any, name: string): Promise<void> {
-    console.log("recieved object to store as global:", name, object);
-    // store canvas in the globalThis object
-    if (typeof globalThis[name] !== 'undefined') {
-      console.warn(`Global variable ${name} already exists, overwriting.`);
-    }
     globalThis[name] = object;
   }
-
 
   async callGlobalReciver(
     reciverName: string,
@@ -71,28 +65,6 @@ export class XeusComlinkKernel extends EmpackedXeusRemoteKernel {
     }
   }
     
-
-  // async storeOffscreenCanvas(
-  //   offscreenCanvas: OffscreenCanvas,
-  //   name: string,
-  //   event_handler_name : string,
-  //   event_handler : (event: Event) => void 
-  // ): Promise<void> {
-  //   console.log("recieved offscreen canvas to store as global:", name, offscreenCanvas);
-  //   // store offscreen canvas in the globalThis object
-  //   if (typeof globalThis[name] !== 'undefined') {
-  //     console.warn(`Global variable ${name} already exists, overwriting.`);
-  //   }
-  //   globalThis[name] = offscreenCanvas;
-
-  //   // get the function to handle events
-  //   if (typeof globalThis[event_handler_name] !== 'undefined') {
-  //     console.warn(`Global event handler ${event_handler_name} already exists, overwriting.`);
-  //   }
-  //   globalThis[event_handler_name] = event_handler;
-    
-  // }
-
   protected initializeStdin(baseUrl: string, browsingContextId: string): void {
     globalThis.get_stdin = (inputRequest: any): any => {
       // Send a input request to the front-end via the service worker and block until
