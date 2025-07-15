@@ -6,7 +6,10 @@ import { IXeusWorkerKernel } from './interfaces';
 import {
   waitRunDependencies,
   ILogger,
-  parse
+  parse,
+  IInstallationCommandOptions,
+  IUninstallationCommandOptions,
+  ICommandData
 } from '@emscripten-forge/mambajs-core';
 
 declare function createXeusModule(options: any): any;
@@ -241,9 +244,7 @@ export abstract class XeusRemoteKernelBase {
    * Implements dynamic installation of packages
    */
   protected abstract install(
-    channels: string[],
-    specs: string[],
-    pipSpecs: string[]
+    options: IInstallationCommandOptions
   ): Promise<void>;
 
   /**
@@ -251,27 +252,36 @@ export abstract class XeusRemoteKernelBase {
    */
   protected abstract listInstalledPackages(): Promise<void>;
 
+  protected abstract uninstall(
+    options: IUninstallationCommandOptions
+  ): Promise<void>;
+
   /**
    * Process magics prior to executing code
    * @returns the runnable code without magics
    */
   protected async processMagics(code: string) {
-    const { commands, run } = parse(code);
+    let magicData: ICommandData;
+    try {
+      magicData = parse(code);
+    } catch (e) {
+      this.logger.error(e);
+      return '';
+    }
+
+    const { commands, run } = magicData;
     for (const command of commands) {
       switch (command.type) {
         case 'install':
-          if (command.data) {
-            const { channels, specs, pipSpecs } = command.data;
-            await this.install(
-              channels,
-              specs as string[],
-              pipSpecs as string[]
-            );
-          }
+          await this.install(command.data as IInstallationCommandOptions);
           break;
         case 'list':
           await this.listInstalledPackages();
           break;
+        case 'remove': {
+          await this.uninstall(command.data as IUninstallationCommandOptions);
+          break;
+        }
         default:
           break;
       }

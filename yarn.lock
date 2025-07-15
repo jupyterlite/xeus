@@ -23,13 +23,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@baszalmstra/rattler@npm:^0.2.1":
-  version: 0.2.1
-  resolution: "@baszalmstra/rattler@npm:0.2.1"
-  checksum: 4ed9a10c61f73eb5187914c9bb68c72b7612ac0a8b6f2ce16e97aa5dcdd3dfcda7ae1b74d1a94a63f09562f7b4a7681b31df516664cb7534b12c5c2fda92b0f2
-  languageName: node
-  linkType: hard
-
 "@codemirror/autocomplete@npm:^6.0.0, @codemirror/autocomplete@npm:^6.18.6, @codemirror/autocomplete@npm:^6.3.2, @codemirror/autocomplete@npm:^6.7.1":
   version: 6.18.6
   resolution: "@codemirror/autocomplete@npm:6.18.6"
@@ -296,6 +289,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@conda-org/rattler@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@conda-org/rattler@npm:0.3.1"
+  checksum: 17511c7ae1cf729f16cc587089d8991dae948779ffd203a502fd8af7982b5bd05433ca7c5c9acd25c6a5b2c00d535f9f8c69940d5db5c1fcbb1f793fca346416
+  languageName: node
+  linkType: hard
+
 "@discoveryjs/json-ext@npm:^0.5.0":
   version: 0.5.7
   resolution: "@discoveryjs/json-ext@npm:0.5.7"
@@ -331,24 +331,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs-core@npm:^0.13.0":
-  version: 0.13.0
-  resolution: "@emscripten-forge/mambajs-core@npm:0.13.0"
+"@emscripten-forge/mambajs-core@npm:^0.15, @emscripten-forge/mambajs-core@npm:^0.15.0":
+  version: 0.15.0
+  resolution: "@emscripten-forge/mambajs-core@npm:0.15.0"
   dependencies:
     "@emscripten-forge/untarjs": ^5.3.0
     yaml: ^2.7.0
-  checksum: c6a72d1ea114614077aa5977a15ec569e6279d82c80640ef1ec326ff72b49d945ee5f54d2321726dde9382a429150cd9c8c13bd33c2cc4e99923ae13d3f0b8f0
+  checksum: 5810693f2ff69f2fe424d1175cedab007f4e3e77c1fa2a22cbd4695611e6352849ae6c04a8a96e739afad5d2f4968be24c9a32aef21fc6942948a80f2d65fcd0
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.13.1":
-  version: 0.13.1
-  resolution: "@emscripten-forge/mambajs@npm:0.13.1"
+"@emscripten-forge/mambajs@npm:^0.15":
+  version: 0.15.0
+  resolution: "@emscripten-forge/mambajs@npm:0.15.0"
   dependencies:
-    "@baszalmstra/rattler": ^0.2.1
-    "@emscripten-forge/mambajs-core": ^0.13.0
+    "@conda-org/rattler": ^0.3.1
+    "@emscripten-forge/mambajs-core": ^0.15.0
     yaml: ^2.7.0
-  checksum: eb7e084a4d77c13fa44243ba58e888fb2d388cc14761c5001f84b2ec9220ff5e7f53681e972229e5df80063ce47594d1d2663544bfe5dac71ddfa23816c3578f
+  checksum: b065ffa9668e3919d70e6cff7310036eda384a32e2a9c6bb4fdcd9885c205ad717a0bee585b558778d419ec829d3323d81b5b4bea555d51b3d7af15f1c3cd782
   languageName: node
   linkType: hard
 
@@ -1366,11 +1366,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlite/xeus-core@^4.0.3, @jupyterlite/xeus-core@workspace:packages/xeus-core":
+"@jupyterlite/xeus-core@^4.1.0-a1, @jupyterlite/xeus-core@workspace:packages/xeus-core":
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus-core@workspace:packages/xeus-core"
   dependencies:
-    "@emscripten-forge/mambajs-core": ^0.13.0
+    "@emscripten-forge/mambajs-core": ^0.15
     "@jupyterlab/coreutils": ^6.4.2
     "@jupyterlab/services": ^7.4.2
     "@jupyterlite/contents": ^0.6.0
@@ -1403,7 +1403,7 @@ __metadata:
     "@jupyterlite/contents": ^0.6.0
     "@jupyterlite/kernel": ^0.6.0
     "@jupyterlite/server": ^0.6.0
-    "@jupyterlite/xeus": ^4.0.3
+    "@jupyterlite/xeus": ^4.1.0-a1
     "@lumino/coreutils": ^2
     "@types/json-schema": ^7.0.11
     "@types/react": ^18.0.26
@@ -1436,17 +1436,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupyterlite/xeus@^4.0.3, @jupyterlite/xeus@workspace:packages/xeus":
+"@jupyterlite/xeus@^4.1.0-a1, @jupyterlite/xeus@workspace:packages/xeus":
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.13.1
+    "@emscripten-forge/mambajs": ^0.15
     "@jupyterlab/coreutils": ^6.4.2
     "@jupyterlab/services": ^7.4.2
     "@jupyterlite/contents": ^0.6.0
     "@jupyterlite/kernel": ^0.6.0
     "@jupyterlite/server": ^0.6.0
-    "@jupyterlite/xeus-core": ^4.0.3
+    "@jupyterlite/xeus-core": ^4.1.0-a1
     "@lumino/coreutils": ^2
     "@lumino/signaling": ^2
     "@types/json-schema": ^7.0.11

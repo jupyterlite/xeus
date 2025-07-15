@@ -1,6 +1,6 @@
 {
     "name": "@jupyterlite/xeus-extension",
-    "version": "4.0.3",
+    "version": "4.1.0-a1",
     "description": "JupyterLite loader for Xeus kernels",
     "keywords": [
         "jupyter",
@@ -48,7 +48,7 @@
         "@jupyterlite/contents": "^0.6.0",
         "@jupyterlite/kernel": "^0.6.0",
         "@jupyterlite/server": "^0.6.0",
-        "@jupyterlite/xeus": "^4.0.3",
+        "@jupyterlite/xeus": "^4.1.0-a1",
         "@lumino/coreutils": "^2"
     },
     "devDependencies": {
@@ -76,7 +76,6 @@
     "styleModule": "style/index.js",
     "jupyterlab": {
         "extension": true,
-        "schemaDir": "schema",
         "outputDir": "../../jupyterlite_xeus/labextension",
         "webpackConfig": "lab.webpack.config.js",
         "sharedPackages": {

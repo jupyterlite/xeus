@@ -7,6 +7,7 @@ import shutil
 from tempfile import TemporaryDirectory
 from urllib.parse import urlparse
 import warnings
+import ast
 
 import yaml
 
@@ -140,6 +141,7 @@ class XeusAddon(FederatedExtensionAddon):
 
         # create the prefixes if it does not exist
         self.prefixes = {}
+        self.specs = {}
         if not self.prefix:
             for environment_file in self.environment_file:
                 env_name, prefix = self.create_prefix(Path(self.manager.lite_dir) / environment_file)
@@ -155,6 +157,8 @@ class XeusAddon(FederatedExtensionAddon):
                 if env_name in self.prefixes:
                     raise ValueError(f"Environment name '{env_name}' used more than once")
                 self.prefixes[env_name] = prefix
+                self.specs[env_name] = self.get_environment_specs(prefix)
+            
 
         all_kernels = []
         for env_name, prefix in self.prefixes.items():
@@ -175,6 +179,21 @@ class XeusAddon(FederatedExtensionAddon):
             ],
         )
 
+    def get_environment_specs(self, prefix):
+        if isinstance(prefix, str):
+            history_file_path = Path(prefix)
+        path = history_file_path / "conda-meta" / "history"
+        specs = []
+        with open(path, "r") as f:
+            for line in f:
+                if line.startswith("# update specs:"):
+                    spec_line = line.strip().replace("# update specs:", "").strip()
+                    try:
+                        specs += ast.literal_eval(spec_line)
+                    except Exception as e:
+                        print(f"Error parsing line: {spec_line} — {e}")
+        return specs
+
     def create_prefix(self, env_file: Path):
         # read the environment file
         root_prefix = Path(self.cwd_name) / "_env"
@@ -184,6 +203,12 @@ class XeusAddon(FederatedExtensionAddon):
 
         env_name = yaml_content["name"]
         env_prefix = root_prefix / "envs" / env_name
+        dependencies = yaml_content.get("dependencies", [])
+        conda_packages = []
+        for item in dependencies:
+            if isinstance(item, str):
+                conda_packages.append(item)
+        self.specs[env_name] = conda_packages
 
         create_conda_env_from_env_file(root_prefix, yaml_content, env_file.parent)
 
@@ -329,6 +354,18 @@ class XeusAddon(FederatedExtensionAddon):
             ],
         )
 
+    def update_empack_meta(self, file_path, new_data):
+        if file_path.exists():
+            with open(file_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        else:
+            data = {}
+
+        data.update(new_data)
+
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+
     def pack_prefix(self, env_name, prefix):
         env_dir = self.xeus_output_dir / env_name
         packages_dir = env_dir / "kernel_packages"
@@ -440,11 +477,17 @@ class XeusAddon(FederatedExtensionAddon):
                     actions=[(self.copy_one, [pkg_path, packages_dir / pkg_path.name])],
                 )
 
-        # copy the empack_env_meta.json
-        # (this is shared between multiple kernels in the same environment)
+        # write specs to empack_env_meta.json 
         yield dict(
-            name=f"xeus:{env_name}:copy_env_file:{EMPACK_ENV_META}",
+            name=f"xeus:{env_name}:update_env_file:{EMPACK_ENV_META}",
             actions=[
+                (
+                    self.update_empack_meta,
+                    [
+                        out_path / EMPACK_ENV_META,
+                        {"specs": self.specs[env_name]},
+                    ],
+                ),
                 (
                     self.copy_one,
                     [
@@ -453,6 +496,7 @@ class XeusAddon(FederatedExtensionAddon):
                     ],
                 )
             ],
+           
         )
 
     def copy_jupyterlab_extensions_from_prefix(self, prefix):
