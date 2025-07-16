@@ -2,6 +2,31 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.1.0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.0.5...2fcc394f0c5f7061ddb0693e4c22ff82b1fe9797))
+
+### Enhancements made
+
+- `%pip list` support and multiple bug fixes with `%conda install` [#264](https://github.com/jupyterlite/xeus/pull/264) ([@martinRenou](https://github.com/martinRenou))
+- Proper warning for pip uninstall of non-installed pkg [#263](https://github.com/jupyterlite/xeus/pull/263) ([@martinRenou](https://github.com/martinRenou))
+- Update mambajs: homogenize install and uninstall methods [#262](https://github.com/jupyterlite/xeus/pull/262) ([@martinRenou](https://github.com/martinRenou))
+- Match real pip's error message for uninstalling non-installed pkg [#261](https://github.com/jupyterlite/xeus/pull/261) ([@martinRenou](https://github.com/martinRenou))
+- Add ability to expose global variables to the worker [#255](https://github.com/jupyterlite/xeus/pull/255) ([@DerThorsten](https://github.com/DerThorsten))
+- Add package removing logic [#254](https://github.com/jupyterlite/xeus/pull/254) ([@AnastasiaSliusar](https://github.com/AnastasiaSliusar))
+
+### Bugs fixed
+
+- Fix support for kernels from the old beta.mamba.pm channel [#258](https://github.com/jupyterlite/xeus/pull/258) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-06-30&to=2025-07-16&type=c))
+
+[@AnastasiaSliusar](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AAnastasiaSliusar+updated%3A2025-06-30..2025-07-16&type=Issues) | [@DerThorsten](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3ADerThorsten+updated%3A2025-06-30..2025-07-16&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-06-30..2025-07-16&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.1.0a2
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.1.0-a1...d6ee3596ae75bcb562b027322e128da7a508c65a))
@@ -16,8 +41,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-07-08&to=2025-07-15&type=c))
 
 [@DerThorsten](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3ADerThorsten+updated%3A2025-07-08..2025-07-15&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-07-08..2025-07-15&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.1.0a1
 
