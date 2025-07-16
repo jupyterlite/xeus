@@ -9,7 +9,8 @@ import {
   parse,
   IInstallationCommandOptions,
   IUninstallationCommandOptions,
-  ICommandData
+  ICommandData,
+  IListCommandOptions
 } from '@emscripten-forge/mambajs-core';
 
 declare function createXeusModule(options: any): any;
@@ -250,7 +251,9 @@ export abstract class XeusRemoteKernelBase {
   /**
    * Implements dynamic installation of packages
    */
-  protected abstract listInstalledPackages(): Promise<void>;
+  protected abstract listInstalledPackages(
+    options: IListCommandOptions
+  ): Promise<void>;
 
   protected abstract uninstall(
     options: IUninstallationCommandOptions
@@ -276,7 +279,7 @@ export abstract class XeusRemoteKernelBase {
           await this.install(command.data as IInstallationCommandOptions);
           break;
         case 'list':
-          await this.listInstalledPackages();
+          await this.listInstalledPackages(command.data as IListCommandOptions);
           break;
         case 'remove': {
           await this.uninstall(command.data as IUninstallationCommandOptions);
