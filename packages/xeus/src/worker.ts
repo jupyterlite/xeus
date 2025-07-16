@@ -187,6 +187,10 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     });
   }
 
+  /**
+   * Process %conda install or %pip install commands
+   * @param options
+   */
   protected async install(options: IInstallationCommandOptions) {
     let env: IEnv;
 
@@ -209,6 +213,10 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     await this._reloadPackagesInFS(env);
   }
 
+  /**
+   * Process %conda remove or %pip uninstall commands
+   * @param options
+   */
   protected async uninstall(
     options: IUninstallationCommandOptions
   ): Promise<void> {
@@ -229,7 +237,8 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   }
 
   /**
-   * Implements dynamic installation of packages
+   * Process %conda list or %pip list commands
+   * @param options
    */
   protected listInstalledPackages(options: IListCommandOptions): Promise<void> {
     if (options.type === 'conda') {
