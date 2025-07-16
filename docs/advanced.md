@@ -44,8 +44,8 @@ This workflow usually starts with creating a local conda environment / prefix fo
 ```bash
 micromamba create -n xeus-python-dev \
     --platform=emscripten-wasm32 \
-    -c https://repo.prefix.dev/emscripten-forge-dev \
-    -c https://repo.prefix.dev/conda-forge \
+    -c https://prefix.dev/emscripten-forge-dev \
+    -c https://prefix.dev/conda-forge \
     --yes \
     "python>=3.11" pybind11 nlohmann_json pybind11_json numpy pytest \
     bzip2 sqlite zlib libffi xtl pyjs \
