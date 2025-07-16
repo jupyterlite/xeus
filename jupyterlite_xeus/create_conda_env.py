@@ -5,6 +5,7 @@ from subprocess import run as subprocess_run
 import os
 
 from ._pip import _install_pip_dependencies
+from .constants import DEFAULT_CHANNELS
 
 MICROMAMBA_COMMAND = shutil.which("micromamba")
 PLATFORM = "emscripten-wasm32"
@@ -35,7 +36,7 @@ def create_conda_env_from_env_file(root_prefix, env_file_content, env_file_locat
 
     # get the channels
     channels = env_file_content.get(
-        "channels", ["https://repo.prefix.dev/emscripten-forge-dev", "https://repo.prefix.dev/conda-forge"]
+        "channels", DEFAULT_CHANNELS
     )
 
     # get the specs

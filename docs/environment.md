@@ -13,8 +13,8 @@ Say you want to install `NumPy`, `Matplotlib` and `ipycanvas`, it can be done by
 ```yaml
 name: xeus-python-kernel
 channels:
-  - https://repo.prefix.dev/emscripten-forge-dev
-  - https://repo.prefix.dev/conda-forge
+  - https://prefix.dev/emscripten-forge-dev
+  - https://prefix.dev/conda-forge
 dependencies:
   - xeus-python
   - numpy
@@ -83,8 +83,8 @@ For example, if you were to install `ipycanvas` from PyPI, you would need to ins
 ```yaml
 name: xeus-python-kernel
 channels:
-  - https://repo.prefix.dev/emscripten-forge-dev
-  - https://repo.prefix.dev/conda-forge
+  - https://prefix.dev/emscripten-forge-dev
+  - https://prefix.dev/conda-forge
 dependencies:
   - xeus-python
   - numpy
@@ -100,8 +100,8 @@ a jupyterlite deployment in your Package documentation, allowing to test the ver
 ```yaml
 name: xeus-python-kernel
 channels:
-  - https://repo.prefix.dev/emscripten-forge-dev
-  - https://repo.prefix.dev/conda-forge
+  - https://prefix.dev/emscripten-forge-dev
+  - https://prefix.dev/conda-forge
 dependencies:
   - xeus-python
   - pip:

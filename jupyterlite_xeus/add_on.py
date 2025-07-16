@@ -28,8 +28,7 @@ from .create_conda_env import (
     create_conda_env_from_env_file,
     create_conda_env_from_specs,
 )
-from .constants import EXTENSION_NAME
-from .constants import EXTENSION_NAME
+from .constants import EXTENSION_NAME, DEFAULT_CHANNELS
 
 from empack.pack import (
     DEFAULT_CONFIG_PATH,
@@ -142,6 +141,7 @@ class XeusAddon(FederatedExtensionAddon):
         # create the prefixes if it does not exist
         self.prefixes = {}
         self.specs = {}
+        self.channels = {}
         if not self.prefix:
             for environment_file in self.environment_file:
                 env_name, prefix = self.create_prefix(Path(self.manager.lite_dir) / environment_file)
@@ -158,7 +158,8 @@ class XeusAddon(FederatedExtensionAddon):
                     raise ValueError(f"Environment name '{env_name}' used more than once")
                 self.prefixes[env_name] = prefix
                 self.specs[env_name] = self.get_environment_specs(prefix)
-            
+                # For lack of a better way for now
+                self.channels[env_name] = DEFAULT_CHANNELS
 
         all_kernels = []
         for env_name, prefix in self.prefixes.items():
@@ -209,6 +210,7 @@ class XeusAddon(FederatedExtensionAddon):
             if isinstance(item, str):
                 conda_packages.append(item)
         self.specs[env_name] = conda_packages
+        self.channels[env_name] = yaml_content.get("channels", [])
 
         create_conda_env_from_env_file(root_prefix, yaml_content, env_file.parent)
 
@@ -477,7 +479,7 @@ class XeusAddon(FederatedExtensionAddon):
                     actions=[(self.copy_one, [pkg_path, packages_dir / pkg_path.name])],
                 )
 
-        # write specs to empack_env_meta.json 
+        # write specs to empack_env_meta.json
         yield dict(
             name=f"xeus:{env_name}:update_env_file:{EMPACK_ENV_META}",
             actions=[
@@ -485,7 +487,7 @@ class XeusAddon(FederatedExtensionAddon):
                     self.update_empack_meta,
                     [
                         out_path / EMPACK_ENV_META,
-                        {"specs": self.specs[env_name]},
+                        {"specs": self.specs[env_name], "channels": self.channels[env_name]},
                     ],
                 ),
                 (
@@ -496,7 +498,7 @@ class XeusAddon(FederatedExtensionAddon):
                     ],
                 )
             ],
-           
+
         )
 
     def copy_jupyterlab_extensions_from_prefix(self, prefix):
