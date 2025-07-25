@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.1.2
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.1.1...3e363bf4a618a96f0b9ba963a740ed039a72ced0))
+
+### Bugs fixed
+
+- Fix incompatibility between xeus-cpp/xeus-r and scipy [#266](https://github.com/jupyterlite/xeus/pull/266) ([@arjxn-py](https://github.com/arjxn-py))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-07-17&to=2025-07-25&type=c))
+
+[@arjxn-py](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aarjxn-py+updated%3A2025-07-17..2025-07-25&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.1.1
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.1.0...df2afd7f390064b9380bbb7e8eb5152a2f0b4170))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-07-16&to=2025-07-17&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-07-16..2025-07-17&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.1.0
 
