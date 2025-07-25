@@ -115,7 +115,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     );
     const empackEnvMeta = (await fetchJson(packagesJsonUrl)) as IEmpackEnvMeta;
     this._env.specs = empackEnvMeta.specs ? empackEnvMeta.specs : [];
-    // @ts-expect-error: Remove this ignore for next mambajs release
     this._env.channels = empackEnvMeta.channels ? empackEnvMeta.channels : [];
 
     // Initialize installed packages from empack env meta
@@ -316,7 +315,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       logger: this.logger
     });
 
-    const { sharedLibs, paths } = await installPackagesToEmscriptenFS({
+    const { paths } = await installPackagesToEmscriptenFS({
       packages: newPackages,
       pkgRootUrl: this._pkgRootUrl,
       pythonVersion: this._pythonVersion,
