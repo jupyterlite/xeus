@@ -315,7 +315,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       logger: this.logger
     });
 
-    const { paths } = await installPackagesToEmscriptenFS({
+    const { sharedLibs, paths } = await installPackagesToEmscriptenFS({
       packages: newPackages,
       pkgRootUrl: this._pkgRootUrl,
       pythonVersion: this._pythonVersion,
@@ -324,6 +324,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       logger: this.logger
     });
     this._paths = { ...newPath, ...paths };
+    this._sharedLibs = sharedLibs;
 
     await this._maybeLoadSharedLibs();
 
