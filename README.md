@@ -46,7 +46,7 @@ Learn more about `jupyterlite-xeus` and test our live demo on https://jupyterlit
 Create the conda environment with `conda`/`mamba`/`micromamba` (replace `micromamba` with `conda` or `mamba` according to your preference):
 
 ```bash
-micromamba create -f environment-dev.yml -n xeus-lite-dev
+micromamba create -f environment-dev.yaml -n xeus-lite-dev
 ```
 
 Activate the environment:

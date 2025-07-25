@@ -8,7 +8,7 @@ import {
   bootstrapEmpackPackedEnvironment,
   bootstrapPython,
   getPythonVersion,
-  loadShareLibs,
+  loadSharedLibs,
   ISolvedPackages,
   installPackagesToEmscriptenFS,
   removePackagesFromEmscriptenFS,
@@ -115,7 +115,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     );
     const empackEnvMeta = (await fetchJson(packagesJsonUrl)) as IEmpackEnvMeta;
     this._env.specs = empackEnvMeta.specs ? empackEnvMeta.specs : [];
-    // @ts-expect-error: Remove this ignore for next mambajs release
     this._env.channels = empackEnvMeta.channels ? empackEnvMeta.channels : [];
 
     // Initialize installed packages from empack env meta
@@ -179,12 +178,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     }
 
     // Load shared libs
-    await loadShareLibs({
-      sharedLibs: this._sharedLibs,
-      prefix: this._prefix,
-      Module: this.Module,
-      logger: this.logger
-    });
+    await this._maybeLoadSharedLibs();
   }
 
   /**
@@ -330,15 +324,30 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       logger: this.logger
     });
     this._paths = { ...newPath, ...paths };
+    this._sharedLibs = sharedLibs;
 
-    await loadShareLibs({
-      sharedLibs,
-      prefix: this._prefix,
-      Module: this.Module,
-      logger: this.logger
-    });
+    await this._maybeLoadSharedLibs();
 
     this._env = newEnv;
+  }
+
+  private async _maybeLoadSharedLibs() {
+    // If we're running in the Python kernel, load all cpython shared libs beforehand
+    if (this._pythonVersion) {
+      const cpythonSharedLibs: TSharedLibsMap = {};
+      for (const pkgName of Object.keys(this._sharedLibs)) {
+        cpythonSharedLibs[pkgName] = this._sharedLibs[pkgName].filter(
+          sharedLib => sharedLib.includes('cpython-3')
+        );
+      }
+
+      await loadSharedLibs({
+        sharedLibs: cpythonSharedLibs,
+        prefix: '/',
+        Module: this.Module,
+        logger: this.logger
+      });
+    }
   }
 
   private _pythonVersion: number[] | undefined;
