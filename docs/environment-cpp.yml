@@ -1,6 +1,6 @@
 name: xeus-cpp-kernel-docs
 channels:
-  - https://prefix.dev/emscripten-forge-dev
-  - https://prefix.dev/conda-forge
+  - https://prefix.dev/channels/emscripten-forge-dev
+  - https://prefix.dev/channels/conda-forge
 dependencies:
   - xeus-cpp

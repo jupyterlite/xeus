@@ -1,7 +1,7 @@
 name: xeus-lite-wasm
 channels:
   - https://repo.mamba.pm/emscripten-forge
-  - https://prefix.dev/conda-forge
+  - https://prefix.dev/channels/conda-forge
 dependencies:
   - xeus-python
   - xeus-sqlite

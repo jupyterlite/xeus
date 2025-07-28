@@ -127,8 +127,8 @@ Once installed, you can create an `environment.yml` file at the root of your jup
 ```yaml
 name: xeus-kernels
 channels:
-  - https://prefix.dev/emscripten-forge-dev
-  - https://prefix.dev/conda-forge
+  - https://prefix.dev/channels/emscripten-forge-dev
+  - https://prefix.dev/channels/conda-forge
 dependencies:
   - xeus-python
   - xeus-lua
@@ -174,8 +174,8 @@ To create a deployment with multiple kernels, you can simply add them to the `en
 ```yaml
 name: xeus-lite-wasm
 channels:
-  - https://prefix.dev/emscripten-forge-dev
-  - https://prefix.dev/conda-forge
+  - https://prefix.dev/channels/emscripten-forge-dev
+  - https://prefix.dev/channels/conda-forge
 dependencies:
   - xeus-python
   - xeus-lua
