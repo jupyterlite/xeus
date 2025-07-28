@@ -30,6 +30,16 @@ def _extract_specs(env_location, env_data):
     return specs, pip_dependencies
 
 
+def hotfix_channels_links(channel):
+    if channel == 'https://prefix.dev/emscripten-forge-dev' or channel == 'https://repo.prefix.dev/emscripten-forge-dev':
+        return 'https://prefix.dev/channels/emscripten-forge-dev'
+
+    if channel == 'https://prefix.dev/conda-forge' or channel == 'https://repo.prefix.dev/conda-forge':
+        return 'https://prefix.dev/channels/conda-forge'
+
+    return channel
+
+
 def create_conda_env_from_env_file(root_prefix, env_file_content, env_file_location):
     # get the name of the environment
     env_name = env_file_content.get("name", "xeus-env")
@@ -38,6 +48,11 @@ def create_conda_env_from_env_file(root_prefix, env_file_content, env_file_locat
     channels = env_file_content.get(
         "channels", DEFAULT_CHANNELS
     )
+
+    # Fix old channels
+    channels = [
+        hotfix_channels_links(channel) for channel in channels
+    ]
 
     # get the specs
     specs, pip_dependencies = _extract_specs(env_file_location, env_file_content)
