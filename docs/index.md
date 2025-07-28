@@ -106,6 +106,10 @@ Try it here!
 :::
 ::::
 
+## Quickstart
+
+You can use the template repository https://github.com/jupyterlite/xeus-lite-demo to quickstart your own deployment of jupyterlite on Github pages including jupyterlite-xeus.
+
 ## Installation
 
 You can install `jupyterlite-xeus` with conda/mamba

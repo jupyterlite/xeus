@@ -17,6 +17,10 @@ Currently supported kernels are:
 - [xeus-nelson](https://github.com/jupyter-xeus/xeus-nelson)
 - [xeus-javascript](https://github.com/jupyter-xeus/xeus-javascript)
 
+## Quickstart
+
+You can use the template repository https://github.com/jupyterlite/xeus-lite-demo to quickstart your own deployment of jupyterlite on Github pages including jupyterlite-xeus.
+
 ## Requirements
 
 - JupyterLab >= 4.0.0
