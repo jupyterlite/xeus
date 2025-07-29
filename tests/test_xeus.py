@@ -93,7 +93,7 @@ def test_no_kernel_no_failure():
     manager = app.lite_manager
 
     addon = XeusAddon(manager)
-    addon.environment_file = "test_package/environment-4.yml"
+    addon.environment_file = "environment-4.yml"
 
     for step in addon.post_build(manager):
         pass
