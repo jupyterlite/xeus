@@ -165,7 +165,8 @@ class XeusAddon(FederatedExtensionAddon):
         for env_name, prefix in self.prefixes.items():
             # copy the kernels from the prefix
             kernels = yield from self.copy_kernels_from_prefix(env_name, prefix)
-            all_kernels.extend(kernels)
+            if kernels is not None:
+                all_kernels.extend(kernels)
 
             # copy the jupyterlab extensions
             yield from self.copy_jupyterlab_extensions_from_prefix(prefix)
