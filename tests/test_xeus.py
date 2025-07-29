@@ -87,6 +87,22 @@ def test_python_env_from_file_2():
         for step in addon.post_build(manager):
             pass
 
+def test_no_kernel_no_failure():
+    app = LiteStatusApp(log_level="DEBUG")
+    app.initialize()
+    manager = app.lite_manager
+
+    addon = XeusAddon(manager)
+    addon.environment_file = "test_package/environment-4.yml"
+
+    for step in addon.post_build(manager):
+        pass
+
+    # Test
+    env_name = "xeus-empty"
+    assert env_name in addon.prefixes
+    env_path = Path(addon.prefixes[env_name])
+    assert env_path.is_dir()
 
 def test_mount_point():
     app = LiteStatusApp(log_level="DEBUG")
