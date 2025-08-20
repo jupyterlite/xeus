@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.2.0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.1.2...1939fd8ecdbf43834cad408497686e903b786dfb))
+
+### Bugs fixed
+
+- Handle case where there is no kernel in the environment [#270](https://github.com/jupyterlite/xeus/pull/270) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Allow for JupyterLite 0.7 pre-releases [#271](https://github.com/jupyterlite/xeus/pull/271) ([@jtpio](https://github.com/jtpio))
+
+### Documentation improvements
+
+- Quickstart docs [#269](https://github.com/jupyterlite/xeus/pull/269) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-07-25&to=2025-08-20&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2025-07-25..2025-08-20&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-07-25..2025-08-20&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.1.2
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.1.1...3e363bf4a618a96f0b9ba963a740ed039a72ced0))
@@ -15,8 +39,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-07-17&to=2025-07-25&type=c))
 
 [@arjxn-py](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aarjxn-py+updated%3A2025-07-17..2025-07-25&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.1.1
 
