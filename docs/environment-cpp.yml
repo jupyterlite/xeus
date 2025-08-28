@@ -4,3 +4,4 @@ channels:
   - https://prefix.dev/conda-forge
 dependencies:
   - xeus-cpp
+  - symengine

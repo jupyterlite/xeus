@@ -332,22 +332,30 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   }
 
   private async _maybeLoadSharedLibs() {
-    // If we're running in the Python kernel, load all cpython shared libs beforehand
+    const toLoad: TSharedLibsMap = {};
+
+    // If we're running in the Python kernel, load all cpython shared libs beforehand,
+    // otherwise load everything but cpython shared libs
     if (this._pythonVersion) {
-      const cpythonSharedLibs: TSharedLibsMap = {};
       for (const pkgName of Object.keys(this._sharedLibs)) {
-        cpythonSharedLibs[pkgName] = this._sharedLibs[pkgName].filter(
+        toLoad[pkgName] = this._sharedLibs[pkgName].filter(
           sharedLib => sharedLib.includes('cpython-3')
         );
       }
-
-      await loadSharedLibs({
-        sharedLibs: cpythonSharedLibs,
-        prefix: '/',
-        Module: this.Module,
-        logger: this.logger
-      });
+    } else {
+      for (const pkgName of Object.keys(this._sharedLibs)) {
+        toLoad[pkgName] = this._sharedLibs[pkgName].filter(
+          sharedLib => !sharedLib.includes('cpython-3')
+        );
+      }
     }
+
+    await loadSharedLibs({
+      sharedLibs: toLoad,
+      prefix: '/',
+      Module: this.Module,
+      logger: this.logger
+    });
   }
 
   private _pythonVersion: number[] | undefined;
