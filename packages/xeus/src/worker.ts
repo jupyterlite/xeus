@@ -338,8 +338,8 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     // otherwise load everything but cpython shared libs
     if (this._pythonVersion) {
       for (const pkgName of Object.keys(this._sharedLibs)) {
-        toLoad[pkgName] = this._sharedLibs[pkgName].filter(
-          sharedLib => sharedLib.includes('cpython-3')
+        toLoad[pkgName] = this._sharedLibs[pkgName].filter(sharedLib =>
+          sharedLib.includes('cpython-3')
         );
       }
     } else {
