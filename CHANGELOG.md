@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.2.2
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.2.1...c56cf4213a297806b39704a210f01a352a9b7ba7))
+
+### Bugs fixed
+
+- Fix shared libs loading + adding more advanced tests [#276](https://github.com/jupyterlite/xeus/pull/276) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-08-28&to=2025-09-01&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-08-28..2025-09-01&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.2.1
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.2.0...70f134bc0fd806346d736418abda0c4a70b12d53))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-08-20&to=2025-08-28&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-08-20..2025-08-28&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.2.0
 
