@@ -1,4 +1,4 @@
-name: env3
+name: env-javascript
 channels:
   - https://repo.mamba.pm/emscripten-forge
   - conda-forge

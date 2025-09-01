@@ -39,11 +39,45 @@ test.describe('General Tests', () => {
     }
   });
 
-  test('xeus-python should execute some code', async ({ page }) => {
+  test('xeus-cpp should execute code', async ({ page }) => {
+    await page.goto('lab/index.html');
+
+    let notebook = 'cpp.ipynb';
+
+    await page.notebook.open(notebook);
+    await page.notebook.runCellByCell();
+
+    notebook = 'cpp-third-party-libs.ipynb';
+
+    await page.notebook.open(notebook);
+    await page.notebook.runCellByCell();
+  });
+
+  test('xeus-python should execute code', async ({ page }) => {
+    await page.goto('lab/index.html');
+
+    const notebook = 'Lorenz.ipynb';
+
+    await page.notebook.open(notebook);
+    await page.notebook.runCellByCell();
+  });
+
+  test('xeus-r should execute code', async ({ page }) => {
+    await page.goto('lab/index.html');
+
+    const notebook = 'r.ipynb';
+
+    await page.notebook.open(notebook);
+    await page.notebook.runCellByCell();
+  });
+
+  test('(Multi-kernels test) xeus-python from env-default should execute some code', async ({
+    page
+  }) => {
     await page.goto('lab/index.html');
 
     const xpython = page
-      .locator('[title="Python 3.13 (XPython) [env1]"]')
+      .locator('[title="Python 3.13 (XPython) [env-python]"]')
       .first();
     await xpython.click();
 
@@ -63,20 +97,20 @@ test.describe('General Tests', () => {
     );
   });
 
-  test('should support the same kernel from a second environment', async ({
+  test('(Multi-kernels test) xeus-python from env-python have packages', async ({
     page
   }) => {
     await page.goto('lab/index.html');
 
     const xpython = page
-      .locator('[title="Python 3.13 (XPython) [env2]"]')
+      .locator('[title="Python 3.13 (XPython) [env-default]"]')
       .first();
     await xpython.click();
 
     // Wait for kernel to be idle
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
-    // xeus-python from env2 does not have bqplot installed.
+    // xeus-python from env-default does not have bqplot installed.
     await page.notebook.addCell('code', 'import bqplot');
     await page.notebook.runCell(1);
 
@@ -95,7 +129,7 @@ test.describe('General Tests', () => {
 
     // Create a Python notebook
     const xpython = page
-      .locator('[title="Python 3.13 (XPython) [env1]"]')
+      .locator('[title="Python 3.13 (XPython) [env-default]"]')
       .first();
     await xpython.click();
 
@@ -115,7 +149,7 @@ test.describe('General Tests', () => {
 
     // Create a Python notebook
     const xpython = page
-      .locator('[title="Python 3.13 (XPython) [env2]"]')
+      .locator('[title="Python 3.13 (XPython) [env-default]"]')
       .first();
     await xpython.click();
 
@@ -155,7 +189,7 @@ test.describe('General Tests', () => {
 
     // Create a Python notebook
     const xpython = page
-      .locator('[title="Python 3.13 (XPython) [env2]"]')
+      .locator('[title="Python 3.13 (XPython) [env-default]"]')
       .first();
     await xpython.click();
 
@@ -182,7 +216,7 @@ test.describe('General Tests', () => {
 
     // Create a Python notebook
     const xpython = page
-      .locator('[title="Python 3.13 (XPython) [env2]"]')
+      .locator('[title="Python 3.13 (XPython) [env-default]"]')
       .first();
     await xpython.click();
 
