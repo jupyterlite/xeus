@@ -1,6 +1,11 @@
-name: xeus-cpp-kernel-docs
+name: env-python
 channels:
   - https://prefix.dev/emscripten-forge-dev
   - https://prefix.dev/conda-forge
 dependencies:
-  - xeus-cpp
+  - xeus-python
+  - scipy
+  - numpy
+  - matplotlib
+  - bqplot
+  - ipywidgets

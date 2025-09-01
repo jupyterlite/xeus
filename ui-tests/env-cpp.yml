@@ -1,11 +1,9 @@
-name: env1
+name: env-cpp
 channels:
   - https://prefix.dev/emscripten-forge-dev
   - https://prefix.dev/conda-forge
 dependencies:
-  - xeus-python
-  - xeus-lua
-  - xeus-r
   - xeus-cpp
-  - pandas
-  - bqplot
+  - symengine
+  - xtensor-blas
+  - xsimd
