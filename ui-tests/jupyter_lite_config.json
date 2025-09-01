@@ -3,6 +3,12 @@
     "output_dir": "dist"
   },
   "XeusAddon": {
-    "environment_file": ["env1.yml", "env2.yml", "env3.yml"]
+    "environment_file": [
+      "env-default.yml",
+      "env-cpp.yml",
+      "env-javascript.yml",
+      "env-python.yml",
+      "env-r.yml"
+    ]
   }
 }
