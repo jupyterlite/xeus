@@ -6,12 +6,12 @@ async function runAndCheckNotebook(page: any, notebook: string) {
   await page.notebook.open(notebook);
   expect(await page.notebook.runCellByCell()).toBeTruthy();
 
-  // const nCells = await page.notebook.getCellCount();
+  const nCells = await page.notebook.getCellCount();
 
-  // for (let cellIdx = 0; cellIdx < nCells; cellIdx++) {
-  //   const output = await page.notebook.getCellTextOutput(cellIdx);
-  //   expect(output).toBeTruthy();
-  // }
+  for (let cellIdx = 0; cellIdx < nCells; cellIdx++) {
+    // @ts-expect-error: missing typing for galata
+    expect(window.galata.haveBeenExecuted(cellIdx));
+  }
 }
 
 test.describe('General Tests', () => {
