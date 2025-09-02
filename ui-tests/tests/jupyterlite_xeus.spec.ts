@@ -7,7 +7,21 @@ async function runAndCheckNotebook(
   notebook: string
 ) {
   await page.notebook.open(notebook);
-  expect(await page.notebook.runCellByCell()).toBeTruthy();
+
+  // Wait for the notebook to be ready
+  await page.waitForSelector('.jp-Notebook.jp-mod-commandMode');
+
+  // Execute "Restart Kernel and Run All Cells..."
+  // This is stupid that we have to do this really, but this is the only way
+  // I found to get galata to stop the execution upon error and detect an error
+  await page.menu.clickMenuItem('Kernel>Restart Kernel and Run All Cells…');
+  await page.getByRole('button', { name: 'Confirm Kernel Restart' }).click();
+
+  // Wait for the notebook to be in command mode after restart
+  await page.waitForSelector('.jp-Notebook.jp-mod-commandMode');
+
+  // Verify the kernel status shows it's idle (not busy)
+  await page.locator('.jp-KernelStatus-success').waitFor();
 
   expect(
     await page.evaluate(() => {
@@ -64,16 +78,12 @@ test.describe('General Tests', () => {
     await page.goto('lab/index.html');
 
     await runAndCheckNotebook(page, 'Lorenz.ipynb');
-
-    expect('3').toBeNull();
   });
 
   test('xeus-r should execute code', async ({ page }) => {
     await page.goto('lab/index.html');
 
     await runAndCheckNotebook(page, 'r.ipynb');
-
-    expect('3').toBeNull();
   });
 
   test('(Multi-kernels test) xeus-python from env-default should execute some code', async ({
