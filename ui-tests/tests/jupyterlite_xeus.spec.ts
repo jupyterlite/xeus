@@ -10,7 +10,9 @@ async function runAndCheckNotebook(
 
   await page.notebook.runCellByCell();
 
-  const stderrElements = page.locator('[data-mime-type="application/vnd.jupyter.stderr"]');
+  const stderrElements = page.locator(
+    '[data-mime-type="application/vnd.jupyter.stderr"]'
+  );
   await expect(stderrElements).toHaveCount(0);
 }
 
