@@ -4,7 +4,7 @@ import { expect } from '@playwright/test';
 
 async function runAndCheckNotebook(page: any, notebook: string) {
   await page.notebook.open(notebook);
-  await page.notebook.runCellByCell();
+  expect(await page.notebook.runCellByCell()).toBeTruthy();
 
   // const nCells = await page.notebook.getCellCount();
 
