@@ -8,26 +8,10 @@ async function runAndCheckNotebook(
 ) {
   await page.notebook.open(notebook);
 
-  // Wait for the notebook to be ready
-  await page.waitForSelector('.jp-Notebook.jp-mod-commandMode');
+  await page.notebook.runCellByCell();
 
-  // Execute "Restart Kernel and Run All Cells..."
-  // This is stupid that we have to do this really, but this is the only way
-  // I found to get galata to stop the execution upon error and detect an error
-  await page.menu.clickMenuItem('Kernel>Restart Kernel and Run All Cells…');
-  await page.getByRole('button', { name: 'Confirm Kernel Restart' }).click();
-
-  // Wait for the notebook to be in command mode after restart
-  await page.waitForSelector('.jp-Notebook.jp-mod-commandMode');
-
-  // Verify the kernel status shows it's idle (not busy)
-  await page.locator('.jp-KernelStatus-success').waitFor();
-
-  expect(
-    await page.evaluate(() => {
-      return Promise.resolve(window.galata.haveBeenExecuted());
-    })
-  ).toBeTruthy();
+  const stderrElements = page.locator('[data-mime-type="application/vnd.jupyter.stderr"]');
+  await expect(stderrElements).toHaveCount(0);
 }
 
 test.describe('General Tests', () => {
