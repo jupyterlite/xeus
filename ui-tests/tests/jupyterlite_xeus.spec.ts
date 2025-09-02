@@ -2,6 +2,18 @@ import { test } from '@jupyterlab/galata';
 
 import { expect } from '@playwright/test';
 
+async function runAndCheckNotebook(page: any, notebook: string) {
+  await page.notebook.open(notebook);
+  await page.notebook.runCellByCell();
+
+  const nCells = await page.notebook.getCellCount();
+
+  for (let cellIdx = 0; cellIdx < nCells; cellIdx++) {
+    const output = await page.notebook.getCellTextOutput(cellIdx);
+    expect(output).toBeTruthy();
+  }
+}
+
 test.describe('General Tests', () => {
   test.beforeEach(({ page }) => {
     page.setDefaultTimeout(600000);
@@ -42,33 +54,20 @@ test.describe('General Tests', () => {
   test('xeus-cpp should execute code', async ({ page }) => {
     await page.goto('lab/index.html');
 
-    let notebook = 'cpp.ipynb';
-
-    await page.notebook.open(notebook);
-    await page.notebook.runCellByCell();
-
-    notebook = 'cpp-third-party-libs.ipynb';
-
-    await page.notebook.open(notebook);
-    await page.notebook.runCellByCell();
+    await runAndCheckNotebook(page, 'cpp.ipynb')
+    await runAndCheckNotebook(page, 'cpp-third-party-libs.ipynb')
   });
 
   test('xeus-python should execute code', async ({ page }) => {
     await page.goto('lab/index.html');
 
-    const notebook = 'Lorenz.ipynb';
-
-    await page.notebook.open(notebook);
-    await page.notebook.runCellByCell();
+    await runAndCheckNotebook(page, 'Lorenz.ipynb')
   });
 
   test('xeus-r should execute code', async ({ page }) => {
     await page.goto('lab/index.html');
 
-    const notebook = 'r.ipynb';
-
-    await page.notebook.open(notebook);
-    await page.notebook.runCellByCell();
+    await runAndCheckNotebook(page, 'r.ipynb')
   });
 
   test('(Multi-kernels test) xeus-python from env-default should execute some code', async ({
