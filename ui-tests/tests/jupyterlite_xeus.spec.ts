@@ -9,15 +9,11 @@ async function runAndCheckNotebook(
   await page.notebook.open(notebook);
   expect(await page.notebook.runCellByCell()).toBeTruthy();
 
-  const nCells = await page.notebook.getCellCount();
-
-  for (let cellIdx = 0; cellIdx < nCells; cellIdx++) {
-    expect(
-      await page.evaluate(cellIdx => {
-        return Promise.resolve(window.galata.haveBeenExecuted(cellIdx));
-      }, cellIdx)
-    ).toBeTruthy();
-  }
+  expect(
+    await page.evaluate(() => {
+      return Promise.resolve(window.galata.haveBeenExecuted());
+    })
+  ).toBeTruthy();
 }
 
 test.describe('General Tests', () => {
@@ -68,12 +64,16 @@ test.describe('General Tests', () => {
     await page.goto('lab/index.html');
 
     await runAndCheckNotebook(page, 'Lorenz.ipynb');
+
+    expect('3').toBeNull();
   });
 
   test('xeus-r should execute code', async ({ page }) => {
     await page.goto('lab/index.html');
 
     await runAndCheckNotebook(page, 'r.ipynb');
+
+    expect('3').toBeNull();
   });
 
   test('(Multi-kernels test) xeus-python from env-default should execute some code', async ({
