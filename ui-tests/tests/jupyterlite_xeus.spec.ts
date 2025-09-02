@@ -1,16 +1,22 @@
-import { test } from '@jupyterlab/galata';
+import { IJupyterLabPageFixture, test } from '@jupyterlab/galata';
 
 import { expect } from '@playwright/test';
 
-async function runAndCheckNotebook(page: any, notebook: string) {
+async function runAndCheckNotebook(
+  page: IJupyterLabPageFixture,
+  notebook: string
+) {
   await page.notebook.open(notebook);
   expect(await page.notebook.runCellByCell()).toBeTruthy();
 
   const nCells = await page.notebook.getCellCount();
 
   for (let cellIdx = 0; cellIdx < nCells; cellIdx++) {
-    // @ts-expect-error: missing typing for galata
-    expect(window.galata.haveBeenExecuted(cellIdx));
+    expect(
+      await page.evaluate(cellIdx => {
+        return Promise.resolve(window.galata.haveBeenExecuted(cellIdx));
+      }, cellIdx)
+    ).toBeTruthy();
   }
 }
 
