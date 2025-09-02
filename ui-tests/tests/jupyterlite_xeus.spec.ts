@@ -54,20 +54,20 @@ test.describe('General Tests', () => {
   test('xeus-cpp should execute code', async ({ page }) => {
     await page.goto('lab/index.html');
 
-    await runAndCheckNotebook(page, 'cpp.ipynb')
-    await runAndCheckNotebook(page, 'cpp-third-party-libs.ipynb')
+    await runAndCheckNotebook(page, 'cpp.ipynb');
+    await runAndCheckNotebook(page, 'cpp-third-party-libs.ipynb');
   });
 
   test('xeus-python should execute code', async ({ page }) => {
     await page.goto('lab/index.html');
 
-    await runAndCheckNotebook(page, 'Lorenz.ipynb')
+    await runAndCheckNotebook(page, 'Lorenz.ipynb');
   });
 
   test('xeus-r should execute code', async ({ page }) => {
     await page.goto('lab/index.html');
 
-    await runAndCheckNotebook(page, 'r.ipynb')
+    await runAndCheckNotebook(page, 'r.ipynb');
   });
 
   test('(Multi-kernels test) xeus-python from env-default should execute some code', async ({
