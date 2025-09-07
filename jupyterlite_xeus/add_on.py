@@ -474,7 +474,7 @@ class XeusAddon(FederatedExtensionAddon):
         # copy all the packages to the packages dir
         # (this is shared between multiple kernels in the same environment)
         for pkg_path in out_path.iterdir():
-            if pkg_path.name.endswith(".tar.gz"):
+            if pkg_path.name.endswith(".tar.gz") or pkg_path.name.endswith(".sqshfs"):
                 yield dict(
                     name=f"xeus:{env_name}:copy:{pkg_path.name}",
                     actions=[(self.copy_one, [pkg_path, packages_dir / pkg_path.name])],
