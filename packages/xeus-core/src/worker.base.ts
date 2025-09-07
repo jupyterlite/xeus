@@ -178,7 +178,7 @@ export abstract class XeusRemoteKernelBase {
       this.xkernel.start();
     } catch (e) {
       if (typeof e === 'number') {
-        const msg = this.Module.get_exception_message(e);
+        const msg = await this.Module.get_exception_message(e);
         this.logger.error(msg);
         throw new Error(msg);
       } else {
