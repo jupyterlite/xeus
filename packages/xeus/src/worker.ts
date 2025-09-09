@@ -241,7 +241,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     const { sharedLibs, paths } = await updatePackagesInEmscriptenFS({
       newLock,
       oldLock: this._lock,
-      pkgRootUrl: this._pkgRootUrl,
       pythonVersion: this._pythonVersion,
       Module: this.Module,
       untarjs: this._untarjs,
