@@ -105,7 +105,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     );
 
     const empackEnvMetaLocation = empackEnvMetaLink || kernelRootUrl;
-    const packagesJsonUrl = `${empackEnvMetaLocation}/empack_lock_meta.json`;
+    const packagesJsonUrl = `${empackEnvMetaLocation}/empack_env_meta.json`;
     this._pkgRootUrl = URLExt.join(
       baseUrl,
       `xeus/${kernelSpec.envName}/kernel_packages`
