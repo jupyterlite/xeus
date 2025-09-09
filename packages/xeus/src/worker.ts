@@ -9,23 +9,20 @@ import {
   bootstrapPython,
   getPythonVersion,
   loadSharedLibs,
-  ISolvedPackages,
-  installPackagesToEmscriptenFS,
-  removePackagesFromEmscriptenFS,
   showPackagesList,
   TSharedLibsMap,
-  ISolvedPackage,
   install,
   pipInstall,
   pipUninstall,
   remove
 } from '@emscripten-forge/mambajs';
 import {
-  IEnv,
+  ILock,
   IInstallationCommandOptions,
   IListCommandOptions,
   IUninstallationCommandOptions,
-  showPipPackagesList
+  showPipPackagesList,
+  updatePackagesInEmscriptenFS
 } from '@emscripten-forge/mambajs-core';
 import { IUnpackJSAPI } from '@emscripten-forge/untarjs';
 import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
@@ -108,28 +105,12 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     );
 
     const empackEnvMetaLocation = empackEnvMetaLink || kernelRootUrl;
-    const packagesJsonUrl = `${empackEnvMetaLocation}/empack_env_meta.json`;
+    const packagesJsonUrl = `${empackEnvMetaLocation}/empack_lock_meta.json`;
     this._pkgRootUrl = URLExt.join(
       baseUrl,
       `xeus/${kernelSpec.envName}/kernel_packages`
     );
     const empackEnvMeta = (await fetchJson(packagesJsonUrl)) as IEmpackEnvMeta;
-    this._env.specs = empackEnvMeta.specs ? empackEnvMeta.specs : [];
-    this._env.channels = empackEnvMeta.channels ? empackEnvMeta.channels : [];
-
-    // Initialize installed packages from empack env meta
-    empackEnvMeta.packages.map(pkg => {
-      this._env.packages.condaPackages[pkg.filename] = {
-        name: pkg.name,
-        version: pkg.version,
-        repo_url: pkg.channel ? pkg.channel : '',
-        url: pkg.url ? pkg.url : '',
-        repo_name: pkg.channel ? pkg.channel : '',
-        build_string: pkg.build,
-        subdir: pkg.subdir ? pkg.subdir : '',
-        depends: pkg.depends ? pkg.depends : []
-      };
-    });
 
     this._pythonVersion = getPythonVersion(empackEnvMeta.packages);
     this._prefix = empackEnvMeta.prefix;
@@ -145,6 +126,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     this._paths = bootstrapped.paths;
     this._untarjs = bootstrapped.untarjs;
     this._sharedLibs = bootstrapped.sharedLibs;
+    this._lock = bootstrapped.lock;
   }
 
   /**
@@ -191,20 +173,20 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
    * @param options
    */
   protected async install(options: IInstallationCommandOptions) {
-    let env: IEnv;
+    let env: ILock;
 
     switch (options.type) {
       case 'conda': {
         env = await install(
           options.specs,
-          this._env,
+          this._lock,
           options.channels,
           this.logger
         );
         break;
       }
       case 'pip': {
-        env = await pipInstall(options.specs, this._env, this.logger);
+        env = await pipInstall(options.specs, this._lock, this.logger);
         break;
       }
     }
@@ -219,15 +201,15 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   protected async uninstall(
     options: IUninstallationCommandOptions
   ): Promise<void> {
-    let env: IEnv;
+    let env: ILock;
 
     switch (options.type) {
       case 'conda': {
-        env = await remove(options.specs, this._env, this.logger);
+        env = await remove(options.specs, this._lock, this.logger);
         break;
       }
       case 'pip': {
-        env = await pipUninstall(options.specs, this._env, this.logger);
+        env = await pipUninstall(options.specs, this._lock, this.logger);
         break;
       }
     }
@@ -243,92 +225,30 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     if (options.type === 'conda') {
       showPackagesList(
         {
-          ...this._env.packages.condaPackages,
-          ...this._env.packages.pipPackages
+          packages: this._lock.packages,
+          pipPackages: this._lock.pipPackages
         },
         this.logger
       );
     } else {
-      showPipPackagesList(this._env.packages.pipPackages, this.logger);
+      showPipPackagesList(this._lock.pipPackages, this.logger);
     }
 
     return Promise.resolve();
   }
 
-  private async _reloadPackagesInFS(newEnv: IEnv) {
-    const removedPackages: ISolvedPackages = {};
-    const newPackages: ISolvedPackages = {};
-
-    const newInstalledPackages = {
-      ...newEnv.packages.condaPackages,
-      ...newEnv.packages.pipPackages
-    };
-    const installedPackages = {
-      ...this._env.packages.condaPackages,
-      ...this._env.packages.pipPackages
-    };
-
-    // First create structures we can quickly inspect
-    const newInstalledPackagesMap: { [name: string]: ISolvedPackage } = {};
-    for (const newInstalledPkg of Object.values(newInstalledPackages)) {
-      newInstalledPackagesMap[newInstalledPkg.name] = newInstalledPkg;
-    }
-    const oldInstalledPackagesMap: { [name: string]: ISolvedPackage } = {};
-    for (const oldInstalledPkg of Object.values(installedPackages)) {
-      oldInstalledPackagesMap[oldInstalledPkg.name] = oldInstalledPkg;
-    }
-
-    // Compare old installed packages with new ones
-    for (const filename of Object.keys(installedPackages)) {
-      const installedPkg = installedPackages[filename];
-
-      // Exact same build of the package already installed
-      if (
-        installedPkg.name in newInstalledPackagesMap &&
-        installedPkg.build_string ===
-          newInstalledPackagesMap[installedPkg.name].build_string &&
-        installedPkg.version ===
-          newInstalledPackagesMap[installedPkg.name].version
-      ) {
-        continue;
-      }
-
-      removedPackages[filename] = installedPkg;
-    }
-
-    // Compare new installed packages with old ones
-    for (const filename of Object.keys(newInstalledPackages)) {
-      const newPkg = newInstalledPackages[filename];
-
-      // Exact same build of the package already installed
-      if (
-        newPkg.name in oldInstalledPackagesMap &&
-        newPkg.build_string ===
-          oldInstalledPackagesMap[newPkg.name].build_string &&
-        newPkg.version === oldInstalledPackagesMap[newPkg.name].version
-      ) {
-        continue;
-      }
-
-      newPackages[filename] = newPkg;
-    }
-
-    const newPath = await removePackagesFromEmscriptenFS({
-      removedPackages,
-      Module: this.Module,
-      paths: this._paths,
-      logger: this.logger
-    });
-
-    const { sharedLibs, paths } = await installPackagesToEmscriptenFS({
-      packages: newPackages,
+  private async _reloadPackagesInFS(newLock: ILock) {
+    const { sharedLibs, paths } = await updatePackagesInEmscriptenFS({
+      newLock,
+      oldLock: this._lock,
       pkgRootUrl: this._pkgRootUrl,
       pythonVersion: this._pythonVersion,
       Module: this.Module,
       untarjs: this._untarjs,
-      logger: this.logger
+      logger: this.logger,
+      paths: this._paths
     });
-    this._paths = { ...newPath, ...paths };
+    this._paths = paths;
     this._sharedLibs = sharedLibs;
 
     await loadSharedLibs({
@@ -338,7 +258,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       logger: this.logger
     });
 
-    this._env = newEnv;
+    this._lock = newLock;
   }
 
   private _pythonVersion: number[] | undefined;
@@ -347,14 +267,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   private _pkgRootUrl = '';
 
   private _sharedLibs: TSharedLibsMap;
-  private _env: IEnv = {
-    packages: {
-      condaPackages: {},
-      pipPackages: {}
-    },
-    channels: [],
-    specs: []
-  };
+  private _lock: ILock;
   private _paths = {};
 
   private _untarjs: IUnpackJSAPI | undefined;
