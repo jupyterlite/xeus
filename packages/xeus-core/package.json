@@ -1,6 +1,6 @@
 {
     "name": "@jupyterlite/xeus-core",
-    "version": "4.2.2",
+    "version": "4.3.0-a0",
     "description": "JupyterLite Xeus core library",
     "keywords": [
         "jupyter",
