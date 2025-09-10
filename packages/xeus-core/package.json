@@ -36,9 +36,9 @@
         "@emscripten-forge/mambajs-core": "^0.17.0-alpha.5",
         "@jupyterlab/coreutils": "^6.4.2",
         "@jupyterlab/services": "^7.4.2",
-        "@jupyterlite/contents": "^0.6.0",
-        "@jupyterlite/kernel": "^0.6.0",
-        "@jupyterlite/server": "^0.6.0",
+        "@jupyterlite/contents": "^0.7.0-alpha.5",
+        "@jupyterlite/kernel": "^0.7.0-alpha.5",
+        "@jupyterlite/server": "^0.7.0-alpha.5",
         "@lumino/coreutils": "^2",
         "@lumino/signaling": "^2"
     },
