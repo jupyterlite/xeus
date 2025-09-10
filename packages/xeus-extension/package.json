@@ -41,10 +41,10 @@
         "watch:labextension": "jupyter labextension watch ."
     },
     "dependencies": {
-        "@jupyterlab/application": "^4.4.2",
-        "@jupyterlab/coreutils": "^6.4.2",
-        "@jupyterlab/logconsole": "^4.4.2",
-        "@jupyterlab/notebook": "^4.4.2",
+        "@jupyterlab/application": "^4.5.0-alpha.3",
+        "@jupyterlab/coreutils": "^6.5.0-alpha.3",
+        "@jupyterlab/logconsole": "^4.5.0-alpha.3",
+        "@jupyterlab/notebook": "^4.5.0-alpha.3",
         "@jupyterlite/contents": "^0.7.0-alpha.5",
         "@jupyterlite/kernel": "^0.7.0-alpha.5",
         "@jupyterlite/server": "^0.7.0-alpha.5",
