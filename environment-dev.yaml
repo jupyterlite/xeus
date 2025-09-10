@@ -7,7 +7,6 @@ dependencies:
   - hatch-jupyter-builder
   - hatch-nodejs-version
   - jupyterlab >=4.0
-  - jupyterlite-core
   - mamba <2
   - nodejs
   - pip
@@ -19,4 +18,5 @@ dependencies:
   - typer
   - yarn=3
   - pip:
+    - jupyterlite-core >=0.7.0a5,<0.8.0
     - empack >=5.1.1
