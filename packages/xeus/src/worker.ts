@@ -247,7 +247,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       paths: this._paths
     });
     this._paths = paths;
-    this._sharedLibs = sharedLibs;
+    this._sharedLibs = this._filterOutXeusShared(sharedLibs);
 
     await loadSharedLibs({
       sharedLibs: this._sharedLibs,
@@ -257,6 +257,19 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     });
 
     this._lock = newLock;
+  }
+
+  /**
+   * Remove libxeus.so from the shared libs that we load dynamically
+   */
+  private _filterOutXeusShared(input: TSharedLibsMap): TSharedLibsMap {
+    const sharedLibs: TSharedLibsMap = {};
+
+    for (const pkg of Object.keys(input)) {
+      sharedLibs[pkg] = input[pkg].filter(lib => !lib.endsWith('libxeus.so'));
+    }
+
+    return sharedLibs;
   }
 
   private _pythonVersion: number[] | undefined;
