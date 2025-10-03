@@ -416,24 +416,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs-core@npm:^0.17.0-alpha.5":
-  version: 0.17.0-alpha.5
-  resolution: "@emscripten-forge/mambajs-core@npm:0.17.0-alpha.5"
+"@emscripten-forge/mambajs-core@npm:^0.18.0, @emscripten-forge/mambajs-core@npm:^0.18.1":
+  version: 0.18.1
+  resolution: "@emscripten-forge/mambajs-core@npm:0.18.1"
   dependencies:
     "@emscripten-forge/untarjs": ^5.3.0
     yaml: ^2.7.0
-  checksum: 19c524690174576e1960e0f1bed8604b8bf08b5cddcc7329e7e400945ce538461aa47efe8679af35a2923ff21e5ea71f59adcd97ba980a19a276499d7469315f
+  checksum: bc17b19edfc195a57a4339f2e6229aba0cedecc6b6c111f701a706aa1f8946e6a403b3784851642af6768cbb10c2d651c1bfa1adad6659dab0503320d59f888b
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.17.0-alpha.5":
-  version: 0.17.0-alpha.5
-  resolution: "@emscripten-forge/mambajs@npm:0.17.0-alpha.5"
+"@emscripten-forge/mambajs@npm:^0.18.0":
+  version: 0.18.1
+  resolution: "@emscripten-forge/mambajs@npm:0.18.1"
   dependencies:
     "@conda-org/rattler": ^0.3.1
-    "@emscripten-forge/mambajs-core": ^0.17.0-alpha.5
+    "@emscripten-forge/mambajs-core": ^0.18.1
     yaml: ^2.7.0
-  checksum: f7526c36dec3df2638d65c66ee354fc38e67da10d8ca1db331f4b11e28a9670ec5b29f15a644d5ef2db16610cad6ea2a4bb854586272fc80ed09663b957bdd96
+  checksum: 5bf6785021c0bdb1bb22aa8e6d578c61094b34eb3a1db6a0303d860730157a6cacf4394da8d6ad224f56716ee1aadb5005283dc6c6b60e181f7500fe52353f14
   languageName: node
   linkType: hard
 
@@ -1479,7 +1479,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus-core@workspace:packages/xeus-core"
   dependencies:
-    "@emscripten-forge/mambajs-core": ^0.17.0-alpha.5
+    "@emscripten-forge/mambajs-core": ^0.18.0
     "@jupyterlab/coreutils": ^6.5.0-alpha.3
     "@jupyterlab/services": ^7.5.0-alpha.3
     "@jupyterlite/contents": ^0.7.0-alpha.5
@@ -1549,7 +1549,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.17.0-alpha.5
+    "@emscripten-forge/mambajs": ^0.18.0
     "@jupyterlab/coreutils": ^6.5.0-alpha.3
     "@jupyterlab/services": ^7.5.0-alpha.3
     "@jupyterlite/contents": ^0.7.0-alpha.5
