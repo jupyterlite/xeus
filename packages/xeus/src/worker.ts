@@ -7,7 +7,6 @@ import {
   IEmpackEnvMeta,
   bootstrapEmpackPackedEnvironment,
   bootstrapPython,
-  getPythonVersion,
   loadSharedLibs,
   showPackagesList,
   TSharedLibsMap,
@@ -112,7 +111,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     );
     const empackEnvMeta = (await fetchJson(packagesJsonUrl)) as IEmpackEnvMeta;
 
-    this._pythonVersion = getPythonVersion(empackEnvMeta.packages);
     this._prefix = empackEnvMeta.prefix;
 
     const bootstrapped = await bootstrapEmpackPackedEnvironment({
@@ -124,6 +122,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     });
 
     this._paths = bootstrapped.paths;
+    this._pythonVersion = bootstrapped.pythonVersion;
     this._untarjs = bootstrapped.untarjs;
     this._sharedLibs = bootstrapped.sharedLibs;
     this._lock = bootstrapped.lock;
