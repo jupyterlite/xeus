@@ -57,7 +57,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         : {};
 
     // Save .so files the kernel links against
-    Object.values(sharedLibs).forEach(this._kernelSharedLibs.add);
+    Object.values(sharedLibs).forEach(lib => this._kernelSharedLibs.add(lib));
     this._kernelSharedLibs.add('lib/libxeus.so');
 
     importScripts(binaryJS);
