@@ -51,10 +51,14 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     const binaryDATA = binaryJS.replace('.js', '.data');
     const kernelRootUrl = URLExt.join(baseUrl, 'xeus', kernelSpec.envName);
 
-    const sharedLibs =
+    const sharedLibs: { [lib: string]: string } =
       kernelSpec.metadata && kernelSpec.metadata.shared
         ? kernelSpec.metadata.shared
         : {};
+
+    // Save .so files the kernel links against
+    Object.values(sharedLibs).forEach(this._kernelSharedLibs.add);
+    this._kernelSharedLibs.add('lib/libxeus.so');
 
     importScripts(binaryJS);
     return {
@@ -246,8 +250,16 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       logger: this.logger,
       paths: this._paths
     });
+
     this._paths = paths;
-    this._sharedLibs = this._filterOutXeusShared(sharedLibs);
+
+    // Remove dynamic libs we already linked against, so we don't load them again
+    this._sharedLibs = {};
+    for (const pkg of Object.keys(sharedLibs)) {
+      this._sharedLibs[pkg] = sharedLibs[pkg].filter(
+        lib => !this._kernelSharedLibs.has(lib)
+      );
+    }
 
     await loadSharedLibs({
       sharedLibs: this._sharedLibs,
@@ -259,25 +271,13 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     this._lock = newLock;
   }
 
-  /**
-   * Remove libxeus.so from the shared libs that we load dynamically
-   */
-  private _filterOutXeusShared(input: TSharedLibsMap): TSharedLibsMap {
-    const sharedLibs: TSharedLibsMap = {};
-
-    for (const pkg of Object.keys(input)) {
-      sharedLibs[pkg] = input[pkg].filter(lib => !lib.endsWith('libxeus.so'));
-    }
-
-    return sharedLibs;
-  }
-
   private _pythonVersion: number[] | undefined;
   private _prefix = '';
 
   private _pkgRootUrl = '';
 
   private _sharedLibs: TSharedLibsMap;
+  private _kernelSharedLibs = new Set<string>();
   private _lock: ILock;
   private _paths = {};
 
