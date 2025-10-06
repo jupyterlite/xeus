@@ -3,7 +3,6 @@ channels:
   - https://repo.mamba.pm/emscripten-forge
   - https://prefix.dev/conda-forge
 dependencies:
-  - xeus >=5.2.2
   - xeus-lua
   - xeus-javascript
   - xeus-nelson
