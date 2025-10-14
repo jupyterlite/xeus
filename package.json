@@ -1,6 +1,6 @@
 {
     "name": "@jupyterlite/xeus-root",
-    "version": "4.3.0-a1",
+    "version": "4.3.0-a2",
     "private": true,
     "description": "JupyterLite loader for Xeus kernels",
     "keywords": [
