@@ -374,10 +374,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@conda-org/rattler@npm:^0.3.1":
-  version: 0.3.1
-  resolution: "@conda-org/rattler@npm:0.3.1"
-  checksum: 17511c7ae1cf729f16cc587089d8991dae948779ffd203a502fd8af7982b5bd05433ca7c5c9acd25c6a5b2c00d535f9f8c69940d5db5c1fcbb1f793fca346416
+"@conda-org/rattler@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "@conda-org/rattler@npm:0.3.2"
+  checksum: 9157a732bc2d9007dcab16857b3796503576992b6e2419e41a9d30e21b1220468196238833d4698944a37194ffab784fdad35a98f57429108248357b473d81cf
   languageName: node
   linkType: hard
 
@@ -416,35 +416,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs-core@npm:^0.18.0, @emscripten-forge/mambajs-core@npm:^0.18.1":
-  version: 0.18.1
-  resolution: "@emscripten-forge/mambajs-core@npm:0.18.1"
+"@emscripten-forge/mambajs-core@npm:^0.19.0":
+  version: 0.19.0
+  resolution: "@emscripten-forge/mambajs-core@npm:0.19.0"
   dependencies:
-    "@emscripten-forge/untarjs": ^5.3.0
+    "@emscripten-forge/untarjs": ^5.3.1
     yaml: ^2.7.0
-  checksum: bc17b19edfc195a57a4339f2e6229aba0cedecc6b6c111f701a706aa1f8946e6a403b3784851642af6768cbb10c2d651c1bfa1adad6659dab0503320d59f888b
+  checksum: 60eb72d8d0fbbc62dd564cca794f74f06ef1e25606ca8ea984b8ff429a09810093f947314945ddd13f0d8a08ef4449100363e43eaf01491ef0c58a519d9f1fe0
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.18.0":
-  version: 0.18.1
-  resolution: "@emscripten-forge/mambajs@npm:0.18.1"
+"@emscripten-forge/mambajs@npm:^0.19.0":
+  version: 0.19.0
+  resolution: "@emscripten-forge/mambajs@npm:0.19.0"
   dependencies:
-    "@conda-org/rattler": ^0.3.1
-    "@emscripten-forge/mambajs-core": ^0.18.1
+    "@conda-org/rattler": ^0.3.2
+    "@emscripten-forge/mambajs-core": ^0.19.0
     yaml: ^2.7.0
-  checksum: 5bf6785021c0bdb1bb22aa8e6d578c61094b34eb3a1db6a0303d860730157a6cacf4394da8d6ad224f56716ee1aadb5005283dc6c6b60e181f7500fe52353f14
+  checksum: 7208b13c1be0ced6036ee7d74ccbdb4202eae5abb1617d33952c59e1bfab2565f4533450877643fbb209183ad2d0a8a4df56c5bd225af306f9f7938212fd77ec
   languageName: node
   linkType: hard
 
-"@emscripten-forge/untarjs@npm:^5.3.0":
-  version: 5.3.0
-  resolution: "@emscripten-forge/untarjs@npm:5.3.0"
+"@emscripten-forge/untarjs@npm:^5.3.1":
+  version: 5.3.1
+  resolution: "@emscripten-forge/untarjs@npm:5.3.1"
   dependencies:
     assert: ^2.1.0
     process: ^0.11.10
     url: ^0.11.4
-  checksum: ba2c9ba878f26b267f334bc941ca508efc227fac4f91cf3babfb02fdb42c77d94ef13926087b075de23d57c030bfa237c68e955ec80f2aa68aec84f10b368f65
+  checksum: 36e29a03ffab28a5c4f1894c5c843f44c7d32d26a1202e3a4b88d3cd1101079583209a1c4fb92f7db3ae5e149f9acad69d6b7383cd8a8fee52ed9666ee3a65fa
   languageName: node
   linkType: hard
 
@@ -1479,7 +1479,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus-core@workspace:packages/xeus-core"
   dependencies:
-    "@emscripten-forge/mambajs-core": ^0.18.0
+    "@emscripten-forge/mambajs-core": ^0.19.0
     "@jupyterlab/coreutils": ^6.5.0-alpha.3
     "@jupyterlab/services": ^7.5.0-alpha.3
     "@jupyterlite/contents": ^0.7.0-alpha.5
@@ -1549,7 +1549,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.18.0
+    "@emscripten-forge/mambajs": ^0.19.0
     "@jupyterlab/coreutils": ^6.5.0-alpha.3
     "@jupyterlab/services": ^7.5.0-alpha.3
     "@jupyterlite/contents": ^0.7.0-alpha.5
