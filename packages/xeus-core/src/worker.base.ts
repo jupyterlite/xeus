@@ -14,6 +14,25 @@ import { waitRunDependencies, parse } from '@emscripten-forge/mambajs-core';
 
 declare function createXeusModule(options: any): any;
 
+declare namespace WebAssembly {
+  type ValueType = "i32" | "i64" | "f32" | "f64" | "externref" | "funcref";
+  interface TagDescriptor {
+    parameters?: ValueType[];
+  }
+
+  class Tag {
+    constructor(descriptor: TagDescriptor);
+    
+
+  }
+
+  class Exception {
+    readonly tag: Tag;
+    getArg(tag: Tag, arg: number): any;
+    is(tag: Tag): boolean;
+  }
+}
+
 const STREAM = { log: 'stdout', warn: 'stdout', error: 'stderr' };
 
 export class XeusWorkerLoggerBase implements ILogger {
@@ -164,12 +183,12 @@ export abstract class XeusRemoteKernelBase {
       await this.initializeFileSystem(options);
       await this.initializeInterpreter(options);
       this.initializeStdin(baseUrl, browsingContextId);
-
-      try {
-        this.xkernel = new this.Module.xkernel(kernelSpec.argv);
-      } catch (e) {
+      console.log("kernelSpec.argv: ", kernelSpec.argv);
+      // try {
+      //   this.xkernel = new this.Module.xkernel(kernelSpec.argv);
+      // } catch (e) {
         this.xkernel = new this.Module.xkernel();
-      }
+      // }
       this.xserver = this.xkernel.get_server();
       if (!this.xserver) {
         this.logger.error('Failed to start kernel!');
@@ -180,7 +199,16 @@ export abstract class XeusRemoteKernelBase {
         const msg = this.Module.get_exception_message(e);
         this.logger.error(msg);
         throw new Error(msg);
-      } else {
+      } 
+      else if (e instanceof WebAssembly.Exception) {
+        console.log("Caught a WebAssembly.Exception!");
+
+        const msg = this.Module.getExceptionMessage(e);
+        console.log("Exception message: ", msg);
+        this.logger.error(msg);
+        throw new Error(msg);
+      }
+      else {
         this.logger.error(e);
         throw e;
       }
