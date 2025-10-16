@@ -374,10 +374,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@conda-org/rattler@npm:^0.3.2":
-  version: 0.3.2
-  resolution: "@conda-org/rattler@npm:0.3.2"
-  checksum: 9157a732bc2d9007dcab16857b3796503576992b6e2419e41a9d30e21b1220468196238833d4698944a37194ffab784fdad35a98f57429108248357b473d81cf
+"@conda-org/rattler@npm:^0.3.4":
+  version: 0.3.4
+  resolution: "@conda-org/rattler@npm:0.3.4"
+  checksum: 46d0747948cd41c283076d2218df9de455cd220d93bab2a1e9ab52ffaf787ce79e1040fd6d04555b25304b2727fdcd6c5e506701dbaa3c463e0ca21ea162afd3
   languageName: node
   linkType: hard
 
@@ -426,14 +426,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.19.0":
-  version: 0.19.0
-  resolution: "@emscripten-forge/mambajs@npm:0.19.0"
+"@emscripten-forge/mambajs@npm:^0.19.2":
+  version: 0.19.2
+  resolution: "@emscripten-forge/mambajs@npm:0.19.2"
   dependencies:
-    "@conda-org/rattler": ^0.3.2
+    "@conda-org/rattler": ^0.3.4
     "@emscripten-forge/mambajs-core": ^0.19.0
     yaml: ^2.7.0
-  checksum: 7208b13c1be0ced6036ee7d74ccbdb4202eae5abb1617d33952c59e1bfab2565f4533450877643fbb209183ad2d0a8a4df56c5bd225af306f9f7938212fd77ec
+  checksum: db6e3d1466c8a35eebbde32319453d3eef8f584b0bfe84f6f7e1aee24c6a057a937046c7cf17f684233a3f6f9f40b7fb4d7b98b0b19fa5732fbab5a0d7f43aef
   languageName: node
   linkType: hard
 
@@ -1549,7 +1549,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.19.0
+    "@emscripten-forge/mambajs": ^0.19.2
     "@jupyterlab/coreutils": ^6.5.0-alpha.3
     "@jupyterlab/services": ^7.5.0-alpha.3
     "@jupyterlite/contents": ^0.7.0-alpha.5
