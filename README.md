@@ -60,8 +60,7 @@ micromamba activate xeus-lite-dev
 ```
 
 ```bash
-python -m pip install -e . -v --no-build-isolation
-jupyter labextension develop . --overwrite
+python -m pip install . -v --no-build-isolation
 ```
 
 Then make your `jupyterlite` build as usual, [see the JupyterLite documentation for more info](https://jupyterlite.readthedocs.io/en/stable/howto/index.html)
