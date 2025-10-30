@@ -16,6 +16,7 @@ Currently supported kernels are:
 - [xeus-cpp](https://github.com/compiler-research/xeus-cpp)
 - [xeus-nelson](https://github.com/jupyter-xeus/xeus-nelson)
 - [xeus-javascript](https://github.com/jupyter-xeus/xeus-javascript)
+- [xeus-octave](https://github.com/jupyter-xeus/xeus-octave)
 
 Try it here!
 
