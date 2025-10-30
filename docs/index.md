@@ -8,7 +8,7 @@ The core feature of `jupyterlite-xeus` is its integration with [emscripten-forge
 
 Ideal for demos, educational resources, and offline computing. Use it in combination with [Voici](https://github.com/voila-dashboards/voici)!
 
-Currently supported kernels are:
+A non-exhaustive list of supported kernels:
 
 - [xeus-python](https://github.com/jupyter-xeus/xeus-python)
 - [xeus-lua](https://github.com/jupyter-xeus/xeus-lua)
@@ -16,6 +16,7 @@ Currently supported kernels are:
 - [xeus-cpp](https://github.com/compiler-research/xeus-cpp)
 - [xeus-nelson](https://github.com/jupyter-xeus/xeus-nelson)
 - [xeus-javascript](https://github.com/jupyter-xeus/xeus-javascript)
+- [xeus-octave](https://github.com/jupyter-xeus/xeus-octave)
 
 Try it here!
 
