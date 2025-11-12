@@ -152,17 +152,25 @@ You can then run the usual `jupyter lite build` or `voici my-notebook.ipynb`. Th
 
 ### Dynamic install of packages
 
-Starting with jupyterlite-xeus v4.0.0a11, you can use the `%pip` magic or the `%mamba` magics to install packages dynamically once the kernel started:
+Starting with jupyterlite-xeus v4.0.0a11, you can use the `%pip` and `%mamba` magics or the `!pip` and `!mamba` commands to install packages dynamically once the kernel started:
 
 ```
 %pip install my_package
+!pip install my_package
 ```
 
 or
 
 ```
 %mamba install my_package
+!mamba install my_package
 ```
+
+:::note
+
+Any command from `conda`, `mamba`, `rattler` to `micromamba` would work. They are all using the [`mambajs` library](https://github.com/emscripten-forge/mambajs) for handling the solving.
+
+:::
 
 ### stdin
 
