@@ -416,35 +416,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs-core@npm:^0.19.0":
-  version: 0.19.0
-  resolution: "@emscripten-forge/mambajs-core@npm:0.19.0"
+"@emscripten-forge/mambajs-core@npm:^0.19.3":
+  version: 0.19.3
+  resolution: "@emscripten-forge/mambajs-core@npm:0.19.3"
   dependencies:
     "@emscripten-forge/untarjs": ^5.3.1
     yaml: ^2.7.0
-  checksum: 60eb72d8d0fbbc62dd564cca794f74f06ef1e25606ca8ea984b8ff429a09810093f947314945ddd13f0d8a08ef4449100363e43eaf01491ef0c58a519d9f1fe0
+  checksum: f10f72fa99438d887e946e81e1afff32acf5262a5772dc67d14086d4808d64702965581bfb3783f91ac63a3823114177755287584c64f662ef740249e0f86205
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.19.2":
-  version: 0.19.2
-  resolution: "@emscripten-forge/mambajs@npm:0.19.2"
+"@emscripten-forge/mambajs@npm:^0.19.3":
+  version: 0.19.3
+  resolution: "@emscripten-forge/mambajs@npm:0.19.3"
   dependencies:
     "@conda-org/rattler": ^0.3.4
-    "@emscripten-forge/mambajs-core": ^0.19.0
+    "@emscripten-forge/mambajs-core": ^0.19.3
     yaml: ^2.7.0
-  checksum: db6e3d1466c8a35eebbde32319453d3eef8f584b0bfe84f6f7e1aee24c6a057a937046c7cf17f684233a3f6f9f40b7fb4d7b98b0b19fa5732fbab5a0d7f43aef
+  checksum: a44016601e337a8c3a01c6df57af404b70e9c5b49b57fb345fbef94c7e5090f794450b54b66a40d734accae30b51ac274750c1d31d3aedc6b9960602d7833e00
   languageName: node
   linkType: hard
 
-"@emscripten-forge/untarjs@npm:^5.3.1":
-  version: 5.3.1
-  resolution: "@emscripten-forge/untarjs@npm:5.3.1"
+"@emscripten-forge/untarjs@npm:^5.3.1, @emscripten-forge/untarjs@npm:^5.3.2":
+  version: 5.3.2
+  resolution: "@emscripten-forge/untarjs@npm:5.3.2"
   dependencies:
     assert: ^2.1.0
     process: ^0.11.10
     url: ^0.11.4
-  checksum: 36e29a03ffab28a5c4f1894c5c843f44c7d32d26a1202e3a4b88d3cd1101079583209a1c4fb92f7db3ae5e149f9acad69d6b7383cd8a8fee52ed9666ee3a65fa
+  checksum: c7ff7bfedfcc1055785731bfbdd4c8911f2448a2b8674a3bdd879affa69eb41bddd36c2d0c74850309a77aa0821c617036b5a2fc6aebe35cbe1738d8dc77045b
   languageName: node
   linkType: hard
 
@@ -1479,7 +1479,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus-core@workspace:packages/xeus-core"
   dependencies:
-    "@emscripten-forge/mambajs-core": ^0.19.0
+    "@emscripten-forge/mambajs-core": ^0.19.3
     "@jupyterlab/coreutils": ^6.5.0-alpha.3
     "@jupyterlab/services": ^7.5.0-alpha.3
     "@jupyterlite/contents": ^0.7.0-alpha.5
@@ -1549,7 +1549,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.19.2
+    "@emscripten-forge/mambajs": ^0.19.3
+    "@emscripten-forge/untarjs": ^5.3.2
     "@jupyterlab/coreutils": ^6.5.0-alpha.3
     "@jupyterlab/services": ^7.5.0-alpha.3
     "@jupyterlite/contents": ^0.7.0-alpha.5
