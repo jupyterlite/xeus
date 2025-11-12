@@ -166,11 +166,7 @@ or
 !mamba install my_package
 ```
 
-:::note
-
 Any command from `conda`, `mamba`, `rattler` to `micromamba` would work. They are all using the [`mambajs` library](https://github.com/emscripten-forge/mambajs) for handling the solving.
-
-:::
 
 ### stdin
 
