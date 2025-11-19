@@ -12,6 +12,21 @@ import type {
 } from '@emscripten-forge/mambajs-core';
 import { waitRunDependencies, parse } from '@emscripten-forge/mambajs-core';
 
+declare namespace WebAssembly {
+  type ValueType = "i32" | "i64" | "f32" | "f64" | "externref" | "funcref";
+  interface TagDescriptor {
+    parameters?: ValueType[];
+  }
+  class Tag {
+    constructor(descriptor: TagDescriptor);
+  }
+  class Exception {
+    readonly tag: Tag;
+    getArg(tag: Tag, arg: number): any;
+    is(tag: Tag): boolean;
+  }
+}
+
 declare function createXeusModule(options: any): any;
 
 const STREAM = { log: 'stdout', warn: 'stdout', error: 'stderr' };
