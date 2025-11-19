@@ -14,25 +14,6 @@ import { waitRunDependencies, parse } from '@emscripten-forge/mambajs-core';
 
 declare function createXeusModule(options: any): any;
 
-declare namespace WebAssembly {
-  type ValueType = "i32" | "i64" | "f32" | "f64" | "externref" | "funcref";
-  interface TagDescriptor {
-    parameters?: ValueType[];
-  }
-
-  class Tag {
-    constructor(descriptor: TagDescriptor);
-    
-
-  }
-
-  class Exception {
-    readonly tag: Tag;
-    getArg(tag: Tag, arg: number): any;
-    is(tag: Tag): boolean;
-  }
-}
-
 const STREAM = { log: 'stdout', warn: 'stdout', error: 'stderr' };
 
 export class XeusWorkerLoggerBase implements ILogger {
@@ -183,12 +164,7 @@ export abstract class XeusRemoteKernelBase {
       await this.initializeFileSystem(options);
       await this.initializeInterpreter(options);
       this.initializeStdin(baseUrl, browsingContextId);
-      console.log("kernelSpec.argv: ", kernelSpec.argv);
-      // try {
-      //   this.xkernel = new this.Module.xkernel(kernelSpec.argv);
-      // } catch (e) {
-        this.xkernel = new this.Module.xkernel();
-      // }
+      this.xkernel = new this.Module.xkernel(kernelSpec.argv);
       this.xserver = this.xkernel.get_server();
       if (!this.xserver) {
         this.logger.error('Failed to start kernel!');
