@@ -2,6 +2,32 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.3.0rc0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.0-a3...3d183d2059c364a26bd5f1e83e5a0c0a975319f3))
+
+### Bugs fixed
+
+- Update mambajs and untarjs to the latest [#308](https://github.com/jupyterlite/xeus/pull/308) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Update for latest JupyterLite rc0 and JupyterLab 4.5 [#312](https://github.com/jupyterlite/xeus/pull/312) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Mention mambajs in documentation [#309](https://github.com/jupyterlite/xeus/pull/309) ([@martinRenou](https://github.com/martinRenou))
+- Add xeus-octave to the list of supported kernels [#306](https://github.com/jupyterlite/xeus/pull/306) ([@rgaiacs](https://github.com/rgaiacs))
+- Fix contributing docs [#304](https://github.com/jupyterlite/xeus/pull/304) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-10-16&to=2025-11-20&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-10-16..2025-11-20&type=Issues) | [@rgaiacs](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Argaiacs+updated%3A2025-10-16..2025-11-20&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.3.0a3
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.0-a2...341e684888b8cf3933223589dcb745ebcc5b674a))
@@ -15,8 +41,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-10-14&to=2025-10-16&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-10-14..2025-10-16&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.3.0a2
 
