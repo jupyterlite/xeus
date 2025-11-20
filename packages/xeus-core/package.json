@@ -34,11 +34,9 @@
     },
     "dependencies": {
         "@emscripten-forge/mambajs-core": "^0.19.3",
-        "@jupyterlab/coreutils": "^6.5.0-alpha.3",
-        "@jupyterlab/services": "^7.5.0-alpha.3",
-        "@jupyterlite/contents": "^0.7.0-alpha.5",
-        "@jupyterlite/kernel": "^0.7.0-alpha.5",
-        "@jupyterlite/server": "^0.7.0-alpha.5",
+        "@jupyterlab/coreutils": "^6.5.0",
+        "@jupyterlab/services": "^7.5.0",
+        "@jupyterlite/services": "^0.7.0-rc.0",
         "@lumino/coreutils": "^2",
         "@lumino/signaling": "^2"
     },
