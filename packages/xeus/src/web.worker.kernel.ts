@@ -15,7 +15,7 @@ import {
   DriveContentsProcessor,
   TDriveMethod,
   TDriveRequest
-} from '@jupyterlite/contents';
+} from '@jupyterlite/services';
 
 import { WebWorkerKernelBase } from '@jupyterlite/xeus-core';
 import { IEmpackXeusWorkerKernel } from './interfaces';

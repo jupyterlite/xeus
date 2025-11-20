@@ -9,8 +9,8 @@ import {
 import { ILoggerRegistry, ILogPayload } from '@jupyterlab/logconsole';
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 
-import { IServiceWorkerManager } from '@jupyterlite/server';
-import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
+import { IServiceWorkerManager,  } from '@jupyterlite/apputils';
+import { IKernel, IKernelSpecs } from '@jupyterlite/services';
 
 import { WebWorkerKernel } from '@jupyterlite/xeus';
 

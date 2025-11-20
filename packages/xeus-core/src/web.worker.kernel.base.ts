@@ -9,8 +9,7 @@ import { PromiseDelegate } from '@lumino/coreutils';
 import { PageConfig } from '@jupyterlab/coreutils';
 import { Contents, KernelMessage } from '@jupyterlab/services';
 
-import { IKernel } from '@jupyterlite/kernel';
-import { DriveContentsProcessor } from '@jupyterlite/contents';
+import { IKernel, DriveContentsProcessor } from '@jupyterlite/services';
 
 import { IXeusWorkerKernel } from './interfaces';
 

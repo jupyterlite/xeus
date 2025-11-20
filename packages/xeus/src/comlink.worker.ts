@@ -9,7 +9,7 @@ import { expose } from 'comlink';
 
 import { URLExt } from '@jupyterlab/coreutils';
 
-import { DriveFS } from '@jupyterlite/contents';
+import { DriveFS } from '@jupyterlite/services';
 
 import { EmpackedXeusRemoteKernel } from './worker';
 

@@ -12,7 +12,7 @@ import {
   TDriveRequest,
   TDriveMethod,
   TDriveResponse
-} from '@jupyterlite/contents';
+} from '@jupyterlite/services';
 
 import { IXeusWorkerKernel } from '@jupyterlite/xeus-core';
 import { EmpackedXeusRemoteKernel } from './worker';
