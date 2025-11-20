@@ -79,15 +79,11 @@
         "outputDir": "../../jupyterlite_xeus/labextension",
         "webpackConfig": "lab.webpack.config.js",
         "sharedPackages": {
-            "@jupyterlite/kernel": {
+            "@jupyterlite/apputils": {
                 "bundled": false,
                 "singleton": true
             },
-            "@jupyterlite/server": {
-                "bundled": false,
-                "singleton": true
-            },
-            "@jupyterlite/contents": {
+            "@jupyterlite/services": {
                 "bundled": false,
                 "singleton": true
             }
