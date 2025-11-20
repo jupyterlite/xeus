@@ -6,15 +6,14 @@ import coincident from 'coincident';
 
 import type { KernelMessage } from '@jupyterlab/services';
 
-import {
-  ContentsAPI,
-  DriveFS,
+import type {
   TDriveRequest,
   TDriveMethod,
   TDriveResponse
-} from '@jupyterlite/contents';
+} from '@jupyterlite/services';
+import { ContentsAPI, DriveFS } from '@jupyterlite/services';
 
-import { IXeusWorkerKernel } from '@jupyterlite/xeus-core';
+import type { IXeusWorkerKernel } from '@jupyterlite/xeus-core';
 import { EmpackedXeusRemoteKernel } from './worker';
 
 const workerAPI = coincident(self) as IXeusWorkerKernel;

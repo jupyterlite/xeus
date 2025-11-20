@@ -2,16 +2,15 @@
 // Copyright (c) JupyterLite Contributors
 // Distributed under the terms of the Modified BSD License.
 
-import { IXeusWorkerKernel } from './interfaces';
-import {
-  waitRunDependencies,
+import type { IXeusWorkerKernel } from './interfaces';
+import type {
   ILogger,
-  parse,
   IInstallationCommandOptions,
   IUninstallationCommandOptions,
   ICommandData,
   IListCommandOptions
 } from '@emscripten-forge/mambajs-core';
+import { waitRunDependencies, parse } from '@emscripten-forge/mambajs-core';
 
 declare function createXeusModule(options: any): any;
 

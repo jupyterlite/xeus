@@ -2,15 +2,17 @@
 // Copyright (c) JupyterLite Contributors
 // Distributed under the terms of the Modified BSD License.
 
-import {
+import type {
   JupyterFrontEndPlugin,
   JupyterFrontEnd
 } from '@jupyterlab/application';
-import { ILoggerRegistry, ILogPayload } from '@jupyterlab/logconsole';
+import type { ILogPayload } from '@jupyterlab/logconsole';
+import { ILoggerRegistry } from '@jupyterlab/logconsole';
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 
-import { IServiceWorkerManager } from '@jupyterlite/server';
-import { IKernel, IKernelSpecs } from '@jupyterlite/kernel';
+import { IServiceWorkerManager } from '@jupyterlite/apputils';
+import type { IKernel } from '@jupyterlite/services';
+import { IKernelSpecs } from '@jupyterlite/services';
 
 import { WebWorkerKernel } from '@jupyterlite/xeus';
 

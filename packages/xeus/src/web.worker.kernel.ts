@@ -9,16 +9,13 @@ import type { Remote } from 'comlink';
 
 import { PromiseDelegate } from '@lumino/coreutils';
 
-import { KernelMessage } from '@jupyterlab/services';
+import type { KernelMessage } from '@jupyterlab/services';
 
-import {
-  DriveContentsProcessor,
-  TDriveMethod,
-  TDriveRequest
-} from '@jupyterlite/contents';
+import type { TDriveMethod, TDriveRequest } from '@jupyterlite/services';
+import { DriveContentsProcessor } from '@jupyterlite/services';
 
 import { WebWorkerKernelBase } from '@jupyterlite/xeus-core';
-import { IEmpackXeusWorkerKernel } from './interfaces';
+import type { IEmpackXeusWorkerKernel } from './interfaces';
 import { PageConfig } from '@jupyterlab/coreutils';
 
 export class WebWorkerKernel extends WebWorkerKernelBase {

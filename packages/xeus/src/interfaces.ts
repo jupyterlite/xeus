@@ -1,4 +1,4 @@
-import { IXeusWorkerKernel } from '@jupyterlite/xeus-core';
+import type { IXeusWorkerKernel } from '@jupyterlite/xeus-core';
 
 export interface IEmpackXeusWorkerKernel extends IXeusWorkerKernel {
   initialize(options: IEmpackXeusWorkerKernel.IOptions): Promise<void>;

@@ -7,13 +7,12 @@
 
 import type { KernelMessage } from '@jupyterlab/services';
 
-import {
+import type {
   TDriveMethod,
   TDriveRequest,
-  TDriveResponse
-} from '@jupyterlite/contents';
-
-import { IWorkerKernel } from '@jupyterlite/kernel';
+  TDriveResponse,
+  IWorkerKernel
+} from '@jupyterlite/services';
 
 /**
  * An interface for Xeus workers.
