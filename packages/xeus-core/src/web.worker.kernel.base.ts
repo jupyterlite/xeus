@@ -3,15 +3,18 @@
 
 import type { Remote } from 'comlink';
 
-import { ISignal, Signal } from '@lumino/signaling';
+import type { ISignal } from '@lumino/signaling';
+import { Signal } from '@lumino/signaling';
 import { PromiseDelegate } from '@lumino/coreutils';
 
 import { PageConfig } from '@jupyterlab/coreutils';
-import { Contents, KernelMessage } from '@jupyterlab/services';
+import type { Contents } from '@jupyterlab/services';
+import { KernelMessage } from '@jupyterlab/services';
 
-import { IKernel, DriveContentsProcessor } from '@jupyterlite/services';
+import type { IKernel } from '@jupyterlite/services';
+import { DriveContentsProcessor } from '@jupyterlite/services';
 
-import { IXeusWorkerKernel } from './interfaces';
+import type { IXeusWorkerKernel } from './interfaces';
 
 export abstract class WebWorkerKernelBase implements IKernel {
   /**

@@ -3,29 +3,30 @@
 
 import { URLExt } from '@jupyterlab/coreutils';
 
+import type { IEmpackEnvMeta, TSharedLibsMap } from '@emscripten-forge/mambajs';
 import {
-  IEmpackEnvMeta,
   bootstrapEmpackPackedEnvironment,
   bootstrapPython,
   loadSharedLibs,
   showPackagesList,
-  TSharedLibsMap,
   install,
   pipInstall,
   pipUninstall,
   remove
 } from '@emscripten-forge/mambajs';
-import {
+import type {
   ILock,
   IInstallationCommandOptions,
   IListCommandOptions,
-  IUninstallationCommandOptions,
+  IUninstallationCommandOptions
+} from '@emscripten-forge/mambajs-core';
+import {
   showPipPackagesList,
   updatePackagesInEmscriptenFS
 } from '@emscripten-forge/mambajs-core';
-import { IUnpackJSAPI } from '@emscripten-forge/untarjs';
+import type { IUnpackJSAPI } from '@emscripten-forge/untarjs';
 import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
-import { IEmpackXeusWorkerKernel } from './interfaces';
+import type { IEmpackXeusWorkerKernel } from './interfaces';
 
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url);
