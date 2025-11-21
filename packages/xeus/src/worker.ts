@@ -4,16 +4,14 @@
 import { URLExt } from '@jupyterlab/coreutils';
 
 import type { IEmpackEnvMeta, TSharedLibsMap } from '@emscripten-forge/mambajs';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+type MambaModuleType = typeof import('@emscripten-forge/mambajs');
 import {
   bootstrapEmpackPackedEnvironment,
   bootstrapPython,
   loadSharedLibs,
-  showPackagesList,
-  install,
-  pipInstall,
-  pipUninstall,
-  remove
-} from '@emscripten-forge/mambajs';
+  showPackagesList
+} from '@emscripten-forge/mambajs-core';
 import type {
   ILock,
   IInstallationCommandOptions,
@@ -27,6 +25,16 @@ import {
 import type { IUnpackJSAPI } from '@emscripten-forge/untarjs';
 import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
 import type { IEmpackXeusWorkerKernel } from './interfaces';
+
+let mamba: MambaModuleType | null = null;
+
+async function getMamba() {
+  if (!mamba) {
+    const module = await import('@emscripten-forge/mambajs');
+    mamba = module;
+  }
+  return mamba;
+}
 
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url);
@@ -178,10 +186,11 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
    */
   protected async install(options: IInstallationCommandOptions) {
     let env: ILock;
+    const mamba = await getMamba();
 
     switch (options.type) {
       case 'conda': {
-        env = await install(
+        env = await mamba.install(
           options.specs,
           this._lock,
           options.channels,
@@ -190,7 +199,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         break;
       }
       case 'pip': {
-        env = await pipInstall(options.specs, this._lock, this.logger);
+        env = await mamba.pipInstall(options.specs, this._lock, this.logger);
         break;
       }
     }
@@ -206,14 +215,15 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     options: IUninstallationCommandOptions
   ): Promise<void> {
     let env: ILock;
+    const mamba = await getMamba();
 
     switch (options.type) {
       case 'conda': {
-        env = await remove(options.specs, this._lock, this.logger);
+        env = await mamba.remove(options.specs, this._lock, this.logger);
         break;
       }
       case 'pip': {
-        env = await pipUninstall(options.specs, this._lock, this.logger);
+        env = await mamba.pipUninstall(options.specs, this._lock, this.logger);
         break;
       }
     }
