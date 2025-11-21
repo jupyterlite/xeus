@@ -171,10 +171,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         Module: this.Module,
         logger: this.logger
       });
-    } else {
-      console.log(
-        'load libraries on demand since we use emscripten 4x or higher'
-      );
     }
   }
 
