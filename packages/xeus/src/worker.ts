@@ -163,19 +163,37 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       });
     }
 
-    // Load shared libs'
-    const is_emscripten_4x_or_higher = true; // fixme
-    if(!is_emscripten_4x_or_higher) {
+    // Load shared libs only for old emscripten versions
+    if (this.emscriptenMajorVersion < 4) {
       await loadSharedLibs({
         sharedLibs: this._sharedLibs,
         prefix: '/',
         Module: this.Module,
         logger: this.logger
       });
+    } else {
+      console.log(
+        'load libraries on demand since we use emscripten 4x or higher'
+      );
     }
-    else{
-      console.log("load libraries on demand since we use emscripten 4x or higher");
+  }
+
+  get emscriptenMajorVersion(): number {
+    if (this._emscriptenVersion) {
+      return this._emscriptenVersion;
     }
+
+    for (const pkg of Object.values(this._lock.packages)) {
+      if (pkg.name === 'emscripten-abi') {
+        this._emscriptenVersion = Number.parseInt(pkg.version.split('.')[0]);
+      }
+    }
+
+    if (!this._emscriptenVersion) {
+      throw new Error('Failed to detect emscripten version');
+    }
+
+    return this._emscriptenVersion;
   }
 
   /**
@@ -268,16 +286,20 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       );
     }
 
-    await loadSharedLibs({
-      sharedLibs: this._sharedLibs,
-      prefix: '/',
-      Module: this.Module,
-      logger: this.logger
-    });
+    // Load shared libs only for old emscripten versions
+    if (this.emscriptenMajorVersion < 4) {
+      await loadSharedLibs({
+        sharedLibs: this._sharedLibs,
+        prefix: '/',
+        Module: this.Module,
+        logger: this.logger
+      });
+    }
 
     this._lock = newLock;
   }
 
+  private _emscriptenVersion: number | undefined = undefined;
   private _pythonVersion: number[] | undefined;
   private _prefix = '';
 
