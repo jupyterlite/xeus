@@ -4,4 +4,3 @@ channels:
   - conda-forge
 dependencies:
   - xeus-javascript
-  - xeus-python

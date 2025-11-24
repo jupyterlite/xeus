@@ -189,7 +189,10 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     }
 
     if (!this._emscriptenVersion) {
-      throw new Error('Failed to detect emscripten version');
+      console.warn('Failed to detect emscripten version');
+
+      // We fallback to loading all shared libs
+      this._emscriptenVersion = 0;
     }
 
     return this._emscriptenVersion;
