@@ -12,6 +12,24 @@ import type {
 } from '@emscripten-forge/mambajs-core';
 import { waitRunDependencies, parse } from '@emscripten-forge/mambajs-core';
 
+declare namespace WebAssembly {
+  type ValueType = 'i32' | 'i64' | 'f32' | 'f64' | 'externref' | 'funcref';
+
+  interface ITagDescriptor {
+    parameters?: ValueType[];
+  }
+
+  class Tag {
+    constructor(descriptor: ITagDescriptor);
+  }
+
+  class Exception {
+    readonly tag: Tag;
+    getArg(tag: Tag, arg: number): any;
+    is(tag: Tag): boolean;
+  }
+}
+
 declare function createXeusModule(options: any): any;
 
 const STREAM = { log: 'stdout', warn: 'stdout', error: 'stderr' };
@@ -131,6 +149,8 @@ export abstract class XeusRemoteKernelBase {
     }
   }
 
+  abstract get emscriptenMajorVersion(): number;
+
   protected get Module() {
     return globalThis.Module;
   }
@@ -165,11 +185,18 @@ export abstract class XeusRemoteKernelBase {
       await this.initializeInterpreter(options);
       this.initializeStdin(baseUrl, browsingContextId);
 
-      try {
+      // If Emscripten 4.x +, we cannot fallback to instanciate the Module a second time
+      // So from that version all kernels must take argv
+      if (this.emscriptenMajorVersion < 4) {
+        try {
+          this.xkernel = new this.Module.xkernel(kernelSpec.argv);
+        } catch (e) {
+          this.xkernel = new this.Module.xkernel();
+        }
+      } else {
         this.xkernel = new this.Module.xkernel(kernelSpec.argv);
-      } catch (e) {
-        this.xkernel = new this.Module.xkernel();
       }
+
       this.xserver = this.xkernel.get_server();
       if (!this.xserver) {
         this.logger.error('Failed to start kernel!');
@@ -178,6 +205,10 @@ export abstract class XeusRemoteKernelBase {
     } catch (e) {
       if (typeof e === 'number') {
         const msg = this.Module.get_exception_message(e);
+        this.logger.error(msg);
+        throw new Error(msg);
+      } else if (e instanceof WebAssembly.Exception) {
+        const msg = this.Module.getExceptionMessage(e);
         this.logger.error(msg);
         throw new Error(msg);
       } else {

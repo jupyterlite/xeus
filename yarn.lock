@@ -90,14 +90,14 @@ __metadata:
   linkType: hard
 
 "@codemirror/autocomplete@npm:^6.0.0, @codemirror/autocomplete@npm:^6.18.6, @codemirror/autocomplete@npm:^6.3.2, @codemirror/autocomplete@npm:^6.7.1":
-  version: 6.19.1
-  resolution: "@codemirror/autocomplete@npm:6.19.1"
+  version: 6.20.0
+  resolution: "@codemirror/autocomplete@npm:6.20.0"
   dependencies:
     "@codemirror/language": ^6.0.0
     "@codemirror/state": ^6.0.0
     "@codemirror/view": ^6.17.0
     "@lezer/common": ^1.0.0
-  checksum: 1012cff08a3db2bd840d2d9dd002f254140a4b5962d4a87cf9eb5a122ecb02e77686f846ca318a58c97cab6e81617d6d34ce8bada0a416291943248abde3dea4
+  checksum: 0defd46302ab2763d10f3a51ef8f2b607dd7268843aaeec76a272e84723fe17f8a5ee5a7ad06e649066b69d9dad2a81d6a6cfdf7593290bd52b711b96c46518b
   languageName: node
   linkType: hard
 
@@ -387,24 +387,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs-core@npm:^0.19.3, @emscripten-forge/mambajs-core@npm:^0.19.5":
-  version: 0.19.5
-  resolution: "@emscripten-forge/mambajs-core@npm:0.19.5"
+"@emscripten-forge/mambajs-core@npm:^0.19.6":
+  version: 0.19.6
+  resolution: "@emscripten-forge/mambajs-core@npm:0.19.6"
   dependencies:
     "@emscripten-forge/untarjs": ^5.3.1
     yaml: ^2.7.0
-  checksum: f451b092b8b01bb9f898488918759888ff59f1845f51170418683d83aaad4e8893c17e2779ce92d63f0cb36b54f362f528da59df1e23b6e94181113de6a8116e
+  checksum: 073549c70fc0af02bed2361d9309d0f8cf40b54ca28e8ff4dba54c78cd4f7b877bbc65f0fa281b28e8485d103fccf05ede1cb4748fb363d22c588679b1bd82e3
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.19.3":
-  version: 0.19.5
-  resolution: "@emscripten-forge/mambajs@npm:0.19.5"
+"@emscripten-forge/mambajs@npm:^0.19.6":
+  version: 0.19.6
+  resolution: "@emscripten-forge/mambajs@npm:0.19.6"
   dependencies:
     "@conda-org/rattler": ^0.3.5
-    "@emscripten-forge/mambajs-core": ^0.19.5
+    "@emscripten-forge/mambajs-core": ^0.19.6
     yaml: ^2.7.0
-  checksum: e82200730bff6cf5a3edc810ed5d4db3e2098c3a8553c098525a50f44be195f0ba5e66eb0d496116dcaea06dbc4194579bd5e937e825e78ba46cb92a5bca2a14
+  checksum: 22d19b0a72e73e743a703b1112c55fe0e4f92b04b217b495cafd32ae631eaed4b1c246d34a553eb6f7ff26bebd1e68a038a664962f00d2a61fb112df8b340e94
   languageName: node
   linkType: hard
 
@@ -675,8 +675,8 @@ __metadata:
   linkType: hard
 
 "@jupyter/ydoc@npm:^3.1.0":
-  version: 3.2.1
-  resolution: "@jupyter/ydoc@npm:3.2.1"
+  version: 3.3.1
+  resolution: "@jupyter/ydoc@npm:3.3.1"
   dependencies:
     "@jupyterlab/nbformat": ^3.0.0 || ^4.0.0-alpha.21 || ^4.0.0
     "@lumino/coreutils": ^1.11.0 || ^2.0.0
@@ -684,7 +684,7 @@ __metadata:
     "@lumino/signaling": ^1.10.0 || ^2.0.0
     y-protocols: ^1.0.5
     yjs: ^13.5.40
-  checksum: e576f146f2aa83b9e9f4859405efd87ee16335e6e151c0cc2440c825afe9a92f629f9e7df532e7fded50c1325efe0a50ed25fae7e8cd72784a39e98753729cac
+  checksum: 05f4235104a682663b71929a0dd481a6bb16e745b9ea7357282caf562d617a8b4117e6d076b9e12f7c7fbfcbd82a8cdbba9b2157055cc0539c3fd015a9e1bbda
   languageName: node
   linkType: hard
 
@@ -1446,7 +1446,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus-core@workspace:packages/xeus-core"
   dependencies:
-    "@emscripten-forge/mambajs-core": ^0.19.3
+    "@emscripten-forge/mambajs-core": ^0.19.6
     "@jupyterlab/coreutils": ^6.5.0
     "@jupyterlab/services": ^7.5.0
     "@jupyterlite/services": ^0.7.0-rc.1
@@ -1514,7 +1514,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.19.3
+    "@emscripten-forge/mambajs": ^0.19.6
     "@emscripten-forge/untarjs": ^5.3.2
     "@jupyterlab/coreutils": ^6.5.0
     "@jupyterlab/services": ^7.5.0
@@ -2227,8 +2227,8 @@ __metadata:
   linkType: hard
 
 "@nx/devkit@npm:>=17.1.2 < 21":
-  version: 20.8.2
-  resolution: "@nx/devkit@npm:20.8.2"
+  version: 20.8.3
+  resolution: "@nx/devkit@npm:20.8.3"
   dependencies:
     ejs: ^3.1.7
     enquirer: ~2.3.6
@@ -2240,76 +2240,76 @@ __metadata:
     yargs-parser: 21.1.1
   peerDependencies:
     nx: ">= 19 <= 21"
-  checksum: 2005419435593fcf763b89e0e025eb154a48a11331247e2bbc59ee23456f1a1a8dab24f420f69a3c87e6ff5a8a7bde8ff8f297cab1767f1bd9529a322cd9222b
+  checksum: 73f376e6a18dfb1fe3079727a33e0a30ee87cc3770e5ee5c85e9f6c5fb3c6218108a982a5ddb796fcca63ffd7b3ca72a50ffe354858b9435cec7e47a3d22445e
   languageName: node
   linkType: hard
 
-"@nx/nx-darwin-arm64@npm:20.8.2":
-  version: 20.8.2
-  resolution: "@nx/nx-darwin-arm64@npm:20.8.2"
+"@nx/nx-darwin-arm64@npm:20.8.3":
+  version: 20.8.3
+  resolution: "@nx/nx-darwin-arm64@npm:20.8.3"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@nx/nx-darwin-x64@npm:20.8.2":
-  version: 20.8.2
-  resolution: "@nx/nx-darwin-x64@npm:20.8.2"
+"@nx/nx-darwin-x64@npm:20.8.3":
+  version: 20.8.3
+  resolution: "@nx/nx-darwin-x64@npm:20.8.3"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@nx/nx-freebsd-x64@npm:20.8.2":
-  version: 20.8.2
-  resolution: "@nx/nx-freebsd-x64@npm:20.8.2"
+"@nx/nx-freebsd-x64@npm:20.8.3":
+  version: 20.8.3
+  resolution: "@nx/nx-freebsd-x64@npm:20.8.3"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
 
-"@nx/nx-linux-arm-gnueabihf@npm:20.8.2":
-  version: 20.8.2
-  resolution: "@nx/nx-linux-arm-gnueabihf@npm:20.8.2"
+"@nx/nx-linux-arm-gnueabihf@npm:20.8.3":
+  version: 20.8.3
+  resolution: "@nx/nx-linux-arm-gnueabihf@npm:20.8.3"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@nx/nx-linux-arm64-gnu@npm:20.8.2":
-  version: 20.8.2
-  resolution: "@nx/nx-linux-arm64-gnu@npm:20.8.2"
+"@nx/nx-linux-arm64-gnu@npm:20.8.3":
+  version: 20.8.3
+  resolution: "@nx/nx-linux-arm64-gnu@npm:20.8.3"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@nx/nx-linux-arm64-musl@npm:20.8.2":
-  version: 20.8.2
-  resolution: "@nx/nx-linux-arm64-musl@npm:20.8.2"
+"@nx/nx-linux-arm64-musl@npm:20.8.3":
+  version: 20.8.3
+  resolution: "@nx/nx-linux-arm64-musl@npm:20.8.3"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@nx/nx-linux-x64-gnu@npm:20.8.2":
-  version: 20.8.2
-  resolution: "@nx/nx-linux-x64-gnu@npm:20.8.2"
+"@nx/nx-linux-x64-gnu@npm:20.8.3":
+  version: 20.8.3
+  resolution: "@nx/nx-linux-x64-gnu@npm:20.8.3"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@nx/nx-linux-x64-musl@npm:20.8.2":
-  version: 20.8.2
-  resolution: "@nx/nx-linux-x64-musl@npm:20.8.2"
+"@nx/nx-linux-x64-musl@npm:20.8.3":
+  version: 20.8.3
+  resolution: "@nx/nx-linux-x64-musl@npm:20.8.3"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@nx/nx-win32-arm64-msvc@npm:20.8.2":
-  version: 20.8.2
-  resolution: "@nx/nx-win32-arm64-msvc@npm:20.8.2"
+"@nx/nx-win32-arm64-msvc@npm:20.8.3":
+  version: 20.8.3
+  resolution: "@nx/nx-win32-arm64-msvc@npm:20.8.3"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@nx/nx-win32-x64-msvc@npm:20.8.2":
-  version: 20.8.2
-  resolution: "@nx/nx-win32-x64-msvc@npm:20.8.2"
+"@nx/nx-win32-x64-msvc@npm:20.8.3":
+  version: 20.8.3
+  resolution: "@nx/nx-win32-x64-msvc@npm:20.8.3"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -3862,11 +3862,11 @@ __metadata:
   linkType: hard
 
 "baseline-browser-mapping@npm:^2.8.25":
-  version: 2.8.29
-  resolution: "baseline-browser-mapping@npm:2.8.29"
+  version: 2.8.30
+  resolution: "baseline-browser-mapping@npm:2.8.30"
   bin:
     baseline-browser-mapping: dist/cli.js
-  checksum: 36aac32abcb13f5ec24cf00b3cde7469bda560fa8bf82d0e4f23b2ddf5a78ba182cf15fa51e4c76e597bfbaf1f71b78330030674f89b4fd20444730faff2c5c2
+  checksum: d10303cea329afc702e6d7cba4ecae234a6c056352c20dbbb23658fa93c233474193d98e10e9d0cc98c171ee465660e93d9bf3374b2e17fdbb3a0be801792a32
   languageName: node
   linkType: hard
 
@@ -5446,9 +5446,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.249":
-  version: 1.5.258
-  resolution: "electron-to-chromium@npm:1.5.258"
-  checksum: 8972b375791f5642b15cafd3d89e97b208324e43460e39827088d4db6a78f3c4694274748663f2a234ef73eee7105c401eb3702647f0d9b46b3d4ab22625a443
+  version: 1.5.259
+  resolution: "electron-to-chromium@npm:1.5.259"
+  checksum: 8711e642257f83d3f17b15917389e95a4da047f680976c48fb00eb6a6868e55f2d300eb6359be745a93ef0fe7720e93a72302f199284039bc453bcb1684772e6
   languageName: node
   linkType: hard
 
@@ -8941,20 +8941,20 @@ __metadata:
   linkType: hard
 
 "nx@npm:>=17.1.2 < 21":
-  version: 20.8.2
-  resolution: "nx@npm:20.8.2"
+  version: 20.8.3
+  resolution: "nx@npm:20.8.3"
   dependencies:
     "@napi-rs/wasm-runtime": 0.2.4
-    "@nx/nx-darwin-arm64": 20.8.2
-    "@nx/nx-darwin-x64": 20.8.2
-    "@nx/nx-freebsd-x64": 20.8.2
-    "@nx/nx-linux-arm-gnueabihf": 20.8.2
-    "@nx/nx-linux-arm64-gnu": 20.8.2
-    "@nx/nx-linux-arm64-musl": 20.8.2
-    "@nx/nx-linux-x64-gnu": 20.8.2
-    "@nx/nx-linux-x64-musl": 20.8.2
-    "@nx/nx-win32-arm64-msvc": 20.8.2
-    "@nx/nx-win32-x64-msvc": 20.8.2
+    "@nx/nx-darwin-arm64": 20.8.3
+    "@nx/nx-darwin-x64": 20.8.3
+    "@nx/nx-freebsd-x64": 20.8.3
+    "@nx/nx-linux-arm-gnueabihf": 20.8.3
+    "@nx/nx-linux-arm64-gnu": 20.8.3
+    "@nx/nx-linux-arm64-musl": 20.8.3
+    "@nx/nx-linux-x64-gnu": 20.8.3
+    "@nx/nx-linux-x64-musl": 20.8.3
+    "@nx/nx-win32-arm64-msvc": 20.8.3
+    "@nx/nx-win32-x64-msvc": 20.8.3
     "@yarnpkg/lockfile": ^1.1.0
     "@yarnpkg/parsers": 3.0.2
     "@zkochan/js-yaml": 0.0.7
@@ -9020,7 +9020,7 @@ __metadata:
   bin:
     nx: bin/nx.js
     nx-cloud: bin/nx-cloud.js
-  checksum: fbc063f8dc7cd55b56164d636c5151d8da8c5fd6e22d15e7b141c5b75dda5f84d0bc7c381f1eb52791bd1916651110b851448c5a64a82413d9dd3784c8c54aca
+  checksum: 5efbd0268498bf09e48b45efa7dd1d4387e2aa8107afc175c8e0faf690fa415d59a2f540f38e3404f3e698a2c8c6217f299160b7149df9e4295de58c5d5cb31a
   languageName: node
   linkType: hard
 
