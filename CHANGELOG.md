@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.3.0rc1
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.0-rc0...df5983ad77d6ba2872966958316ae443148bf86e))
+
+### Enhancements made
+
+- Emscripten 4.x support [#311](https://github.com/jupyterlite/xeus/pull/311) ([@DerThorsten](https://github.com/DerThorsten))
+
+### Maintenance and upkeep improvements
+
+- Update JupyterLite 0.7.0 rc1 [#317](https://github.com/jupyterlite/xeus/pull/317) ([@martinRenou](https://github.com/martinRenou))
+- Fix shared packages entry [#313](https://github.com/jupyterlite/xeus/pull/313) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-11-20&to=2025-11-24&type=c))
+
+[@DerThorsten](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3ADerThorsten+updated%3A2025-11-20..2025-11-24&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-11-20..2025-11-24&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.3.0rc0
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.0-a3...3d183d2059c364a26bd5f1e83e5a0c0a975319f3))
@@ -25,8 +46,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-10-16&to=2025-11-20&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-10-16..2025-11-20&type=Issues) | [@rgaiacs](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Argaiacs+updated%3A2025-10-16..2025-11-20&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.3.0a3
 
