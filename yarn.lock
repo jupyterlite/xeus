@@ -387,24 +387,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs-core@npm:^0.19.3, @emscripten-forge/mambajs-core@npm:^0.19.5":
-  version: 0.19.5
-  resolution: "@emscripten-forge/mambajs-core@npm:0.19.5"
+"@emscripten-forge/mambajs-core@npm:^0.19.6":
+  version: 0.19.6
+  resolution: "@emscripten-forge/mambajs-core@npm:0.19.6"
   dependencies:
     "@emscripten-forge/untarjs": ^5.3.1
     yaml: ^2.7.0
-  checksum: f451b092b8b01bb9f898488918759888ff59f1845f51170418683d83aaad4e8893c17e2779ce92d63f0cb36b54f362f528da59df1e23b6e94181113de6a8116e
+  checksum: 073549c70fc0af02bed2361d9309d0f8cf40b54ca28e8ff4dba54c78cd4f7b877bbc65f0fa281b28e8485d103fccf05ede1cb4748fb363d22c588679b1bd82e3
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.19.3":
-  version: 0.19.5
-  resolution: "@emscripten-forge/mambajs@npm:0.19.5"
+"@emscripten-forge/mambajs@npm:^0.19.6":
+  version: 0.19.6
+  resolution: "@emscripten-forge/mambajs@npm:0.19.6"
   dependencies:
     "@conda-org/rattler": ^0.3.5
-    "@emscripten-forge/mambajs-core": ^0.19.5
+    "@emscripten-forge/mambajs-core": ^0.19.6
     yaml: ^2.7.0
-  checksum: e82200730bff6cf5a3edc810ed5d4db3e2098c3a8553c098525a50f44be195f0ba5e66eb0d496116dcaea06dbc4194579bd5e937e825e78ba46cb92a5bca2a14
+  checksum: 22d19b0a72e73e743a703b1112c55fe0e4f92b04b217b495cafd32ae631eaed4b1c246d34a553eb6f7ff26bebd1e68a038a664962f00d2a61fb112df8b340e94
   languageName: node
   linkType: hard
 
@@ -1446,7 +1446,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus-core@workspace:packages/xeus-core"
   dependencies:
-    "@emscripten-forge/mambajs-core": ^0.19.3
+    "@emscripten-forge/mambajs-core": ^0.19.6
     "@jupyterlab/coreutils": ^6.5.0
     "@jupyterlab/services": ^7.5.0
     "@jupyterlite/services": ^0.7.0-rc.1
@@ -1514,7 +1514,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.19.3
+    "@emscripten-forge/mambajs": ^0.19.6
     "@emscripten-forge/untarjs": ^5.3.2
     "@jupyterlab/coreutils": ^6.5.0
     "@jupyterlab/services": ^7.5.0

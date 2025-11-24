@@ -5,10 +5,6 @@ import { URLExt } from '@jupyterlab/coreutils';
 
 import type { IEmpackEnvMeta, TSharedLibsMap } from '@emscripten-forge/mambajs';
 import {
-  bootstrapEmpackPackedEnvironment,
-  bootstrapPython,
-  loadSharedLibs,
-  showPackagesList,
   install,
   pipInstall,
   pipUninstall,
@@ -21,6 +17,11 @@ import type {
   IUninstallationCommandOptions
 } from '@emscripten-forge/mambajs-core';
 import {
+  empackLockToMambajsLock,
+  bootstrapEmpackPackedEnvironment,
+  bootstrapPython,
+  loadSharedLibs,
+  showPackagesList,
   showPipPackagesList,
   updatePackagesInEmscriptenFS
 } from '@emscripten-forge/mambajs-core';
@@ -90,16 +91,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   ): Promise<any> {
     const { baseUrl, kernelSpec, empackEnvMetaLink } = options;
 
-    if (
-      this.Module.FS === undefined ||
-      this.Module.loadDynamicLibrary === undefined
-    ) {
-      console.warn(
-        `Cannot initialize the file-system of ${kernelSpec.dir} since it wasn't compiled with FS support.`
-      );
-      return;
-    }
-
     // location of the kernel binary on the server
     const kernelRootUrl = URLExt.join(
       baseUrl,
@@ -116,10 +107,23 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     );
     const empackEnvMeta = (await fetchJson(packagesJsonUrl)) as IEmpackEnvMeta;
 
+    this._lock = empackLockToMambajsLock({ empackEnvMeta });
+
+    if (
+      this.Module.FS === undefined ||
+      this.Module.loadDynamicLibrary === undefined
+    ) {
+      console.warn(
+        `Cannot initialize the file-system of ${kernelSpec.dir} since it wasn't compiled with FS support.`
+      );
+      return;
+    }
+
     this._prefix = empackEnvMeta.prefix;
 
     const bootstrapped = await bootstrapEmpackPackedEnvironment({
       empackEnvMeta,
+      lock: this._lock,
       pkgRootUrl: this._pkgRootUrl,
       Module: this.Module,
       logger: this.logger,
@@ -130,7 +134,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     this._pythonVersion = bootstrapped.pythonVersion;
     this._untarjs = bootstrapped.untarjs;
     this._sharedLibs = bootstrapped.sharedLibs;
-    this._lock = bootstrapped.lock;
   }
 
   /**
