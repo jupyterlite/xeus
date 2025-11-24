@@ -268,37 +268,46 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   }
 
   private async _reloadPackagesInFS(newLock: ILock) {
-    const { sharedLibs, paths } = await updatePackagesInEmscriptenFS({
-      newLock,
-      oldLock: this._lock,
-      pythonVersion: this._pythonVersion,
-      Module: this.Module,
-      untarjs: this._untarjs,
-      logger: this.logger,
-      paths: this._paths
-    });
+    // This is workaround to not hit FS APIs of the mounted custom FS for the kernel.
+    const pwd = this.Module.FS.cwd();
+    this.Module.FS.chdir('/');
 
-    this._paths = paths;
-
-    // Remove dynamic libs we already linked against, so we don't load them again
-    this._sharedLibs = {};
-    for (const pkg of Object.keys(sharedLibs)) {
-      this._sharedLibs[pkg] = sharedLibs[pkg].filter(
-        lib => !this._kernelSharedLibs.has(lib)
-      );
-    }
-
-    // Load shared libs only for old emscripten versions
-    if (this.emscriptenMajorVersion < 4) {
-      await loadSharedLibs({
-        sharedLibs: this._sharedLibs,
-        prefix: '/',
+    try {
+      const { sharedLibs, paths } = await updatePackagesInEmscriptenFS({
+        newLock,
+        oldLock: this._lock,
+        pythonVersion: this._pythonVersion,
         Module: this.Module,
-        logger: this.logger
+        untarjs: this._untarjs,
+        logger: this.logger,
+        paths: this._paths
       });
-    }
 
-    this._lock = newLock;
+      this._paths = paths;
+
+      // Remove dynamic libs we already linked against, so we don't load them again
+      this._sharedLibs = {};
+      for (const pkg of Object.keys(sharedLibs)) {
+        this._sharedLibs[pkg] = sharedLibs[pkg].filter(
+          lib => !this._kernelSharedLibs.has(lib)
+        );
+      }
+
+      // Load shared libs only for old emscripten versions
+      if (this.emscriptenMajorVersion < 4) {
+        await loadSharedLibs({
+          sharedLibs: this._sharedLibs,
+          prefix: '/',
+          Module: this.Module,
+          logger: this.logger
+        });
+      }
+
+      this._lock = newLock;
+    } catch (e) {
+      this.Module.FS.chdir(pwd);
+      throw e;
+    }
   }
 
   private _emscriptenVersion: number | undefined = undefined;
