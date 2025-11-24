@@ -245,7 +245,7 @@ test.describe('General Tests', () => {
     await page.notebook.runCell(4);
 
     output = await page.notebook.getCellTextOutput(4);
-    expect(output![0]).not.toContain('ModuleNotFoundError');
-    expect(output![0]).toContain('ok');
+    expect(output![1]).not.toContain('ModuleNotFoundError');
+    expect(output![1]).toContain('ok');
   });
 });
