@@ -33,7 +33,7 @@
         "watch:src": "tsc -w --sourceMap"
     },
     "dependencies": {
-        "@emscripten-forge/mambajs-core": "^0.19.6",
+        "@emscripten-forge/mambajs-core": "^0.19.7",
         "@jupyterlab/coreutils": "^6.5.0",
         "@jupyterlab/services": "^7.5.0",
         "@jupyterlite/services": "^0.7.0-rc.1",
