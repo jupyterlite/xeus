@@ -236,5 +236,16 @@ test.describe('General Tests', () => {
 
     output = await page.notebook.getCellTextOutput(2);
     expect(output![0]).not.toContain('ModuleNotFoundError');
+    expect(output![0]).toContain('ok');
+
+    await page.notebook.setCell(3, 'code', '!mamba install datascience');
+    await page.notebook.runCell(3);
+
+    await page.notebook.setCell(4, 'code', 'import datascience; print("ok")');
+    await page.notebook.runCell(4);
+
+    output = await page.notebook.getCellTextOutput(4);
+    expect(output![0]).not.toContain('ModuleNotFoundError');
+    expect(output![0]).toContain('ok');
   });
 });
