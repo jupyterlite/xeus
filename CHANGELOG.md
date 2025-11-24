@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.3.0rc2
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.0-rc1...939b96f3caaeb92acff87421c17bf127a8d05cee))
+
+### Enhancements made
+
+- Improve perf of dynamic installs [#322](https://github.com/jupyterlite/xeus/pull/322) ([@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- Log kernel instanciation error [#323](https://github.com/jupyterlite/xeus/pull/323) ([@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Bump mambajs 0.19.7 [#321](https://github.com/jupyterlite/xeus/pull/321) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-11-24&to=2025-11-24&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-11-24..2025-11-24&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.3.0rc1
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.0-rc0...df5983ad77d6ba2872966958316ae443148bf86e))
@@ -20,8 +44,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-11-20&to=2025-11-24&type=c))
 
 [@DerThorsten](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3ADerThorsten+updated%3A2025-11-20..2025-11-24&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-11-20..2025-11-24&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.3.0rc0
 
