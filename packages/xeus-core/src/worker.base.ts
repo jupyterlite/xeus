@@ -89,6 +89,16 @@ export class XeusWorkerLoggerBase implements ILogger {
   executionCount: number = 0;
 }
 
+function getErrorMessage(e: any, Module: any) {
+  if (typeof e === 'number') {
+    return Module.get_exception_message(e);
+  } else if (e instanceof WebAssembly.Exception) {
+    return Module.getExceptionMessage(e);
+  } else {
+    return e;
+  }
+}
+
 /**
  * The base class for the worker kernel
  *
@@ -191,6 +201,8 @@ export abstract class XeusRemoteKernelBase {
         try {
           this.xkernel = new this.Module.xkernel(kernelSpec.argv);
         } catch (e) {
+          const msg = getErrorMessage(e, this.Module);
+          this.logger.warn(msg);
           this.xkernel = new this.Module.xkernel();
         }
       } else {
@@ -203,18 +215,9 @@ export abstract class XeusRemoteKernelBase {
       }
       this.xkernel.start();
     } catch (e) {
-      if (typeof e === 'number') {
-        const msg = this.Module.get_exception_message(e);
-        this.logger.error(msg);
-        throw new Error(msg);
-      } else if (e instanceof WebAssembly.Exception) {
-        const msg = this.Module.getExceptionMessage(e);
-        this.logger.error(msg);
-        throw new Error(msg);
-      } else {
-        this.logger.error(e);
-        throw e;
-      }
+      const msg = getErrorMessage(e, this.Module);
+      this.logger.error(msg);
+      throw new Error(msg);
     }
 
     this.logger.log('Kernel successfuly started!');
