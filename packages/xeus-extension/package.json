@@ -1,6 +1,6 @@
 {
     "name": "@jupyterlite/xeus-extension",
-    "version": "4.3.0-rc2",
+    "version": "4.3.0-rc3",
     "description": "JupyterLite loader for Xeus kernels",
     "keywords": [
         "jupyter",
@@ -46,7 +46,7 @@
         "@jupyterlab/logconsole": "^4.5.0",
         "@jupyterlite/apputils": "^0.7.0-rc.2",
         "@jupyterlite/services": "^0.7.0-rc.2",
-        "@jupyterlite/xeus": "^4.3.0-rc2",
+        "@jupyterlite/xeus": "^4.3.0-rc3",
         "@lumino/coreutils": "^2"
     },
     "devDependencies": {

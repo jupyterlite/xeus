@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.3.0rc3
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.0-rc2...b08ffcb5de3052d4e764787b8917e32432966007))
+
+### Maintenance and upkeep improvements
+
+- Update JupyterLite rc2 [#324](https://github.com/jupyterlite/xeus/pull/324) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-11-24&to=2025-11-25&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-11-24..2025-11-25&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.3.0rc2
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.0-rc1...939b96f3caaeb92acff87421c17bf127a8d05cee))
@@ -23,8 +39,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-11-24&to=2025-11-24&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-11-24..2025-11-24&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.3.0rc1
 

@@ -820,7 +820,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlite/xeus-core@^4.3.0-rc2, @jupyterlite/xeus-core@workspace:packages/xeus-core":
+"@jupyterlite/xeus-core@^4.3.0-rc3, @jupyterlite/xeus-core@workspace:packages/xeus-core":
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus-core@workspace:packages/xeus-core"
   dependencies:
@@ -853,7 +853,7 @@ __metadata:
     "@jupyterlab/logconsole": ^4.5.0
     "@jupyterlite/apputils": ^0.7.0-rc.2
     "@jupyterlite/services": ^0.7.0-rc.2
-    "@jupyterlite/xeus": ^4.3.0-rc2
+    "@jupyterlite/xeus": ^4.3.0-rc3
     "@lumino/coreutils": ^2
     "@types/json-schema": ^7.0.11
     "@types/react": ^18.0.26
@@ -886,7 +886,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jupyterlite/xeus@^4.3.0-rc2, @jupyterlite/xeus@workspace:packages/xeus":
+"@jupyterlite/xeus@^4.3.0-rc3, @jupyterlite/xeus@workspace:packages/xeus":
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
@@ -895,7 +895,7 @@ __metadata:
     "@jupyterlab/coreutils": ^6.5.0
     "@jupyterlab/services": ^7.5.0
     "@jupyterlite/services": ^0.7.0-rc.1
-    "@jupyterlite/xeus-core": ^4.3.0-rc2
+    "@jupyterlite/xeus-core": ^4.3.0-rc3
     "@lumino/coreutils": ^2
     "@lumino/signaling": ^2
     "@types/json-schema": ^7.0.11
