@@ -27,7 +27,7 @@ classifiers = [
 dependencies = [
     "empack>=5.1.1,<7",
     "traitlets",
-    "jupyterlite-core>=0.7.0a5,<0.8.0",
+    "jupyterlite-core>=0.7.0,<0.8.0",
     "pyyaml",
     "requests",
 ]
