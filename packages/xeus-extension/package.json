@@ -44,8 +44,8 @@
         "@jupyterlab/application": "^4.5.0",
         "@jupyterlab/coreutils": "^6.5.0",
         "@jupyterlab/logconsole": "^4.5.0",
-        "@jupyterlite/apputils": "^0.7.0-rc.2",
-        "@jupyterlite/services": "^0.7.0-rc.2",
+        "@jupyterlite/apputils": "^0.7.0",
+        "@jupyterlite/services": "^0.7.0",
         "@jupyterlite/xeus": "^4.3.0-rc3",
         "@lumino/coreutils": "^2"
     },
