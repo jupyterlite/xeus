@@ -2,6 +2,49 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.3.0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.2.2...8712857250fedaa8091de03a333f98cf4937951c))
+
+### Enhancements made
+
+- Improve perf of dynamic installs [#322](https://github.com/jupyterlite/xeus/pull/322) ([@martinRenou](https://github.com/martinRenou))
+- Emscripten 4.x support [#311](https://github.com/jupyterlite/xeus/pull/311) ([@DerThorsten](https://github.com/DerThorsten))
+- Bump JupyterLite 0.7.0
+  - [#280](https://github.com/jupyterlite/xeus/pull/280) ([@martinRenou](https://github.com/martinRenou))
+  - [#326](https://github.com/jupyterlite/xeus/pull/326) ([@martinRenou](https://github.com/martinRenou))
+  - [#325](https://github.com/jupyterlite/xeus/pull/325) ([@martinRenou](https://github.com/martinRenou))
+  - [#324](https://github.com/jupyterlite/xeus/pull/324) ([@martinRenou](https://github.com/martinRenou))
+  - [#317](https://github.com/jupyterlite/xeus/pull/317) ([@martinRenou](https://github.com/martinRenou))
+  - [#312](https://github.com/jupyterlite/xeus/pull/312) ([@martinRenou](https://github.com/martinRenou))
+- Bump MambaJS
+  - [#321](https://github.com/jupyterlite/xeus/pull/321) ([@martinRenou](https://github.com/martinRenou))
+  - [#302](https://github.com/jupyterlite/xeus/pull/302) ([@martinRenou](https://github.com/martinRenou))
+  - [#285](https://github.com/jupyterlite/xeus/pull/285) ([@martinRenou](https://github.com/martinRenou))
+  - [#279](https://github.com/jupyterlite/xeus/pull/279) ([@martinRenou](https://github.com/martinRenou))
+  - [#303](https://github.com/jupyterlite/xeus/pull/303) ([@martinRenou](https://github.com/martinRenou))
+  - [#308](https://github.com/jupyterlite/xeus/pull/308) ([@martinRenou](https://github.com/martinRenou))
+- Log kernel instanciation error [#323](https://github.com/jupyterlite/xeus/pull/323) ([@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- Never dynamically load twice the same dynlib [#282](https://github.com/jupyterlite/xeus/pull/282) ([@martinRenou](https://github.com/martinRenou))
+- Fix shared packages entry [#313](https://github.com/jupyterlite/xeus/pull/313) ([@martinRenou](https://github.com/martinRenou))
+
+### Documentation improvements
+
+- Mention mambajs in documentation [#309](https://github.com/jupyterlite/xeus/pull/309) ([@martinRenou](https://github.com/martinRenou))
+- Add xeus-octave to the list of supported kernels [#306](https://github.com/jupyterlite/xeus/pull/306) ([@rgaiacs](https://github.com/rgaiacs))
+- Fix contributing docs [#304](https://github.com/jupyterlite/xeus/pull/304) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-09-01&to=2025-11-26&type=c))
+
+[@DerThorsten](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3ADerThorsten+updated%3A2025-09-01..2025-11-26&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-09-01..2025-11-26&type=Issues) | [@rgaiacs](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Argaiacs+updated%3A2025-09-01..2025-11-26&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.3.0rc3
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.0-rc2...b08ffcb5de3052d4e764787b8917e32432966007))
@@ -15,8 +58,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-11-24&to=2025-11-25&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-11-24..2025-11-25&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.3.0rc2
 
