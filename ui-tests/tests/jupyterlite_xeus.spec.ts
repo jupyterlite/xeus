@@ -71,33 +71,7 @@ test.describe('General Tests', () => {
     await page.notebook.runCellByCell();
   });
 
-  test('(Multi-kernels test) xeus-python from env-default should execute some code', async ({
-    page
-  }) => {
-    await page.goto('lab/index.html');
-
-    const xpython = page
-      .locator('[title="Python 3.13 (XPython) [env-python]"]')
-      .first();
-    await xpython.click();
-
-    // Wait for kernel to be idle
-    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
-
-    await page.notebook.addCell('code', 'import bqplot; print("ok")');
-    await page.notebook.runCell(1);
-
-    // Wait for kernel to be idle
-    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
-
-    const cell = await page.notebook.getCellOutput(1);
-
-    expect(await cell?.screenshot()).toMatchSnapshot(
-      'jupyter-xeus-execute.png'
-    );
-  });
-
-  test('(Multi-kernels test) xeus-python from env-python have packages', async ({
+  test('(Multi-kernels test) xeus-python from env-default does not have packages', async ({
     page
   }) => {
     await page.goto('lab/index.html');
@@ -107,21 +81,56 @@ test.describe('General Tests', () => {
       .first();
     await xpython.click();
 
+    await page.notebook.save();
+
     // Wait for kernel to be idle
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
     // xeus-python from env-default does not have bqplot installed.
-    await page.notebook.addCell('code', 'import bqplot');
+    await page.notebook.setCell(0, 'code', 'import bqplot');
+    await page.notebook.runCell(0);
+
+    // Wait for kernel to be idle
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
+    let output = await page.notebook.getCellTextOutput(0);
+    expect(output![0]).toContain('ModuleNotFoundError');
+  });
+
+  test('(Multi-kernels test) xeus-python from env-python have packages', async ({
+    page
+  }) => {
+    await page.goto('lab/index.html');
+
+    const xpython = page
+      .locator('[title="Python 3.13 (XPython) [env-python]"]')
+      .first();
+    await xpython.click();
+
+    await page.notebook.save();
+
+    // Wait for kernel to be idle
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
+    await page.notebook.setCell(0, 'code', 'import bqplot; print("ok")');
+    await page.notebook.runCell(0);
+
+    // Wait for kernel to be idle
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
+    let output = await page.notebook.getCellTextOutput(0);
+    expect(output![0]).not.toContain('ModuleNotFoundError');
+    expect(output![0]).toContain('ok');
+
+    await page.notebook.setCell(1, 'code', 'import ipycanvas; print("ok")');
     await page.notebook.runCell(1);
 
     // Wait for kernel to be idle
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
-    const cell = await page.notebook.getCellOutput(1);
-
-    expect(await cell?.screenshot()).toMatchSnapshot(
-      'jupyter-xeus-execute-env2.png'
-    );
+    output = await page.notebook.getCellTextOutput(1);
+    expect(output![0]).not.toContain('ModuleNotFoundError');
+    expect(output![0]).toContain('ok');
   });
 
   test('the kernel should have access to the file system', async ({ page }) => {
@@ -244,6 +253,7 @@ test.describe('General Tests', () => {
     await page.notebook.setCell(4, 'code', 'import datascience; print("ok")');
     await page.notebook.runCell(4);
 
+    // Reading output![1] here because the first output is a matplotlib warning...
     output = await page.notebook.getCellTextOutput(4);
     expect(output![1]).not.toContain('ModuleNotFoundError');
     expect(output![1]).toContain('ok');

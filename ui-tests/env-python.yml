@@ -9,3 +9,5 @@ dependencies:
   - matplotlib
   - bqplot
   - ipywidgets
+  - pip:
+    - ipycanvas

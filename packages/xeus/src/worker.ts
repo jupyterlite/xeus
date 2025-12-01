@@ -107,7 +107,10 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     );
     const empackEnvMeta = (await fetchJson(packagesJsonUrl)) as IEmpackEnvMeta;
 
-    this._lock = empackLockToMambajsLock({ empackEnvMeta });
+    this._lock = empackLockToMambajsLock({
+      empackEnvMeta,
+      pkgRootUrl: this._pkgRootUrl
+    });
 
     if (
       this.Module.FS === undefined ||
