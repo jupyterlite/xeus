@@ -77,7 +77,7 @@ test.describe('General Tests', () => {
     await page.goto('lab/index.html');
 
     const xpython = page
-      .locator('[title="Python 3.13 (XPython) [env-python]"]')
+      .locator('[title="Python 3.13 (XPython) [env-default]"]')
       .first();
     await xpython.click();
 
@@ -103,7 +103,7 @@ test.describe('General Tests', () => {
     await page.goto('lab/index.html');
 
     const xpython = page
-      .locator('[title="Python 3.13 (XPython) [env-default]"]')
+      .locator('[title="Python 3.13 (XPython) [env-python]"]')
       .first();
     await xpython.click();
 
