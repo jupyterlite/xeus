@@ -1,6 +1,6 @@
 name: xeus-lite-dev
 channels:
-  - conda-forge
+  - https://prefix.dev/conda-forge
 dependencies:
   - black
   - python-build

@@ -26,6 +26,9 @@ jobs:
       with:
         environment-name: xeus-lite-dev
         environment-file: environment-dev.yaml
+        condarc: |
+          channels:
+            - https://prefix.dev/conda-forge
 
     - name: Lint JS
       run: |
@@ -104,6 +107,9 @@ jobs:
         with:
           environment-file: environment-dev.yaml
           environment-name: xeus-lite-dev
+          condarc: |
+            channels:
+              - https://prefix.dev/conda-forge
 
       - name: Install
         run: pip install jupyterlite_xeus*.whl
@@ -145,6 +151,9 @@ jobs:
         environment-name: test-env
         create-args: >-
           pip
+        condarc: |
+          channels:
+            - https://prefix.dev/conda-forge
 
     - name: Install the extension
       run: |
