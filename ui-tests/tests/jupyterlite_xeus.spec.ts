@@ -94,7 +94,7 @@ test.describe('General Tests', () => {
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
     let output = await page.notebook.getCellTextOutput(0);
-    expect(output![1]).toContain('ModuleNotFoundError');
+    expect(output![0]).toContain('ModuleNotFoundError');
   });
 
   test('(Multi-kernels test) xeus-python from env-python have packages', async ({
@@ -119,8 +119,8 @@ test.describe('General Tests', () => {
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
     let output = await page.notebook.getCellTextOutput(0);
-    expect(output![1]).not.toContain('ModuleNotFoundError');
-    expect(output![1]).toContain('ok');
+    expect(output![0]).not.toContain('ModuleNotFoundError');
+    expect(output![0]).toContain('ok');
 
     await page.notebook.setCell(1, 'code', 'import ipycanvas; print("ok")');
     await page.notebook.runCell(1);
@@ -129,8 +129,8 @@ test.describe('General Tests', () => {
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
     output = await page.notebook.getCellTextOutput(1);
-    expect(output![1]).not.toContain('ModuleNotFoundError');
-    expect(output![1]).toContain('ok');
+    expect(output![0]).not.toContain('ModuleNotFoundError');
+    expect(output![0]).toContain('ok');
   });
 
   test('the kernel should have access to the file system', async ({ page }) => {
@@ -253,6 +253,7 @@ test.describe('General Tests', () => {
     await page.notebook.setCell(4, 'code', 'import datascience; print("ok")');
     await page.notebook.runCell(4);
 
+    // Reading output![1] here because the first output is a matplotlib warning...
     output = await page.notebook.getCellTextOutput(4);
     expect(output![1]).not.toContain('ModuleNotFoundError');
     expect(output![1]).toContain('ok');
