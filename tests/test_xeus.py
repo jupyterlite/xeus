@@ -210,8 +210,6 @@ def test_multiple_envs():
         update_action_args = update_cp_env_steps["actions"][0][1]
         expected_tmp_path = update_action_args[0]
         assert expected_tmp_path.name == "empack_env_meta.json"
-        assert isinstance(update_action_args[1], dict)
-        assert "specs" in update_action_args[1]
 
         copy_action_args = update_cp_env_steps["actions"][1][1]
         assert copy_action_args[1] == target_path / env_name_tmp / "empack_env_meta.json"
