@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.3.2
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.1...4cd4a15da0b264812b7d88f7b6270a117c63102f))
+
+### Enhancements made
+
+- Support for `!pip install jaraco.classes` (Python packages with dots) [#330](https://github.com/jupyterlite/xeus/pull/330) ([@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- Fix support for empacked pip packages [#329](https://github.com/jupyterlite/xeus/pull/329) ([@martinRenou](https://github.com/martinRenou))
+- Fix handling of channels from prefixes [#328](https://github.com/jupyterlite/xeus/pull/328) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-11-27&to=2025-12-01&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-11-27..2025-12-01&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.3.1
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.0...4df60ea95e97647498c0839e3066aaa2adadde9a))
@@ -15,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-11-26&to=2025-11-27&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-11-26..2025-11-27&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.3.0
 
