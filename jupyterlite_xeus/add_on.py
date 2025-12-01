@@ -158,6 +158,7 @@ class XeusAddon(FederatedExtensionAddon):
                     raise ValueError(f"Environment name '{env_name}' used more than once")
                 self.prefixes[env_name] = prefix
                 self.specs[env_name] = self.get_environment_specs(prefix)
+                self.channels[env_name] = self.get_environment_channels(prefix)
 
         all_kernels = []
         for env_name, prefix in self.prefixes.items():
@@ -193,6 +194,23 @@ class XeusAddon(FederatedExtensionAddon):
                     except Exception as e:
                         print(f"Error parsing line: {spec_line} — {e}")
         return specs
+
+    def get_environment_channels(self, prefix):
+        if isinstance(prefix, str):
+            history_file_path = Path(prefix)
+        path = history_file_path / "conda-meta" / "history"
+        channels = []
+        with open(path, "r") as f:
+            for line in f:
+                if line.startswith("# cmd:"):
+                    # TODO
+                    pass
+                    # spec_line = line.strip().replace("# update specs:", "").strip()
+                    # try:
+                    #     specs += ast.literal_eval(spec_line)
+                    # except Exception as e:
+                    #     print(f"Error parsing line: {spec_line} — {e}")
+        return channels
 
     def create_prefix(self, env_file: Path):
         # read the environment file
@@ -355,7 +373,7 @@ class XeusAddon(FederatedExtensionAddon):
             ],
         )
 
-    def update_empack_meta(self, file_path, env_name, new_data):
+    def update_empack_meta(self, file_path, new_data):
         if file_path.exists():
             with open(file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
@@ -363,18 +381,6 @@ class XeusAddon(FederatedExtensionAddon):
             data = {}
 
         data.update(new_data)
-
-        # TODO Channel priority????
-        # Generate channels entry
-        if not hasattr(self.channels, env_name):
-            # Detect channels from empack_meta
-            self.channels[env_name] = []
-            for pkg in data["packages"]:
-                pkg_channel = pkg.get("channel", None)
-                if pkg_channel is not None and pkg_channel != 'PyPi' and pkg_channel not in self.channels[env_name]:
-                    self.channels[env_name].append(pkg_channel)
-
-        data.update({"channels": self.channels[env_name]})
 
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
@@ -498,8 +504,7 @@ class XeusAddon(FederatedExtensionAddon):
                     self.update_empack_meta,
                     [
                         out_path / EMPACK_ENV_META,
-                        env_name,
-                        {"specs": self.specs[env_name]},
+                        {"specs": self.specs[env_name], "channels": self.channels[env_name]},
                     ],
                 ),
                 (
