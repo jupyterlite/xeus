@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import shlex
 from tempfile import TemporaryDirectory
 from urllib.parse import urlparse
 import warnings
@@ -203,13 +204,26 @@ class XeusAddon(FederatedExtensionAddon):
         with open(path, "r") as f:
             for line in f:
                 if line.startswith("# cmd:"):
-                    # TODO
-                    pass
-                    # spec_line = line.strip().replace("# update specs:", "").strip()
-                    # try:
-                    #     specs += ast.literal_eval(spec_line)
-                    # except Exception as e:
-                    #     print(f"Error parsing line: {spec_line} — {e}")
+                    tokens = shlex.split(line.replace("# cmd:", ""))
+                    i = 0
+                    while i < len(tokens):
+                        tok = tokens[i]
+
+                        # Handle "-c URL" or "--channel URL"
+                        if tok in ("-c", "--channel"):
+                            if i + 1 < len(tokens):
+                                channels.append(tokens[i + 1])
+                            i += 2
+                            continue
+
+                        # Handle "--channel=URL"
+                        if tok.startswith("--channel="):
+                            channels.append(tok.split("=", 1)[1])
+                            i += 1
+                            continue
+
+                        i += 1
+        print('---DEBUG extracted channels', channels)
         return channels
 
     def create_prefix(self, env_file: Path):
