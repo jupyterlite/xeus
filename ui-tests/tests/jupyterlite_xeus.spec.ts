@@ -95,6 +95,13 @@ test.describe('General Tests', () => {
     expect(await cell?.screenshot()).toMatchSnapshot(
       'jupyter-xeus-execute.png'
     );
+
+    await page.notebook.setCell(2, 'code', 'import ipycanvas; print("ok")');
+    await page.notebook.runCell(2);
+
+    const output = await page.notebook.getCellTextOutput(2);
+    expect(output![1]).not.toContain('ModuleNotFoundError');
+    expect(output![1]).toContain('ok');
   });
 
   test('(Multi-kernels test) xeus-python from env-python have packages', async ({
