@@ -112,8 +112,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       pkgRootUrl: this._pkgRootUrl
     });
 
-    console.log('loaded lock', this._lock);
-
     if (
       this.Module.FS === undefined ||
       this.Module.loadDynamicLibrary === undefined
