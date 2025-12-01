@@ -280,7 +280,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         newLock,
         oldLock: this._lock,
         pythonVersion: this._pythonVersion,
-        pkgRootUrl: this._pkgRootUrl,
         Module: this.Module,
         untarjs: this._untarjs,
         logger: this.logger,
