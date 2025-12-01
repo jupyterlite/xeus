@@ -84,23 +84,23 @@ test.describe('General Tests', () => {
     // Wait for kernel to be idle
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
-    await page.notebook.setCell(1, 'code', 'import bqplot; print("ok")');
+    await page.notebook.setCell(0, 'code', 'import bqplot; print("ok")');
+    await page.notebook.runCell(0);
+
+    // Wait for kernel to be idle
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
+    let output = await page.notebook.getCellTextOutput(0);
+    expect(output![1]).not.toContain('ModuleNotFoundError');
+    expect(output![1]).toContain('ok');
+
+    await page.notebook.setCell(1, 'code', 'import ipycanvas; print("ok")');
     await page.notebook.runCell(1);
 
     // Wait for kernel to be idle
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
-    let output = await page.notebook.getCellTextOutput(1);
-    expect(output![1]).not.toContain('ModuleNotFoundError');
-    expect(output![1]).toContain('ok');
-
-    await page.notebook.setCell(2, 'code', 'import ipycanvas; print("ok")');
-    await page.notebook.runCell(2);
-
-    // Wait for kernel to be idle
-    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
-
-    output = await page.notebook.getCellTextOutput(2);
+    output = await page.notebook.getCellTextOutput(1);
     expect(output![1]).not.toContain('ModuleNotFoundError');
     expect(output![1]).toContain('ok');
   });
@@ -119,13 +119,13 @@ test.describe('General Tests', () => {
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
     // xeus-python from env-default does not have bqplot installed.
-    await page.notebook.setCell(1, 'code', 'import bqplot');
-    await page.notebook.runCell(1);
+    await page.notebook.setCell(0, 'code', 'import bqplot');
+    await page.notebook.runCell(0);
 
     // Wait for kernel to be idle
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
-    let output = await page.notebook.getCellTextOutput(1);
+    let output = await page.notebook.getCellTextOutput(0);
     expect(output![1]).toContain('ModuleNotFoundError');
   });
 
