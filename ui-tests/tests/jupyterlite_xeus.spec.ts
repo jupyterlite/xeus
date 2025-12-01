@@ -84,22 +84,23 @@ test.describe('General Tests', () => {
     // Wait for kernel to be idle
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
-    await page.notebook.addCell('code', 'import bqplot; print("ok")');
+    await page.notebook.setCell(1,'code', 'import bqplot; print("ok")');
     await page.notebook.runCell(1);
 
     // Wait for kernel to be idle
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
-    const cell = await page.notebook.getCellOutput(1);
-
-    expect(await cell?.screenshot()).toMatchSnapshot(
-      'jupyter-xeus-execute.png'
-    );
+    let output = await page.notebook.getCellTextOutput(1);
+    expect(output![1]).not.toContain('ModuleNotFoundError');
+    expect(output![1]).toContain('ok');
 
     await page.notebook.setCell(2, 'code', 'import ipycanvas; print("ok")');
     await page.notebook.runCell(2);
 
-    const output = await page.notebook.getCellTextOutput(2);
+    // Wait for kernel to be idle
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
+    output = await page.notebook.getCellTextOutput(2);
     expect(output![1]).not.toContain('ModuleNotFoundError');
     expect(output![1]).toContain('ok');
   });
@@ -118,17 +119,14 @@ test.describe('General Tests', () => {
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
     // xeus-python from env-default does not have bqplot installed.
-    await page.notebook.addCell('code', 'import bqplot');
+    await page.notebook.setCell(1, 'code', 'import bqplot');
     await page.notebook.runCell(1);
 
     // Wait for kernel to be idle
     await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
-    const cell = await page.notebook.getCellOutput(1);
-
-    expect(await cell?.screenshot()).toMatchSnapshot(
-      'jupyter-xeus-execute-env2.png'
-    );
+    let output = await page.notebook.getCellTextOutput(1);
+    expect(output![1]).toContain('ModuleNotFoundError');
   });
 
   test('the kernel should have access to the file system', async ({ page }) => {
