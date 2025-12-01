@@ -223,7 +223,6 @@ class XeusAddon(FederatedExtensionAddon):
                             continue
 
                         i += 1
-        print('---DEBUG extracted channels', channels)
         return channels
 
     def create_prefix(self, env_file: Path):
