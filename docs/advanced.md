@@ -100,3 +100,5 @@ When running `jupyter lite build`, we pass the `prefix` option and point it to t
 ```bash
 jupyter lite build --XeusAddon.prefix=$WASM_ENV_PREFIX
 ```
+
+In that special case, jupyterlite-xeus will be able to detect the channels that were used for creating the environment. If it's not able to detect the channels, you need to provide them with an extra `--XeusAddon.default_channels` option.

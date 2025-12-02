@@ -99,6 +99,12 @@ class XeusAddon(FederatedExtensionAddon):
         description="The path to the wasm prefix",
     )
 
+    default_channels = ListLike(
+        [],
+        config=True,
+        description="The channels to use",
+    )
+
     mount_jupyterlite_content = Bool(
         None,
         allow_none=True,
@@ -223,6 +229,13 @@ class XeusAddon(FederatedExtensionAddon):
                             continue
 
                         i += 1
+
+        if len(channels) == 0:
+            if len(self.default_channels) == 0:
+                raise RuntimeError(f"Cannot detect channels from prefix {prefix}. Please provide a `default_channels` option.")
+
+            channels = self.default_channels
+
         return channels
 
     def create_prefix(self, env_file: Path):
@@ -240,7 +253,7 @@ class XeusAddon(FederatedExtensionAddon):
             if isinstance(item, str):
                 conda_packages.append(item)
         self.specs[env_name] = conda_packages
-        self.channels[env_name] = yaml_content.get("channels", [])
+        self.channels[env_name] = yaml_content.get("channels", self.default_channels)
 
         create_conda_env_from_env_file(root_prefix, yaml_content, env_file.parent)
 
