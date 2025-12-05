@@ -44,8 +44,10 @@ export class XeusComlinkKernel extends EmpackedXeusRemoteKernel {
     FS.chdir(mountpoint);
   }
 
-  async storeAsGlobal(object: any, name: string): Promise<void> {
+  storeAsGlobal(object: any, name: string) {
+    console.log(`Storing object as globalThis.${name}`);
     globalThis[name] = object;
+    console.log(`Stored object as globalThis.${name}`);
   }
 
   async callGlobalReceiver(
