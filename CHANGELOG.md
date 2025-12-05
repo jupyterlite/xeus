@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.3.4
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.3...52d5c47ce0e35be6a4ceee912ef7756e4a9af29a))
+
+### Enhancements made
+
+- make 'storeAsGlobal' sync on the worker, also add log for debuggability [#333](https://github.com/jupyterlite/xeus/pull/333) ([@derthorsten](https://github.com/derthorsten))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-12-02&to=2025-12-05&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-12-02..2025-12-05&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.3.3
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.2...d9eb6a3f3496546bb4cf11ea2739a7ffaed6ea99))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-12-01&to=2025-12-02&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-12-01..2025-12-02&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.3.2
 
