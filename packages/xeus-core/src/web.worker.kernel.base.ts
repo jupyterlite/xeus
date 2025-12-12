@@ -34,8 +34,9 @@ export abstract class WebWorkerKernelBase implements IKernel {
     this.sendMessage = sendMessage;
     this.worker = this.initWorker(options);
     this.remoteKernel = this.createRemote(options);
-    this.initRemote(options).then(this._ready.resolve.bind(this._ready));
-    this.initFileSystem(options);
+    this.initRemote(options)
+      .then(() => this.initFileSystem(options))
+      .then(this._ready.resolve.bind(this._ready));
   }
 
   /**
