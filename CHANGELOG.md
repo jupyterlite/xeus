@@ -2,6 +2,25 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.3.6
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.5...5043245eb8b6b1c35905b11e81e332135280d394))
+
+### Bugs fixed
+
+- Handle mounted files [#336](https://github.com/jupyterlite/xeus/pull/336) ([@jtpio](https://github.com/jtpio), [@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-12-15&to=2025-12-15&type=c))
+
+@jtpio ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2025-12-15..2025-12-15&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-12-15..2025-12-15&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.3.5
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.4...9c140faeb5993f98578d3d827f50728f3ca5ac16))
@@ -18,8 +37,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-12-05&to=2025-12-15&type=c))
 
 @jtpio ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2025-12-05..2025-12-15&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-12-05..2025-12-15&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.3.4
 
