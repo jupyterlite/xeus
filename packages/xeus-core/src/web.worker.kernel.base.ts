@@ -231,7 +231,10 @@ export abstract class WebWorkerKernelBase implements IKernel {
       options.browsingContextId
     );
 
-    if (await this.remoteKernel.isDir('/files')) {
+    const filesLocalPath = `/files/${localPath}`;
+    if (localPath && (await this.remoteKernel.isDir(filesLocalPath))) {
+      await this.remoteKernel.cd(filesLocalPath);
+    } else if (await this.remoteKernel.isDir('/files')) {
       await this.remoteKernel.cd('/files');
     } else {
       await this.remoteKernel.cd(`/drive/${localPath}`);
