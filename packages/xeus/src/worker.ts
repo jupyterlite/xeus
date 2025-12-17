@@ -307,8 +307,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       }
 
       this._lock = newLock;
-    } catch (e) {
-      throw e;
     } finally {
       this.Module.FS.chdir(pwd);
     }
