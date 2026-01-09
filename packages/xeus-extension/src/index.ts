@@ -144,7 +144,7 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
     if (loggerRegistry) {
       const channel = new BroadcastChannel('/xeus-kernel-logs-broadcast');
 
-      channel.onmessage = event => {
+      channel.addEventListener('message', event => {
         const { kernelId, payload } = event.data as {
           kernelId: string;
           payload: ILogPayload;
@@ -163,7 +163,7 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
 
         const logger = loggerRegistry.getLogger(sessionPath);
         logger.log(payload);
-      };
+      });
     }
   }
 };
