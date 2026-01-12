@@ -74,24 +74,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs-core@npm:^0.19.11":
-  version: 0.19.11
-  resolution: "@emscripten-forge/mambajs-core@npm:0.19.11"
+"@emscripten-forge/mambajs-core@npm:^0.19.13":
+  version: 0.19.13
+  resolution: "@emscripten-forge/mambajs-core@npm:0.19.13"
   dependencies:
     "@emscripten-forge/untarjs": ^5.3.2
     yaml: ^2.7.0
-  checksum: bcd9ba284621be4ba446a11d98239e49387d744dbcf77ba5bb45564d1341732a143e6d3ddf8f3b40664ed4fca6891da2bbbe13bfe74d72329979d518a45facaa
+  checksum: d26ff4137d460100ac7eb386282ff3c8d916f8feaa329dd915021b2755d3999c1d3d56eeeb1acc07af828e2b0de75f8dc918a37f63f7b0bb3c4989a62522dde6
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.19.11":
-  version: 0.19.11
-  resolution: "@emscripten-forge/mambajs@npm:0.19.11"
+"@emscripten-forge/mambajs@npm:^0.19.13":
+  version: 0.19.13
+  resolution: "@emscripten-forge/mambajs@npm:0.19.13"
   dependencies:
     "@conda-org/rattler": ^0.3.5
-    "@emscripten-forge/mambajs-core": ^0.19.11
+    "@emscripten-forge/mambajs-core": ^0.19.13
     yaml: ^2.7.0
-  checksum: 482d17fcb853170d709c254c4a84161910c9bac96e44d42e0206448797411be6b7dd95ced82558319df399760be7f8de3dd8a5e8b6b3a13b5e9f6c927c361d4f
+  checksum: 43dcba4b6704bc4f85e13e214fbcf7442a49bb9bdb93cb50bb082c3e933e618c95051a69c67a07587c86431ed95cf1bda611e8b0877695d60845df9b6ea3ec20
   languageName: node
   linkType: hard
 
@@ -787,7 +787,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus-core@workspace:packages/xeus-core"
   dependencies:
-    "@emscripten-forge/mambajs-core": ^0.19.11
+    "@emscripten-forge/mambajs-core": ^0.19.13
     "@jupyterlab/coreutils": ^6.5.0
     "@jupyterlab/services": ^7.5.0
     "@jupyterlite/services": ^0.7.0
@@ -853,7 +853,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.19.11
+    "@emscripten-forge/mambajs": ^0.19.13
     "@emscripten-forge/untarjs": ^5.3.2
     "@jupyterlab/coreutils": ^6.5.0
     "@jupyterlab/services": ^7.5.0
