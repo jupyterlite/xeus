@@ -57,9 +57,9 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
 
     // We directly forward messages to xeus, which will dispatch them properly
     // See discussion in https://github.com/jupyterlite/xeus/pull/108#discussion_r1750143661
-    this.worker.onmessage = e => {
+    this.worker.addEventListener('message', e => {
       this.processWorkerMessage(e.data);
-    };
+    });
 
     if (crossOriginIsolated) {
       remote = coincident(this.worker) as IEmpackXeusWorkerKernel;

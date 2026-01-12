@@ -73,6 +73,14 @@ export abstract class WebWorkerKernelBase implements IKernel {
 
   protected processWorkerMessage(msg: any) {
     if (!msg.header) {
+      // Special handling for pyjs's webbrowser module
+      // Allows:
+      // import webbrowser; webbrowser.open('https://google.com')
+      if (msg.OPEN_TAB) {
+        const { url } = msg.OPEN_TAB;
+        window.open(url)?.focus();
+      }
+
       // Custom msg bypassing comlink/coincident protocol
       if (msg._stream) {
         const parentHeaderValue = this.parentHeader;
