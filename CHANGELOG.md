@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.4.0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.7...35ee16996a8b907d2a391d1fc7de970977faee94))
+
+### Enhancements made
+
+- Update mambajs: support for pip != constraint [#346](https://github.com/jupyterlite/xeus/pull/346) ([@martinRenou](https://github.com/martinRenou))
+- Working webbrowser module [#345](https://github.com/jupyterlite/xeus/pull/345) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-12-17&to=2026-01-12&type=c))
+
+@martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-12-17..2026-01-12&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.3.7
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.3.6...97ed022a35bfb9e1245412599bd216dcd25be556))
@@ -18,8 +38,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2025-12-15&to=2025-12-17&type=c))
 
 @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2025-12-15..2025-12-17&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.3.6
 
