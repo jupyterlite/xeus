@@ -1,3 +1,3 @@
 export * from './interfaces';
-export * from './web.worker.kernel.base';
+export * from './kernel.base';
 export * from './worker.base';
