@@ -253,9 +253,8 @@ test.describe('General Tests', () => {
     await page.notebook.setCell(4, 'code', 'import datascience; print("ok")');
     await page.notebook.runCell(4);
 
-    // Reading output![1] here because the first output is a matplotlib warning...
     output = await page.notebook.getCellTextOutput(4);
-    expect(output![1]).not.toContain('ModuleNotFoundError');
-    expect(output![1]).toContain('ok');
+    expect(output![0]).not.toContain('ModuleNotFoundError');
+    expect(output![0]).toContain('ok');
   });
 });
