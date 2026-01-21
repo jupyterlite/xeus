@@ -212,6 +212,7 @@ export abstract class XeusRemoteKernelBase {
       this.xserver = this.xkernel.get_server();
       if (!this.xserver) {
         this.logger.error('Failed to start kernel!');
+        throw new Error('Failed to start kernel!');
       }
       this.xkernel.start();
     } catch (e) {
