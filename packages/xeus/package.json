@@ -37,7 +37,6 @@
     },
     "dependencies": {
         "@emscripten-forge/mambajs": "^0.20.3",
-        "@emscripten-forge/untarjs": "^5.3.3",
         "@jupyterlab/coreutils": "^6.5.0",
         "@jupyterlab/services": "^7.5.0",
         "@jupyterlite/services": "^0.7.0",

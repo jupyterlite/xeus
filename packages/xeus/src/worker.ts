@@ -25,7 +25,6 @@ import {
   showPipPackagesList,
   updatePackagesInEmscriptenFS
 } from '@emscripten-forge/mambajs-core';
-import { initUntarJS } from '@emscripten-forge/untarjs';
 import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
 import type { IEmpackXeusWorkerKernel } from './interfaces';
 
@@ -274,15 +273,12 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     const pwd = this.Module.FS.cwd();
     this.Module.FS.chdir('/');
 
-    const untarjs = await initUntarJS();
-
     try {
       const { sharedLibs, paths } = await updatePackagesInEmscriptenFS({
         newLock,
         oldLock: this._lock,
         pythonVersion: this._pythonVersion,
         Module: this.Module,
-        untarjs: untarjs,
         logger: this.logger,
         paths: this._paths
       });
