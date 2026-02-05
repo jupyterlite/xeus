@@ -274,7 +274,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     const pwd = this.Module.FS.cwd();
     this.Module.FS.chdir('/');
 
-    const untarjs = await initUntarJS()
+    const untarjs = await initUntarJS();
 
     try {
       const { sharedLibs, paths } = await updatePackagesInEmscriptenFS({
