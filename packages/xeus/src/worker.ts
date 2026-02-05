@@ -25,7 +25,6 @@ import {
   showPipPackagesList,
   updatePackagesInEmscriptenFS
 } from '@emscripten-forge/mambajs-core';
-import type { IUnpackJSAPI } from '@emscripten-forge/untarjs';
 import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
 import type { IEmpackXeusWorkerKernel } from './interfaces';
 
@@ -135,7 +134,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
 
     this._paths = bootstrapped.paths;
     this._pythonVersion = bootstrapped.pythonVersion;
-    this._untarjs = bootstrapped.untarjs;
     this._sharedLibs = bootstrapped.sharedLibs;
   }
 
@@ -281,7 +279,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
         oldLock: this._lock,
         pythonVersion: this._pythonVersion,
         Module: this.Module,
-        untarjs: this._untarjs,
         logger: this.logger,
         paths: this._paths
       });
@@ -322,8 +319,6 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   private _kernelSharedLibs = new Set<string>();
   private _lock: ILock;
   private _paths = {};
-
-  private _untarjs: IUnpackJSAPI | undefined;
 }
 
 export namespace XeusRemoteKernel {
