@@ -193,7 +193,12 @@ test.describe('General Tests', () => {
     expect(output![0]).toEqual('Password: ········\n');
   });
 
-  test('pip install using python kernel', async ({ page }) => {
+  test('pip install using python kernel', async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name === 'crossoriginisolated',
+      'Not supported in crossoriginisolated project'
+    );
+
     await page.goto('lab/index.html');
 
     // Create a Python notebook
@@ -220,7 +225,12 @@ test.describe('General Tests', () => {
     expect(output![0]).not.toContain('ModuleNotFoundError');
   });
 
-  test('conda install using python kernel', async ({ page }) => {
+  test('conda install using python kernel', async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name === 'crossoriginisolated',
+      'Not supported in crossoriginisolated project'
+    );
+
     await page.goto('lab/index.html');
 
     // Create a Python notebook
