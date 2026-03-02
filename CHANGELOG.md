@@ -2,6 +2,25 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 4.4.2
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.4.1...9527b2bb399d7307d18a6076d3c18491e7bac7bb))
+
+### Documentation improvements
+
+- Build docs on latest micromamba [#199](https://github.com/jupyterlite/xeus/pull/199) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2026-02-05&to=2026-03-02&type=c))
+
+@martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2026-02-05..2026-03-02&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 4.4.1
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.4.0...45ce59996ff7e748c982298a30ae7ead9767075d))
@@ -28,8 +47,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2026-01-12&to=2026-02-05&type=c))
 
 @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2026-01-12..2026-02-05&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.4.0
 
