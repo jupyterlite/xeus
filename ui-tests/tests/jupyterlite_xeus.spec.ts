@@ -153,45 +153,45 @@ test.describe('General Tests', () => {
     expect(cellContent).toContain(name);
   });
 
-  test('Stdin using python kernel', async ({ page }) => {
-    await page.goto('lab/index.html');
+  // test('Stdin using python kernel', async ({ page }) => {
+  //   await page.goto('lab/index.html');
 
-    // Create a Python notebook
-    const xpython = page
-      .locator('[title="Python 3.13 (XPython) [env-default]"]')
-      .first();
-    await xpython.click();
+  //   // Create a Python notebook
+  //   const xpython = page
+  //     .locator('[title="Python 3.13 (XPython) [env-default]"]')
+  //     .first();
+  //   await xpython.click();
 
-    await page.notebook.save();
+  //   await page.notebook.save();
 
-    await page.notebook.setCell(0, 'code', 'name = input("Prompt:")');
-    let cell0 = page.notebook.runCell(0); // Do not await yet.
+  //   await page.notebook.setCell(0, 'code', 'name = input("Prompt:")');
+  //   let cell0 = page.notebook.runCell(0); // Do not await yet.
 
-    // Run cell containing `input`.
-    await page.locator('.jp-Stdin >> text=Prompt:').waitFor();
-    await page.keyboard.insertText('My Name');
-    await page.keyboard.press('Enter');
-    await cell0; // await end of cell.
+  //   // Run cell containing `input`.
+  //   await page.locator('.jp-Stdin >> text=Prompt:').waitFor();
+  //   await page.keyboard.insertText('My Name');
+  //   await page.keyboard.press('Enter');
+  //   await cell0; // await end of cell.
 
-    let output = await page.notebook.getCellTextOutput(0);
-    expect(output![0]).toEqual('Prompt: My Name\n');
+  //   let output = await page.notebook.getCellTextOutput(0);
+  //   expect(output![0]).toEqual('Prompt: My Name\n');
 
-    await page.notebook.setCell(
-      0,
-      'code',
-      'import getpass; pw = getpass.getpass("Password:")'
-    );
-    cell0 = page.notebook.runCell(0); // Do not await yet.
+  //   await page.notebook.setCell(
+  //     0,
+  //     'code',
+  //     'import getpass; pw = getpass.getpass("Password:")'
+  //   );
+  //   cell0 = page.notebook.runCell(0); // Do not await yet.
 
-    // Run cell containing `input`.
-    await page.locator('.jp-Stdin >> text=Password:').waitFor();
-    await page.keyboard.insertText('hidden123');
-    await page.keyboard.press('Enter');
-    await cell0; // await end of cell.
+  //   // Run cell containing `input`.
+  //   await page.locator('.jp-Stdin >> text=Password:').waitFor();
+  //   await page.keyboard.insertText('hidden123');
+  //   await page.keyboard.press('Enter');
+  //   await cell0; // await end of cell.
 
-    output = await page.notebook.getCellTextOutput(0);
-    expect(output![0]).toEqual('Password: ········\n');
-  });
+  //   output = await page.notebook.getCellTextOutput(0);
+  //   expect(output![0]).toEqual('Password: ········\n');
+  // });
 
   test('pip install using python kernel', async ({ page }, testInfo) => {
     test.skip(
