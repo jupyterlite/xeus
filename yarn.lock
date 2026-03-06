@@ -74,24 +74,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs-core@npm:^0.21, @emscripten-forge/mambajs-core@npm:^0.21.0":
-  version: 0.21.0
-  resolution: "@emscripten-forge/mambajs-core@npm:0.21.0"
+"@emscripten-forge/mambajs-core@npm:^0.21.1":
+  version: 0.21.1
+  resolution: "@emscripten-forge/mambajs-core@npm:0.21.1"
   dependencies:
     "@emscripten-forge/untarjs": ^5.3.2
     yaml: ^2.7.0
-  checksum: 33deedf3d33fdbb4efd0cf02afc1b45a50e2a02f94dc2cbc76404536fb70e076c42f5882052fab0db0eb62441dbe2a4ec08025de438a0ad9d15edbf5ecaf139a
+  checksum: 94d88e62edb0074817c0cb5bff61c4c8dd888f8e71a4fe7746c096af930c4aa41151eb6ce64aeefa3b46b0227e23b66dd6cc1ed411166bc17a956882990cf1ce
   languageName: node
   linkType: hard
 
-"@emscripten-forge/mambajs@npm:^0.21":
-  version: 0.21.0
-  resolution: "@emscripten-forge/mambajs@npm:0.21.0"
+"@emscripten-forge/mambajs@npm:^0.21.1":
+  version: 0.21.1
+  resolution: "@emscripten-forge/mambajs@npm:0.21.1"
   dependencies:
     "@conda-org/rattler": ^0.3.5
-    "@emscripten-forge/mambajs-core": ^0.21.0
+    "@emscripten-forge/mambajs-core": ^0.21.1
     yaml: ^2.7.0
-  checksum: 05f837a9aec3528ba5ae91b30eaab3baf6c325c0071585ef58a84f144c7ee2737e1c32fff91a4519c84c3565d5ce445f8cff0b8c02654ef0642eb39f388cd385
+  checksum: d2d283bdbe0ac030d78b6b1b889a1bd95138a840d7489d520cf881efc367c6f480ba7ce569a14a87285a47d77c6b426ded6ea2a076b0ce6911e9cee370d27deb
   languageName: node
   linkType: hard
 
@@ -787,7 +787,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus-core@workspace:packages/xeus-core"
   dependencies:
-    "@emscripten-forge/mambajs-core": ^0.21
+    "@emscripten-forge/mambajs-core": ^0.21.1
     "@jupyterlab/coreutils": ^6.5.0
     "@jupyterlab/services": ^7.5.0
     "@jupyterlite/services": ^0.7.0
@@ -853,7 +853,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
-    "@emscripten-forge/mambajs": ^0.21
+    "@emscripten-forge/mambajs": ^0.21.1
     "@jupyterlab/coreutils": ^6.5.0
     "@jupyterlab/services": ^7.5.0
     "@jupyterlite/services": ^0.7.0
