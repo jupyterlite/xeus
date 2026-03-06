@@ -19,7 +19,9 @@ Currently supported kernels are:
 
 ## Quickstart
 
-You can use the template repository https://github.com/jupyterlite/xeus-lite-demo to quickstart your own deployment of jupyterlite on Github pages including jupyterlite-xeus.
+The easiest way to deploy your Notebooks using xeus lite kernels is through [Notebook.link](https://notebook.link), try it!
+
+Alternatively, you can use the template repository https://github.com/jupyterlite/xeus-lite-demo to quickstart your own deployment of jupyterlite on Github pages including jupyterlite-xeus.
 
 ## Requirements
 
