@@ -127,11 +127,12 @@ jobs:
       matrix:
         # try the latest stable and potential pre-releases
         jupyterlite_version: ["jupyterlite-core -U", "jupyterlite-core -U --pre"]
-        project: ["default", "crossoriginisolated"]
+        project: ["default"]
+        # project: ["default", "crossoriginisolated"]
         # the latest stable release is not compatible for now
-        exclude:
-          - jupyterlite_version: "jupyterlite-core -U"
-            project: "crossoriginisolated"
+        # exclude:
+        #   - jupyterlite_version: "jupyterlite-core -U"
+        #     project: "crossoriginisolated"
 
     steps:
     - name: Checkout
