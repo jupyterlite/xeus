@@ -111,10 +111,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
       pkgRootUrl: this._pkgRootUrl
     });
 
-    if (
-      this.Module.FS === undefined ||
-      this.Module.loadDynamicLibrary === undefined
-    ) {
+    if (this.Module.FS === undefined) {
       console.warn(
         `Cannot initialize the file-system of ${kernelSpec.dir} since it wasn't compiled with FS support.`
       );
@@ -144,10 +141,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   protected async initializeInterpreter(
     options: IEmpackXeusWorkerKernel.IOptions
   ) {
-    if (
-      this.Module.FS === undefined ||
-      this.Module.loadDynamicLibrary === undefined
-    ) {
+    if (this.Module.FS === undefined) {
       // Return early, we've already warned earlier
       return;
     }
