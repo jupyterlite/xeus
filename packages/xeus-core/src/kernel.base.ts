@@ -126,22 +126,22 @@ export abstract class WebWorkerKernelBase implements IKernel {
     msg.session = this.parentHeader?.session ?? '';
     this.sendMessage(msg);
 
-    // resolve promise
-    if (
-      msg.header.msg_type === 'status' &&
-      msg.content.execution_state === 'idle'
-    ) {
-      this.executeDelegate.resolve();
-    }
+    // // resolve promise
+    // if (
+    //   msg.header.msg_type === 'status' &&
+    //   msg.content.execution_state === 'idle'
+    // ) {
+    //   this.executeDelegate.resolve();
+    // }
   }
 
   private async _sendMessageToWorker(msg: any): Promise<void> {
     if (msg.header.msg_type === 'input_reply') {
       this.inputDelegate.resolve(msg);
     } else {
-      this.executeDelegate = new PromiseDelegate<void>();
+      //this.executeDelegate = new PromiseDelegate<void>();
       await this.remoteKernel.processMessage({ msg, parent: this.parent });
-      return await this.executeDelegate.promise;
+      //return await this.executeDelegate.promise;
     }
   }
 
