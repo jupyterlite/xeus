@@ -125,23 +125,13 @@ export abstract class WebWorkerKernelBase implements IKernel {
     msg.header.session = this.parentHeader?.session ?? '';
     msg.session = this.parentHeader?.session ?? '';
     this.sendMessage(msg);
-
-    // resolve promise
-    if (
-      msg.header.msg_type === 'status' &&
-      msg.content.execution_state === 'idle'
-    ) {
-      this.executeDelegate.resolve();
-    }
   }
 
   private async _sendMessageToWorker(msg: any): Promise<void> {
     if (msg.header.msg_type === 'input_reply') {
       this.inputDelegate.resolve(msg);
     } else {
-      this.executeDelegate = new PromiseDelegate<void>();
       await this.remoteKernel.processMessage({ msg, parent: this.parent });
-      return await this.executeDelegate.promise;
     }
   }
 
@@ -260,7 +250,6 @@ export abstract class WebWorkerKernelBase implements IKernel {
   protected remoteKernel: IXeusWorkerKernel | Remote<IXeusWorkerKernel>;
   protected worker: Worker;
   protected sendMessage: IKernel.SendMessage;
-  protected executeDelegate = new PromiseDelegate<void>();
   protected inputDelegate = new PromiseDelegate<KernelMessage.IInputReplyMsg>();
 
   private _parentHeader:
