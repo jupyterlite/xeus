@@ -1,12 +1,12 @@
 [build-system]
-requires = ["hatchling>=1.5.0", "jupyterlab>=4.4.0.b0,<5", "hatch-nodejs-version>=0.3.2"]
+requires = ["hatchling>=1.5.0", "hatch-nodejs-version>=0.3.2", "jupyter-builder>=1.0.0,<2"]
 build-backend = "hatchling.build"
 
 [project]
 name = "jupyterlite_xeus"
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
     "Framework :: Jupyter",
     "Framework :: Jupyter :: JupyterLab",
@@ -16,8 +16,6 @@ classifiers = [
     "License :: OSI Approved :: BSD License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -27,7 +25,7 @@ classifiers = [
 dependencies = [
     "empack>=5.1.1,<7",
     "traitlets",
-    "jupyterlite-core>=0.7.0,<0.9.0",
+    "jupyterlite-core>=0.8.0,<0.9.0",
     "pyyaml",
     "requests",
 ]
@@ -76,9 +74,9 @@ build_dir = "jupyterlite_xeus/labextension"
 version_cmd = "python ./scripts/bump_version.py"
 
 [tool.jupyter-releaser.hooks]
-before-bump-version = ["python -m pip install 'jupyterlab>=4.0.0,<5'", "jlpm"]
+before-bump-version = ["python -m pip install 'jupyter-builder>=1.0.0,<2'", "jlpm"]
 before-build-npm = [
-    "python -m pip install 'jupyterlab>=4.0.0,<4.3'",
+    "python -m pip install 'jupyter-builder>=1.0.0,<2'",
     "YARN_ENABLE_IMMUTABLE_INSTALLS=0 jlpm",
     "jlpm build:prod"
 ]
