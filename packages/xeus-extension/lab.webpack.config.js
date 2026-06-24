@@ -27,6 +27,7 @@ module.exports = {
   // also referenced by name in the bundled JS (here, mambajs-core's
   // `unpack-<hash>.wasm`). Disabling realContentHash avoids the cycle; the
   // labextension chunk hashes stay internally consistent.
+  // See https://github.com/jupyterlab/jupyterlab/issues/18245#issuecomment-3675392312
   optimization: {
     realContentHash: false
   },
