@@ -195,7 +195,7 @@ class XeusAddon(FederatedExtensionAddon):
         with open(path, "r") as f:
             for line in f:
                 if line.startswith("# update specs:"):
-                    spec_line = line.strip().replace("# update specs:", "").strip()
+                    spec_line = line.strip().removeprefix("# update specs:").strip()
                     try:
                         specs += ast.literal_eval(spec_line)
                     except Exception as e:
@@ -210,7 +210,7 @@ class XeusAddon(FederatedExtensionAddon):
         with open(path, "r") as f:
             for line in f:
                 if line.startswith("# cmd:"):
-                    tokens = shlex.split(line.replace("# cmd:", ""))
+                    tokens = shlex.split(line.removeprefix("# cmd:"))
                     i = 0
                     while i < len(tokens):
                         tok = tokens[i]
