@@ -7,7 +7,7 @@ channels:
 dependencies:
   - micromamba
   - pip
-  - nodejs=20
+  - nodejs >=22
   - click
   - typer
   - linkify-it-py
