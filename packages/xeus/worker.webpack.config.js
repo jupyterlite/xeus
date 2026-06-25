@@ -24,8 +24,7 @@ module.exports = [
     },
     output: {
       filename: '[name].js',
-      path: path.resolve(__dirname, 'lib'),
-      libraryTarget: 'amd'
+      path: path.resolve(__dirname, 'lib')
     },
     module: {
       rules

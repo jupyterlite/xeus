@@ -6,7 +6,8 @@ dependencies:
   - python-build
   - hatch-jupyter-builder
   - hatch-nodejs-version
-  - jupyterlab >=4.0
+  - jupyter-builder >=1.0.0,<2
+  - jupyterlab >=4.6,<5
   - mamba <2
   - nodejs
   - pip
