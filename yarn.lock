@@ -338,7 +338,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/application@npm:^4.6.0, @jupyterlab/application@npm:~4.6.0":
+"@jupyterlab/application@npm:^4.5.0, @jupyterlab/application@npm:^4.6.0, @jupyterlab/application@npm:~4.6.0":
   version: 4.6.0
   resolution: "@jupyterlab/application@npm:4.6.0"
   dependencies:
@@ -426,7 +426,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/coreutils@npm:^6.6.0, @jupyterlab/coreutils@npm:~6.6.0":
+"@jupyterlab/coreutils@npm:^6.5.0, @jupyterlab/coreutils@npm:^6.6.0, @jupyterlab/coreutils@npm:~6.6.0":
   version: 6.6.0
   resolution: "@jupyterlab/coreutils@npm:6.6.0"
   dependencies:
@@ -466,7 +466,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/logconsole@npm:^4.6.0":
+"@jupyterlab/logconsole@npm:^4.5.0":
   version: 4.6.0
   resolution: "@jupyterlab/logconsole@npm:4.6.0"
   dependencies:
@@ -577,7 +577,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlab/services@npm:^7.6.0, @jupyterlab/services@npm:~7.6.0":
+"@jupyterlab/services@npm:^7.5.0, @jupyterlab/services@npm:^7.6.0, @jupyterlab/services@npm:~7.6.0":
   version: 7.6.0
   resolution: "@jupyterlab/services@npm:7.6.0"
   dependencies:
@@ -703,7 +703,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlite/apputils@npm:^0.8.0":
+"@jupyterlite/apputils@npm:^0.7.0 || ^0.8.0":
   version: 0.8.0
   resolution: "@jupyterlite/apputils@npm:0.8.0"
   dependencies:
@@ -741,7 +741,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jupyterlite/services@npm:^0.8.0":
+"@jupyterlite/services@npm:^0.7.0 || ^0.8.0, @jupyterlite/services@npm:^0.8.0":
   version: 0.8.0
   resolution: "@jupyterlite/services@npm:0.8.0"
   dependencies:
@@ -780,9 +780,9 @@ __metadata:
   resolution: "@jupyterlite/xeus-core@workspace:packages/xeus-core"
   dependencies:
     "@emscripten-forge/mambajs-core": ^0.21.2
-    "@jupyterlab/coreutils": ^6.6.0
-    "@jupyterlab/services": ^7.6.0
-    "@jupyterlite/services": ^0.8.0
+    "@jupyterlab/coreutils": ^6.5.0
+    "@jupyterlab/services": ^7.5.0
+    "@jupyterlite/services": ^0.7.0 || ^0.8.0
     "@lumino/coreutils": ^2
     "@lumino/signaling": ^2
     "@types/json-schema": ^7.0.11
@@ -803,11 +803,11 @@ __metadata:
   resolution: "@jupyterlite/xeus-extension@workspace:packages/xeus-extension"
   dependencies:
     "@jupyter/builder": ^1.0.0
-    "@jupyterlab/application": ^4.6.0
-    "@jupyterlab/coreutils": ^6.6.0
-    "@jupyterlab/logconsole": ^4.6.0
-    "@jupyterlite/apputils": ^0.8.0
-    "@jupyterlite/services": ^0.8.0
+    "@jupyterlab/application": ^4.5.0
+    "@jupyterlab/coreutils": ^6.5.0
+    "@jupyterlab/logconsole": ^4.5.0
+    "@jupyterlite/apputils": ^0.7.0 || ^0.8.0
+    "@jupyterlite/services": ^0.7.0 || ^0.8.0
     "@jupyterlite/xeus": ^4.5.4
     "@lumino/coreutils": ^2
     "@rspack/core": ^2.0.2
@@ -846,9 +846,9 @@ __metadata:
   resolution: "@jupyterlite/xeus@workspace:packages/xeus"
   dependencies:
     "@emscripten-forge/mambajs": ^0.21.4
-    "@jupyterlab/coreutils": ^6.6.0
-    "@jupyterlab/services": ^7.6.0
-    "@jupyterlite/services": ^0.8.0
+    "@jupyterlab/coreutils": ^6.5.0
+    "@jupyterlab/services": ^7.5.0
+    "@jupyterlite/services": ^0.7.0 || ^0.8.0
     "@jupyterlite/xeus-core": ^4.5.4
     "@lumino/coreutils": ^2
     "@lumino/signaling": ^2

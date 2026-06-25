@@ -41,11 +41,11 @@
         "watch:labextension": "jupyter-builder watch ."
     },
     "dependencies": {
-        "@jupyterlab/application": "^4.6.0",
-        "@jupyterlab/coreutils": "^6.6.0",
-        "@jupyterlab/logconsole": "^4.6.0",
-        "@jupyterlite/apputils": "^0.8.0",
-        "@jupyterlite/services": "^0.8.0",
+        "@jupyterlab/application": "^4.5.0",
+        "@jupyterlab/coreutils": "^6.5.0",
+        "@jupyterlab/logconsole": "^4.5.0",
+        "@jupyterlite/apputils": "^0.7.0 || ^0.8.0",
+        "@jupyterlite/services": "^0.7.0 || ^0.8.0",
         "@jupyterlite/xeus": "^4.5.4",
         "@lumino/coreutils": "^2"
     },
