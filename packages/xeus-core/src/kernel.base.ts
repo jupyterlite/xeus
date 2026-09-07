@@ -207,7 +207,7 @@ export abstract class WebWorkerKernelBase implements IKernel {
     return this._name;
   }
 
-  private async initFileSystem(options: WebWorkerKernelBase.IOptions) {
+  protected async initFileSystem(options: WebWorkerKernelBase.IOptions) {
     let driveName: string;
     let localPath: string;
 
