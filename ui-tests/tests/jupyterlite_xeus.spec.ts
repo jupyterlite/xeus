@@ -142,6 +142,8 @@ test.describe('General Tests', () => {
       .first();
     await xpython.click();
 
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
     await page.notebook.save();
 
     await page.notebook.setCell(0, 'code', 'import os; os.listdir()');
@@ -207,6 +209,8 @@ test.describe('General Tests', () => {
       .first();
     await xpython.click();
 
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
     await page.notebook.save();
 
     await page.notebook.setCell(0, 'code', 'import py2vega');
@@ -238,6 +242,8 @@ test.describe('General Tests', () => {
       .locator('[title="Python 3.13 (XPython) [env-default]"]')
       .first();
     await xpython.click();
+
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
 
     await page.notebook.save();
 
