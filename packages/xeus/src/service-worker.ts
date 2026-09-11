@@ -1,4 +1,4 @@
-import { IServiceWorkerManager } from '@jupyterlite/apputils';
+import type { IServiceWorkerManager } from '@jupyterlite/apputils';
 
 /**
  * Wait for the service worker to take control of this page.
