@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 5.1.0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@5.0.0...8445dc54b817336d5b06c1c87477b2f0e676e4ce))
+
+### Enhancements made
+
+- Move waitForServiceWorkerControl into library [#369](https://github.com/jupyterlite/xeus/pull/369) ([@martinRenou](https://github.com/martinRenou))
+- Make initFilesystem protected [#368](https://github.com/jupyterlite/xeus/pull/368) ([@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- Await service worker control before kernel start [#363](https://github.com/jupyterlite/xeus/pull/363) ([@certik](https://github.com/certik), [@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2026-06-25&to=2026-09-11&type=c))
+
+@certik ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Acertik+updated%3A2026-06-25..2026-09-11&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2026-06-25..2026-09-11&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 5.0.0
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@4.5.4...260bdae088170dea9a772719dd8869f957126fba))
@@ -18,8 +42,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2026-06-17&to=2026-06-25&type=c))
 
 @jtpio ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Ajtpio+updated%3A2026-06-17..2026-06-25&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2026-06-17..2026-06-25&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 4.5.4
 
