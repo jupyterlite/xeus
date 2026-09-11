@@ -14,7 +14,10 @@ import { IServiceWorkerManager } from '@jupyterlite/apputils';
 import type { IKernel } from '@jupyterlite/services';
 import { IKernelSpecs } from '@jupyterlite/services';
 
-import { WebWorkerKernel, waitForServiceWorkerControl } from '@jupyterlite/xeus';
+import {
+  WebWorkerKernel,
+  waitForServiceWorkerControl
+} from '@jupyterlite/xeus';
 
 import { IEmpackEnvMetaFile } from './tokens';
 
