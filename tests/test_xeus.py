@@ -1,5 +1,6 @@
 """Test creating Python envs for jupyterlite-xeus-python."""
 
+import json
 import os
 from tempfile import TemporaryDirectory
 from pathlib import Path
@@ -8,6 +9,7 @@ import tarfile
 import pytest
 
 from jupyterlite_core.app import LiteStatusApp
+from traitlets import TraitError
 
 from jupyterlite_xeus.add_on import XeusAddon
 
@@ -103,6 +105,7 @@ def test_no_kernel_no_failure():
     assert env_name in addon.prefixes
     env_path = Path(addon.prefixes[env_name])
     assert env_path.is_dir()
+
 
 def test_mount_point():
     app = LiteStatusApp(log_level="DEBUG")
@@ -236,3 +239,46 @@ def test_multiple_envs():
         filename = match[0].split(':')[-1]  # e.g. xeus-cpp-0.6.0-h18da88b_1.tar.gz
         action = steps[match[0]]["actions"][0][1]
         assert action[1] == target_path / env_name_cpp / "kernel_packages" / filename
+
+
+@pytest.mark.parametrize(
+    "platform", [None, "emscripten-wasm32", "emscripten-wasm64"]
+)
+def test_platform(platform):
+    expected_platform = platform or "emscripten-wasm32"
+    argv = [] if platform is None else [f"--XeusAddon.platform={platform}"]
+
+    app = LiteStatusApp(log_level="DEBUG")
+    app.initialize(argv)
+    manager = app.lite_manager
+
+    addon = XeusAddon(manager)
+    assert addon.platform == expected_platform
+    addon.environment_file = "environment-6x.yml"
+
+    for step in addon.post_build(manager):
+        pass
+
+    env_name = "xeus-lua-kernel-wasm64"
+    assert env_name in addon.prefixes
+    env_path = Path(addon.prefixes[env_name])
+    assert env_path.is_dir()
+
+    assert os.path.isfile(env_path / "bin/xlua.js")
+    assert os.path.isfile(env_path / "bin/xlua.wasm")
+
+    # Check the package was resolved for the requested platform
+    records = list((env_path / "conda-meta").glob("xeus-lua-*.json"))
+    assert len(records) == 1
+    assert json.loads(records[0].read_text())["subdir"] == expected_platform
+
+
+def test_platform_invalid():
+    app = LiteStatusApp(log_level="DEBUG")
+    app.initialize()
+    manager = app.lite_manager
+
+    addon = XeusAddon(manager)
+
+    with pytest.raises(TraitError):
+        addon.platform = "linux-64"
