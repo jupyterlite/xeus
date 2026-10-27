@@ -133,6 +133,52 @@ test.describe('General Tests', () => {
     expect(output![0]).toContain('ok');
   });
 
+  test('(Multi-kernels test) switch between xeus-python kernels from different environments', async ({
+    page
+  }) => {
+    await page.goto('lab/index.html');
+
+    const switchKernel = async (displayName: string) => {
+      await page.locator('.jp-NotebookPanel-toolbar .jp-KernelName').click();
+      const dialog = page.locator('.jp-Dialog');
+      await dialog.locator('select').selectOption({ label: displayName });
+      await dialog.locator('.jp-mod-accept').click();
+      await page
+        .locator('.jp-NotebookPanel-toolbar .jp-KernelName')
+        .getByText(displayName)
+        .waitFor();
+      await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+    };
+
+    const importBqplot = async (index: number) => {
+      await page.notebook.setCell(index, 'code', 'import bqplot; print("ok")');
+      await page.notebook.runCell(index);
+      await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+      return (await page.notebook.getCellTextOutput(index))![0];
+    };
+
+    const xpython = page
+      .locator('[title="Python 3.13 (XPython) [env-default]"]')
+      .first();
+    await xpython.click();
+
+    await page.notebook.save();
+
+    await page.locator('#jp-main-statusbar').getByText('Idle').waitFor();
+
+    // Kernel from env-default does not have bqplot installed.
+    expect(await importBqplot(0)).toContain('ModuleNotFoundError');
+
+    await switchKernel('Python 3.13 (XPython) [env-python]');
+    const output = await importBqplot(1);
+    expect(output).not.toContain('ModuleNotFoundError');
+    expect(output).toContain('ok');
+
+    // Switching back used to fail once both kernels had been started.
+    await switchKernel('Python 3.13 (XPython) [env-default]');
+    expect(await importBqplot(2)).toContain('ModuleNotFoundError');
+  });
+
   test('the kernel should have access to the file system', async ({ page }) => {
     await page.goto('lab/index.html');
 
