@@ -1,0 +1,6 @@
+name: xeus-6x
+channels:
+  - https://prefix.dev/emscripten-forge-bot/emscripten-forge-6x
+  - https://prefix.dev/conda-forge
+dependencies:
+  - xeus-lua

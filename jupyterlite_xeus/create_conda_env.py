@@ -8,7 +8,8 @@ from ._pip import _install_pip_dependencies
 from .constants import DEFAULT_CHANNELS
 
 MICROMAMBA_COMMAND = shutil.which("micromamba")
-PLATFORM = "emscripten-wasm32"
+PLATFORMS = ["emscripten-wasm32", "emscripten-wasm64"]
+DEFAULT_PLATFORM = "emscripten-wasm32"
 
 
 def _extract_specs(env_location, env_data):
@@ -30,7 +31,9 @@ def _extract_specs(env_location, env_data):
     return specs, pip_dependencies
 
 
-def create_conda_env_from_env_file(root_prefix, env_file_content, env_file_location):
+def create_conda_env_from_env_file(
+    root_prefix, env_file_content, env_file_location, platform=DEFAULT_PLATFORM
+):
     # get the name of the environment
     env_name = env_file_content.get("name", "xeus-env")
 
@@ -48,6 +51,7 @@ def create_conda_env_from_env_file(root_prefix, env_file_content, env_file_locat
         specs=specs,
         channels=channels,
         pip_dependencies=pip_dependencies,
+        platform=platform,
     )
 
 
@@ -57,12 +61,14 @@ def create_conda_env_from_specs(
     specs,
     channels,
     pip_dependencies=None,
+    platform=DEFAULT_PLATFORM,
 ):
     _create_conda_env_from_specs_impl(
         env_name=env_name,
         root_prefix=root_prefix,
         specs=specs,
         channels=channels,
+        platform=platform,
     )
     if pip_dependencies:
         _install_pip_dependencies(
@@ -71,7 +77,9 @@ def create_conda_env_from_specs(
         )
 
 
-def _create_conda_env_from_specs_impl(env_name, root_prefix, specs, channels):
+def _create_conda_env_from_specs_impl(
+    env_name, root_prefix, specs, channels, platform=DEFAULT_PLATFORM
+):
     """Create the emscripten environment with the given specs."""
     prefix_path = Path(root_prefix) / "envs" / env_name
 
@@ -100,7 +108,7 @@ def _create_conda_env_from_specs_impl(env_name, root_prefix, specs, channels):
             "",
             "--root-prefix",
             root_prefix,
-            f"--platform={PLATFORM}",
+            f"--platform={platform}",
             *channels_args,
             *specs,
         ],
