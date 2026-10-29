@@ -259,7 +259,7 @@ def test_platform(platform):
     for step in addon.post_build(manager):
         pass
 
-    env_name = "xeus-lua-kernel-wasm64"
+    env_name = "xeus-6x"
     assert env_name in addon.prefixes
     env_path = Path(addon.prefixes[env_name])
     assert env_path.is_dir()
