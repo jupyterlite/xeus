@@ -114,10 +114,9 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
         create: async (options: IKernel.IOptions): Promise<IKernel> => {
           // If kernelspec.name contains a space then the actual name of the executable
           // is only the part before the space.
-          const index = kernelspec.name.indexOf(' ');
-          if (index > 0) {
-            kernelspec.name = kernelspec.name.slice(0, index);
-          }
+          // Use a copy so that the registered kernelspec keeps its unique name,
+          // otherwise the kernel cannot be found by name once it has been started.
+          const spec = { ...kernelspec, name: kernelspec.name.split(' ')[0] };
 
           // The drive is reached through SharedArrayBuffer when the page is
           // cross-origin isolated, and through the service worker otherwise. Mount
@@ -130,22 +129,22 @@ const kernelPlugin: JupyterFrontEndPlugin<void> = {
 
           if (mountDrive) {
             console.info(
-              `${kernelspec.name} contents will be synced with Jupyter Contents`
+              `${spec.name} contents will be synced with Jupyter Contents`
             );
           } else {
             console.warn(
-              `${kernelspec.name} contents will NOT be synced with Jupyter Contents`
+              `${spec.name} contents will NOT be synced with Jupyter Contents`
             );
           }
           const link = empackEnvMetaFile
-            ? await empackEnvMetaFile.getLink(kernelspec)
+            ? await empackEnvMetaFile.getLink(spec)
             : '';
 
           return new WebWorkerKernel({
             ...options,
             contentsManager,
             mountDrive,
-            kernelSpec: kernelspec,
+            kernelSpec: spec,
             empackEnvMetaLink: link,
             browsingContextId: serviceWorker?.browsingContextId || ''
           });
