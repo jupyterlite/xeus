@@ -34,7 +34,11 @@ declare function createXeusModule(options: any): any;
 
 const STREAM = { log: 'stdout', warn: 'stdout', error: 'stderr' };
 
-export class XeusWorkerLoggerBase implements ILogger {
+export interface IXeusWorkerLogger extends ILogger {
+  executionCount: number;
+}
+
+export class XeusWorkerLoggerBase implements IXeusWorkerLogger {
   constructor(kernelId: string) {
     this._id = kernelId;
     this._channel = new BroadcastChannel('/xeus-kernel-logs-broadcast');
@@ -228,7 +232,7 @@ export abstract class XeusRemoteKernelBase {
 
   protected initializeLogger(
     options: IXeusWorkerKernel.IOptions
-  ): XeusWorkerLoggerBase {
+  ): IXeusWorkerLogger {
     return new XeusWorkerLoggerBase(options.kernelId);
   }
 
@@ -333,7 +337,7 @@ export abstract class XeusRemoteKernelBase {
 
   private _ready: Promise<void>;
 
-  protected logger: XeusWorkerLoggerBase;
+  protected logger: IXeusWorkerLogger;
 }
 
 export namespace XeusRemoteKernelBase {
