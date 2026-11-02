@@ -23,9 +23,11 @@ from jupyterlite_core.constants import (
     SHARE_LABEXTENSIONS,
     UTF8,
 )
-from traitlets import Bool, Callable, List, Unicode
+from traitlets import Bool, Callable, Enum, List, Unicode
 
 from .create_conda_env import (
+    DEFAULT_PLATFORM,
+    PLATFORMS,
     create_conda_env_from_env_file,
     create_conda_env_from_specs,
 )
@@ -103,6 +105,13 @@ class XeusAddon(FederatedExtensionAddon):
         [],
         config=True,
         description="The channels to use",
+    )
+
+    platform = Enum(
+        PLATFORMS,
+        DEFAULT_PLATFORM,
+        config=True,
+        description="The platform used when creating the environment from an environment file",
     )
 
     mount_jupyterlite_content = Bool(
@@ -255,7 +264,9 @@ class XeusAddon(FederatedExtensionAddon):
         self.specs[env_name] = conda_packages
         self.channels[env_name] = yaml_content.get("channels", self.default_channels)
 
-        create_conda_env_from_env_file(root_prefix, yaml_content, env_file.parent)
+        create_conda_env_from_env_file(
+            root_prefix, yaml_content, env_file.parent, platform=self.platform
+        )
 
         return env_name, env_prefix
 

@@ -34,6 +34,12 @@ You can also pick another name for that environment file (_e.g._ `custom.yml`), 
 jupyter lite build --XeusAddon.environment_file=custom.yml
 ```
 
+By default the environment is created for the `emscripten-wasm32` platform. You can create it for `emscripten-wasm64` instead using the `--XeusAddon.platform` option:
+
+```
+jupyter lite build --XeusAddon.platform=emscripten-wasm64
+```
+
 ```{warning}
 It is common to provide `pip` dependencies in a conda environment file. This is currently **partially supported** by jupyterlite-xeus. See "pip packages" section.
 ```
