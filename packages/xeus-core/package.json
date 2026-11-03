@@ -33,10 +33,10 @@
         "watch:src": "tsc -w --sourceMap"
     },
     "dependencies": {
-        "@emscripten-forge/mambajs-core": "^0.21.2",
+        "@emscripten-forge/mambajs-core": "^0.24",
         "@jupyterlab/coreutils": "^6.5.0",
         "@jupyterlab/services": "^7.5.0",
-        "@jupyterlite/services": "^0.7.0 || ^0.8.0",
+        "@jupyterlite/services": "^0.7 || ^0.8",
         "@lumino/coreutils": "^2",
         "@lumino/signaling": "^2"
     },
