@@ -2,6 +2,36 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.6.0
+
+([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@5.1.0...6eec338c073b0ec0fa1d66dcfa3fc470009fc4e8))
+
+### Enhancements made
+
+- Bump jlite 0.8.7 + mambajs 0.24 [#377](https://github.com/jupyterlite/xeus/pull/377) ([@martinRenou](https://github.com/martinRenou), [@ianthomas23](https://github.com/ianthomas23))
+- Change return type of XeusRemoteKernelBase.initializeLogger [#374](https://github.com/jupyterlite/xeus/pull/374) ([@ianthomas23](https://github.com/ianthomas23), [@martinRenou](https://github.com/martinRenou))
+- Add support for platform=emscripten-wasm64 [#372](https://github.com/jupyterlite/xeus/pull/372) ([@ianthomas23](https://github.com/ianthomas23), [@martinRenou](https://github.com/martinRenou))
+
+### Bugs fixed
+
+- Fix switching kernels of the same type in different envs [#373](https://github.com/jupyterlite/xeus/pull/373) ([@ianthomas23](https://github.com/ianthomas23), [@martinRenou](https://github.com/martinRenou))
+
+### Maintenance and upkeep improvements
+
+- Fix CI: use new symengine-dev [#376](https://github.com/jupyterlite/xeus/pull/376) ([@martinRenou](https://github.com/martinRenou))
+- Correct the lab extension name [#375](https://github.com/jupyterlite/xeus/pull/375) ([@ianthomas23](https://github.com/ianthomas23), [@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2026-09-11&to=2026-11-03&type=c))
+
+@ianthomas23 ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Aianthomas23+updated%3A2026-09-11..2026-11-03&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2026-09-11..2026-11-03&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 5.1.0
 
 ([Full Changelog](https://github.com/jupyterlite/xeus/compare/@jupyterlite/xeus-core@5.0.0...8445dc54b817336d5b06c1c87477b2f0e676e4ce))
@@ -23,8 +53,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/jupyterlite/xeus/graphs/contributors?from=2026-06-25&to=2026-09-11&type=c))
 
 @certik ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3Acertik+updated%3A2026-06-25..2026-09-11&type=Issues)) | @martinRenou ([activity](https://github.com/search?q=repo%3Ajupyterlite%2Fxeus+involves%3AmartinRenou+updated%3A2026-06-25..2026-09-11&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 5.0.0
 
