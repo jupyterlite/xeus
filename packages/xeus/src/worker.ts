@@ -22,6 +22,7 @@ import {
 } from '@emscripten-forge/mambajs-core';
 import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
 import type { IEmpackXeusWorkerKernel } from './interfaces';
+import { envFingerprint, restorePycCache, savePycCache } from './pyc-cache';
 
 /**
  * Lazily load @emscripten-forge/mambajs.
@@ -146,6 +147,50 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     this._paths = bootstrapped.paths;
     this._pythonVersion = bootstrapped.pythonVersion;
     this._sharedLibs = bootstrapped.sharedLibs;
+
+    // Restore the Python bytecode compiled by a previous kernel (see pyc-cache.ts)
+    this._envKey = envFingerprint(kernelSpec.envName, empackEnvMeta);
+    if (this._pythonVersion) {
+      try {
+        this._restoredPycs = await restorePycCache(this.Module, this._envKey);
+      } catch (e) {
+        console.warn('Failed to restore the Python bytecode cache', e);
+      }
+    }
+  }
+
+  /**
+   * Persist the Python bytecode compiled during startup for the next kernel.
+   */
+  protected async afterKernelStarted(): Promise<void> {
+    if (!this._pythonVersion || !this._envKey || this._envModified) {
+      return;
+    }
+    const root = `${this._prefix === '/' ? '' : this._prefix}/lib`;
+    await savePycCache(
+      this.Module,
+      this._envKey,
+      root,
+      this._restoredPycs.length
+    );
+  }
+
+  /**
+   * Called before the environment is changed at runtime (%conda / %pip).
+   *
+   * The restored pycs are "unchecked": Python would use them even if the
+   * package sources change. Remove them, Python recompiles what it needs.
+   */
+  private _onEnvironmentChange() {
+    this._envModified = true;
+    for (const path of this._restoredPycs) {
+      try {
+        this.Module.FS.unlink(path);
+      } catch {
+        // already gone
+      }
+    }
+    this._restoredPycs = [];
   }
 
   /**
@@ -213,6 +258,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
    */
   protected async install(options: IInstallationCommandOptions) {
     const { install, pipInstall } = await loadMambajs();
+    this._onEnvironmentChange();
     let env: ILock;
 
     switch (options.type) {
@@ -242,6 +288,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     options: IUninstallationCommandOptions
   ): Promise<void> {
     const { remove, pipUninstall } = await loadMambajs();
+    this._onEnvironmentChange();
     let env: ILock;
 
     switch (options.type) {
@@ -319,6 +366,9 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     }
   }
 
+  private _envKey = '';
+  private _envModified = false;
+  private _restoredPycs: string[] = [];
   private _emscriptenVersion: number | undefined = undefined;
   private _pythonVersion: number[] | undefined;
   private _prefix = '';
