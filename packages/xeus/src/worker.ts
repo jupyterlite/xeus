@@ -4,12 +4,7 @@
 import { URLExt } from '@jupyterlab/coreutils';
 
 import type { IEmpackEnvMeta, TSharedLibsMap } from '@emscripten-forge/mambajs';
-import {
-  install,
-  pipInstall,
-  pipUninstall,
-  remove
-} from '@emscripten-forge/mambajs';
+import type * as Mambajs from '@emscripten-forge/mambajs';
 import type {
   ILock,
   IInstallationCommandOptions,
@@ -27,6 +22,28 @@ import {
 } from '@emscripten-forge/mambajs-core';
 import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
 import type { IEmpackXeusWorkerKernel } from './interfaces';
+import { envFingerprint, restorePycCache, savePycCache } from './pyc-cache';
+import type { IFsSnapshot } from './fs-snapshot';
+import { createFsSnapshot, envRoots, restoreFsSnapshot } from './fs-snapshot';
+
+/**
+ * Lazily load @emscripten-forge/mambajs.
+ *
+ * It bundles the rattler package solver, whose ~4 MB wasm is inlined as base64 and
+ * compiled synchronously when the module is evaluated. The solver is only needed for
+ * %conda / %pip (un)install, so we don't want to pay for it on every kernel start.
+ * webpackMode "eager" keeps the code in the worker bundle (no extra chunk to load),
+ * but defers its evaluation to the first call.
+ */
+let mambajsPromise: Promise<typeof Mambajs> | undefined;
+function loadMambajs(): Promise<typeof Mambajs> {
+  if (!mambajsPromise) {
+    mambajsPromise = import(
+      /* webpackMode: "eager" */ '@emscripten-forge/mambajs'
+    );
+  }
+  return mambajsPromise;
+}
 
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url);
@@ -63,6 +80,51 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
 
     importScripts(binaryJS);
     return {
+      // Compile the wasm here (or reuse the module compiled by a previous worker of
+      // this kernel), so that the compiled module can be handed to the next worker.
+      instantiateWasm: (
+        imports: any,
+        receiveInstance: (instance: any, module: any) => void
+      ) => {
+        const compile = async () => {
+          try {
+            return await WebAssembly.compileStreaming(
+              fetch(binaryWASM, { credentials: 'same-origin' })
+            );
+          } catch {
+            // e.g. wrong MIME type: fall back to non-streaming compilation
+            const response = await fetch(binaryWASM, {
+              credentials: 'same-origin'
+            });
+            return WebAssembly.compile(await response.arrayBuffer());
+          }
+        };
+        const instantiate = async () => {
+          if (options.wasmModule) {
+            try {
+              const instance = await WebAssembly.instantiate(
+                options.wasmModule,
+                imports
+              );
+              return { instance, module: options.wasmModule };
+            } catch (e) {
+              console.warn('Cannot reuse the compiled wasm module', e);
+            }
+          }
+          const module = await compile();
+          const instance = await WebAssembly.instantiate(module, imports);
+          return { instance, module };
+        };
+        instantiate()
+          .then(({ instance, module }) => {
+            this.wasmModule = module;
+            receiveInstance(instance, module);
+          })
+          .catch(e =>
+            console.error('Failed to instantiate the kernel wasm', e)
+          );
+        return {};
+      },
       locateFile: (file: string) => {
         if (file in sharedLibs) {
           return URLExt.join(kernelRootUrl, kernelSpec.name, file);
@@ -119,19 +181,110 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     }
 
     this._prefix = empackEnvMeta.prefix;
+    this._envKey = envFingerprint(kernelSpec.envName, empackEnvMeta);
 
-    const bootstrapped = await bootstrapEmpackPackedEnvironment({
-      empackEnvMeta,
-      lock: this._lock,
-      pkgRootUrl: this._pkgRootUrl,
-      Module: this.Module,
-      logger: this.logger,
-      pythonVersion: this._pythonVersion
-    });
+    // On restart, reuse the files unpacked by the previous worker (see fs-snapshot.ts)
+    const snapshot = options.fsSnapshot as IFsSnapshot | undefined;
+    if (snapshot?.key === this._envKey) {
+      try {
+        restoreFsSnapshot(this.Module, snapshot);
+        this._paths = snapshot.paths;
+        this._pythonVersion = snapshot.pythonVersion;
+        this._sharedLibs = snapshot.sharedLibs;
+        this._restoredFromSnapshot = true;
+      } catch (e) {
+        console.warn('Cannot restore the FS snapshot, unpacking packages', e);
+      }
+    }
 
-    this._paths = bootstrapped.paths;
-    this._pythonVersion = bootstrapped.pythonVersion;
-    this._sharedLibs = bootstrapped.sharedLibs;
+    if (!this._restoredFromSnapshot) {
+      const bootstrapped = await bootstrapEmpackPackedEnvironment({
+        empackEnvMeta,
+        lock: this._lock,
+        pkgRootUrl: this._pkgRootUrl,
+        Module: this.Module,
+        logger: this.logger,
+        pythonVersion: this._pythonVersion
+      });
+
+      this._paths = bootstrapped.paths;
+      this._pythonVersion = bootstrapped.pythonVersion;
+      this._sharedLibs = bootstrapped.sharedLibs;
+    }
+    this._envRoots = envRoots(this.Module);
+
+    // Restore the Python bytecode compiled by a previous kernel (see pyc-cache.ts)
+    if (this._pythonVersion) {
+      try {
+        this._restoredPycs = await restorePycCache(this.Module, this._envKey);
+      } catch (e) {
+        console.warn('Failed to restore the Python bytecode cache', e);
+      }
+    }
+  }
+
+  /**
+   * Snapshot of the unpacked environment for the next worker of this kernel
+   * (restart), or undefined. Resolves shortly after the kernel is ready.
+   */
+  getFsSnapshot(): Promise<IFsSnapshot | undefined> {
+    return this._fsSnapshot;
+  }
+
+  /**
+   * Persist what the next kernel can reuse: the unpacked environment (for
+   * restarts) and the Python bytecode compiled during startup.
+   */
+  protected async afterKernelStarted(): Promise<void> {
+    // Only snapshot the pristine environment, and only once per page: a worker
+    // restored from a snapshot doesn't need to create a new one.
+    let snapshot: IFsSnapshot | undefined;
+    if (
+      !this._restoredFromSnapshot &&
+      !this._envModified &&
+      this._envRoots.length
+    ) {
+      try {
+        snapshot = createFsSnapshot(this.Module, this._envRoots, {
+          key: this._envKey,
+          paths: this._paths,
+          pythonVersion: this._pythonVersion,
+          sharedLibs: this._sharedLibs
+        });
+      } catch (e) {
+        console.warn('Cannot create the FS snapshot', e);
+      }
+    }
+    this._resolveFsSnapshot(snapshot);
+
+    if (!this._pythonVersion || !this._envKey || this._envModified) {
+      return;
+    }
+    const root = `${this._prefix === '/' ? '' : this._prefix}/lib`;
+    await savePycCache(
+      this.Module,
+      this._envKey,
+      root,
+      this._restoredPycs.length
+    );
+  }
+
+  /**
+   * Called before the environment is changed at runtime (%conda / %pip).
+   *
+   * The restored pycs are "unchecked": Python would use them even if the
+   * package sources change. Remove them, Python recompiles what it needs.
+   */
+  private _onEnvironmentChange() {
+    this._envModified = true;
+    for (const path of this._restoredPycs) {
+      try {
+        this.Module.FS.unlink(path);
+      } catch {
+        // already gone
+      }
+    }
+    this._restoredPycs = [];
   }
 
   /**
@@ -198,6 +351,8 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
    * @param options
    */
   protected async install(options: IInstallationCommandOptions) {
+    const { install, pipInstall } = await loadMambajs();
+    this._onEnvironmentChange();
     let env: ILock;
 
     switch (options.type) {
@@ -226,6 +381,8 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   protected async uninstall(
     options: IUninstallationCommandOptions
   ): Promise<void> {
+    const { remove, pipUninstall } = await loadMambajs();
+    this._onEnvironmentChange();
     let env: ILock;
 
     switch (options.type) {
@@ -303,6 +460,15 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     }
   }
 
+  private _envKey = '';
+  private _envModified = false;
+  private _envRoots: string[] = [];
+  private _restoredFromSnapshot = false;
+  private _restoredPycs: string[] = [];
+  private _resolveFsSnapshot: (s: IFsSnapshot | undefined) => void = () => {};
+  private _fsSnapshot = new Promise<IFsSnapshot | undefined>(resolve => {
+    this._resolveFsSnapshot = resolve;
+  });
   private _emscriptenVersion: number | undefined = undefined;
   private _pythonVersion: number[] | undefined;
   private _prefix = '';
