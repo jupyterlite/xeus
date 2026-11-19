@@ -4,12 +4,7 @@
 import { URLExt } from '@jupyterlab/coreutils';
 
 import type { IEmpackEnvMeta, TSharedLibsMap } from '@emscripten-forge/mambajs';
-import {
-  install,
-  pipInstall,
-  pipUninstall,
-  remove
-} from '@emscripten-forge/mambajs';
+import type * as Mambajs from '@emscripten-forge/mambajs';
 import type {
   ILock,
   IInstallationCommandOptions,
@@ -27,6 +22,25 @@ import {
 } from '@emscripten-forge/mambajs-core';
 import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
 import type { IEmpackXeusWorkerKernel } from './interfaces';
+
+/**
+ * Lazily load @emscripten-forge/mambajs.
+ *
+ * It bundles the rattler package solver, whose ~4 MB wasm is inlined as base64 and
+ * compiled synchronously when the module is evaluated. The solver is only needed for
+ * %conda / %pip (un)install, so we don't want to pay for it on every kernel start.
+ * webpackMode "eager" keeps the code in the worker bundle (no extra chunk to load),
+ * but defers its evaluation to the first call.
+ */
+let mambajsPromise: Promise<typeof Mambajs> | undefined;
+function loadMambajs(): Promise<typeof Mambajs> {
+  if (!mambajsPromise) {
+    mambajsPromise = import(
+      /* webpackMode: "eager" */ '@emscripten-forge/mambajs'
+    );
+  }
+  return mambajsPromise;
+}
 
 async function fetchJson(url: string): Promise<any> {
   const response = await fetch(url);
@@ -198,6 +212,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
    * @param options
    */
   protected async install(options: IInstallationCommandOptions) {
+    const { install, pipInstall } = await loadMambajs();
     let env: ILock;
 
     switch (options.type) {
@@ -226,6 +241,7 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   protected async uninstall(
     options: IUninstallationCommandOptions
   ): Promise<void> {
+    const { remove, pipUninstall } = await loadMambajs();
     let env: ILock;
 
     switch (options.type) {
