@@ -30,6 +30,12 @@ export interface IXeusWorkerKernel extends IWorkerKernel {
   getWasmModule(): any;
 
   /**
+   * Snapshot of the unpacked environment, for the next worker of the same kernel
+   * (restart), or undefined if the worker doesn't provide one.
+   */
+  getFsSnapshot(): Promise<any>;
+
+  /**
    * Process drive request
    * @param data
    */
@@ -131,5 +137,10 @@ export namespace IXeusWorkerKernel {
      * worker of the same kernel. Instantiating it skips the compilation.
      */
     wasmModule?: any;
+    /**
+     * The unpacked environment from a previous worker of the same kernel
+     * (see getFsSnapshot). Restoring it skips fetching and unpacking the packages.
+     */
+    fsSnapshot?: any;
   }
 }

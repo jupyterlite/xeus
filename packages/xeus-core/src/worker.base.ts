@@ -177,6 +177,14 @@ export abstract class XeusRemoteKernelBase {
    */
   protected wasmModule: any;
 
+  /**
+   * Snapshot of the unpacked environment for the next worker (restart).
+   * None by default.
+   */
+  async getFsSnapshot(): Promise<any> {
+    return undefined;
+  }
+
   protected get Module() {
     return globalThis.Module;
   }

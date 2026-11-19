@@ -23,6 +23,8 @@ import {
 import { XeusRemoteKernelBase } from '@jupyterlite/xeus-core';
 import type { IEmpackXeusWorkerKernel } from './interfaces';
 import { envFingerprint, restorePycCache, savePycCache } from './pyc-cache';
+import type { IFsSnapshot } from './fs-snapshot';
+import { createFsSnapshot, envRoots, restoreFsSnapshot } from './fs-snapshot';
 
 /**
  * Lazily load @emscripten-forge/mambajs.
@@ -179,22 +181,39 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
     }
 
     this._prefix = empackEnvMeta.prefix;
+    this._envKey = envFingerprint(kernelSpec.envName, empackEnvMeta);
 
-    const bootstrapped = await bootstrapEmpackPackedEnvironment({
-      empackEnvMeta,
-      lock: this._lock,
-      pkgRootUrl: this._pkgRootUrl,
-      Module: this.Module,
-      logger: this.logger,
-      pythonVersion: this._pythonVersion
-    });
+    // On restart, reuse the files unpacked by the previous worker (see fs-snapshot.ts)
+    const snapshot = options.fsSnapshot as IFsSnapshot | undefined;
+    if (snapshot?.key === this._envKey) {
+      try {
+        restoreFsSnapshot(this.Module, snapshot);
+        this._paths = snapshot.paths;
+        this._pythonVersion = snapshot.pythonVersion;
+        this._sharedLibs = snapshot.sharedLibs;
+        this._restoredFromSnapshot = true;
+      } catch (e) {
+        console.warn('Cannot restore the FS snapshot, unpacking packages', e);
+      }
+    }
 
-    this._paths = bootstrapped.paths;
-    this._pythonVersion = bootstrapped.pythonVersion;
-    this._sharedLibs = bootstrapped.sharedLibs;
+    if (!this._restoredFromSnapshot) {
+      const bootstrapped = await bootstrapEmpackPackedEnvironment({
+        empackEnvMeta,
+        lock: this._lock,
+        pkgRootUrl: this._pkgRootUrl,
+        Module: this.Module,
+        logger: this.logger,
+        pythonVersion: this._pythonVersion
+      });
+
+      this._paths = bootstrapped.paths;
+      this._pythonVersion = bootstrapped.pythonVersion;
+      this._sharedLibs = bootstrapped.sharedLibs;
+    }
+    this._envRoots = envRoots(this.Module);
 
     // Restore the Python bytecode compiled by a previous kernel (see pyc-cache.ts)
-    this._envKey = envFingerprint(kernelSpec.envName, empackEnvMeta);
     if (this._pythonVersion) {
       try {
         this._restoredPycs = await restorePycCache(this.Module, this._envKey);
@@ -205,9 +224,39 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
   }
 
   /**
-   * Persist the Python bytecode compiled during startup for the next kernel.
+   * Snapshot of the unpacked environment for the next worker of this kernel
+   * (restart), or undefined. Resolves shortly after the kernel is ready.
+   */
+  getFsSnapshot(): Promise<IFsSnapshot | undefined> {
+    return this._fsSnapshot;
+  }
+
+  /**
+   * Persist what the next kernel can reuse: the unpacked environment (for
+   * restarts) and the Python bytecode compiled during startup.
    */
   protected async afterKernelStarted(): Promise<void> {
+    // Only snapshot the pristine environment, and only once per page: a worker
+    // restored from a snapshot doesn't need to create a new one.
+    let snapshot: IFsSnapshot | undefined;
+    if (
+      !this._restoredFromSnapshot &&
+      !this._envModified &&
+      this._envRoots.length
+    ) {
+      try {
+        snapshot = createFsSnapshot(this.Module, this._envRoots, {
+          key: this._envKey,
+          paths: this._paths,
+          pythonVersion: this._pythonVersion,
+          sharedLibs: this._sharedLibs
+        });
+      } catch (e) {
+        console.warn('Cannot create the FS snapshot', e);
+      }
+    }
+    this._resolveFsSnapshot(snapshot);
+
     if (!this._pythonVersion || !this._envKey || this._envModified) {
       return;
     }
@@ -413,7 +462,13 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
 
   private _envKey = '';
   private _envModified = false;
+  private _envRoots: string[] = [];
+  private _restoredFromSnapshot = false;
   private _restoredPycs: string[] = [];
+  private _resolveFsSnapshot: (s: IFsSnapshot | undefined) => void = () => {};
+  private _fsSnapshot = new Promise<IFsSnapshot | undefined>(resolve => {
+    this._resolveFsSnapshot = resolve;
+  });
   private _emscriptenVersion: number | undefined = undefined;
   private _pythonVersion: number[] | undefined;
   private _prefix = '';

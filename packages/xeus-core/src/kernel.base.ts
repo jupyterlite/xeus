@@ -25,6 +25,12 @@ import type { IXeusWorkerKernel } from './interfaces';
  */
 const compiledWasmModules = new Map<string, any>();
 
+/**
+ * Snapshots of the unpacked environment, shared by all kernels of this page,
+ * so that a restart doesn't fetch, decompress and untar all packages again.
+ */
+const fsSnapshots = new Map<string, any>();
+
 export abstract class WebWorkerKernelBase implements IKernel {
   /**
    * Instantiate a new WebWorkerKernelBase
@@ -77,8 +83,9 @@ export abstract class WebWorkerKernelBase implements IKernel {
   /**
    * Call `initialize` on the remote kernel.
    *
-   * Passes the wasm module compiled by a previous kernel of the same kind, if any;
-   * otherwise fetches the module compiled by this worker for the next one.
+   * Passes what a previous kernel of the same kind left for reuse (compiled wasm
+   * module, unpacked environment), and otherwise fetches it from this worker for
+   * the next one (e.g. restart), without delaying this kernel.
    */
   protected async initializeRemote(
     options: WebWorkerKernelBase.IOptions,
@@ -90,34 +97,44 @@ export abstract class WebWorkerKernelBase implements IKernel {
       options.kernelSpec?.argv?.[0]
     ].join('|');
     const wasmModule = compiledWasmModules.get(cacheKey);
+    const fsSnapshot = fsSnapshots.get(cacheKey);
 
-    if (wasmModule) {
-      try {
-        return await this.remoteKernel.initialize({
-          ...initOptions,
-          wasmModule
-        });
-      } catch (e: any) {
-        if (e?.name !== 'DataCloneError') {
-          throw e;
-        }
-        // The transport cannot clone a WebAssembly.Module: let the worker compile it
-        compiledWasmModules.delete(cacheKey);
-        return await this.remoteKernel.initialize(initOptions);
+    try {
+      await this.remoteKernel.initialize({
+        ...initOptions,
+        wasmModule,
+        fsSnapshot
+      });
+    } catch (e: any) {
+      if (e?.name !== 'DataCloneError') {
+        throw e;
       }
+      // The transport cannot clone what we pass: start from scratch
+      compiledWasmModules.delete(cacheKey);
+      fsSnapshots.delete(cacheKey);
+      await this.remoteKernel.initialize(initOptions);
     }
 
-    await this.remoteKernel.initialize(initOptions);
-    // Keep the compiled module for the next kernel (e.g. restart), without delaying this one
-    Promise.resolve(this.remoteKernel.getWasmModule())
-      .then(m => {
-        if (m instanceof WebAssembly.Module) {
-          compiledWasmModules.set(cacheKey, m);
-        }
-      })
-      .catch(e =>
-        console.warn('Cannot get the compiled kernel wasm module', e)
-      );
+    if (!compiledWasmModules.has(cacheKey)) {
+      Promise.resolve(this.remoteKernel.getWasmModule())
+        .then(m => {
+          if (m instanceof WebAssembly.Module) {
+            compiledWasmModules.set(cacheKey, m);
+          }
+        })
+        .catch(e =>
+          console.warn('Cannot get the compiled kernel wasm module', e)
+        );
+    }
+    if (!fsSnapshots.has(cacheKey)) {
+      Promise.resolve(this.remoteKernel.getFsSnapshot())
+        .then(snapshot => {
+          if (snapshot) {
+            fsSnapshots.set(cacheKey, snapshot);
+          }
+        })
+        .catch(e => console.warn('Cannot get the FS snapshot', e));
+    }
   }
 
   async handleMessage(msg: KernelMessage.IMessage): Promise<void> {
