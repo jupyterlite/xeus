@@ -63,6 +63,51 @@ export abstract class EmpackedXeusRemoteKernel extends XeusRemoteKernelBase {
 
     importScripts(binaryJS);
     return {
+      // Compile the wasm here (or reuse the module compiled by a previous worker of
+      // this kernel), so that the compiled module can be handed to the next worker.
+      instantiateWasm: (
+        imports: any,
+        receiveInstance: (instance: any, module: any) => void
+      ) => {
+        const compile = async () => {
+          try {
+            return await WebAssembly.compileStreaming(
+              fetch(binaryWASM, { credentials: 'same-origin' })
+            );
+          } catch {
+            // e.g. wrong MIME type: fall back to non-streaming compilation
+            const response = await fetch(binaryWASM, {
+              credentials: 'same-origin'
+            });
+            return WebAssembly.compile(await response.arrayBuffer());
+          }
+        };
+        const instantiate = async () => {
+          if (options.wasmModule) {
+            try {
+              const instance = await WebAssembly.instantiate(
+                options.wasmModule,
+                imports
+              );
+              return { instance, module: options.wasmModule };
+            } catch (e) {
+              console.warn('Cannot reuse the compiled wasm module', e);
+            }
+          }
+          const module = await compile();
+          const instance = await WebAssembly.instantiate(module, imports);
+          return { instance, module };
+        };
+        instantiate()
+          .then(({ instance, module }) => {
+            this.wasmModule = module;
+            receiveInstance(instance, module);
+          })
+          .catch(e =>
+            console.error('Failed to instantiate the kernel wasm', e)
+          );
+        return {};
+      },
       locateFile: (file: string) => {
         if (file in sharedLibs) {
           return URLExt.join(kernelRootUrl, kernelSpec.name, file);

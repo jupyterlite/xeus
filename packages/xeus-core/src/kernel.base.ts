@@ -16,6 +16,15 @@ import { DriveContentsProcessor } from '@jupyterlite/services';
 
 import type { IXeusWorkerKernel } from './interfaces';
 
+/**
+ * Compiled kernel wasm modules, shared by all kernels of this page.
+ *
+ * A kernel restart creates a new worker. Handing it the WebAssembly.Module compiled
+ * by the previous worker avoids recompiling the wasm, and V8 shares the code it has
+ * already compiled and optimized (lazily compiled / tiered-up functions included).
+ */
+const compiledWasmModules = new Map<string, any>();
+
 export abstract class WebWorkerKernelBase implements IKernel {
   /**
    * Instantiate a new WebWorkerKernelBase
@@ -56,13 +65,59 @@ export abstract class WebWorkerKernelBase implements IKernel {
    * @param options
    */
   protected async initRemote(options: WebWorkerKernelBase.IOptions) {
-    return this.remoteKernel.initialize({
+    return this.initializeRemote(options, {
       baseUrl: PageConfig.getBaseUrl(),
       kernelId: this.id,
       mountDrive: options.mountDrive,
       kernelSpec: options.kernelSpec,
       browsingContextId: options.browsingContextId
     });
+  }
+
+  /**
+   * Call `initialize` on the remote kernel.
+   *
+   * Passes the wasm module compiled by a previous kernel of the same kind, if any;
+   * otherwise fetches the module compiled by this worker for the next one.
+   */
+  protected async initializeRemote(
+    options: WebWorkerKernelBase.IOptions,
+    initOptions: IXeusWorkerKernel.IOptions & { [key: string]: any }
+  ): Promise<void> {
+    const cacheKey = [
+      PageConfig.getBaseUrl(),
+      options.kernelSpec?.name,
+      options.kernelSpec?.argv?.[0]
+    ].join('|');
+    const wasmModule = compiledWasmModules.get(cacheKey);
+
+    if (wasmModule) {
+      try {
+        return await this.remoteKernel.initialize({
+          ...initOptions,
+          wasmModule
+        });
+      } catch (e: any) {
+        if (e?.name !== 'DataCloneError') {
+          throw e;
+        }
+        // The transport cannot clone a WebAssembly.Module: let the worker compile it
+        compiledWasmModules.delete(cacheKey);
+        return await this.remoteKernel.initialize(initOptions);
+      }
+    }
+
+    await this.remoteKernel.initialize(initOptions);
+    // Keep the compiled module for the next kernel (e.g. restart), without delaying this one
+    Promise.resolve(this.remoteKernel.getWasmModule())
+      .then(m => {
+        if (m instanceof WebAssembly.Module) {
+          compiledWasmModules.set(cacheKey, m);
+        }
+      })
+      .catch(e =>
+        console.warn('Cannot get the compiled kernel wasm module', e)
+      );
   }
 
   async handleMessage(msg: KernelMessage.IMessage): Promise<void> {
