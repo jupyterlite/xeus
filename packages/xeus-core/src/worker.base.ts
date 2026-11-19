@@ -165,6 +165,18 @@ export abstract class XeusRemoteKernelBase {
 
   abstract get emscriptenMajorVersion(): number;
 
+  /**
+   * The compiled kernel wasm module (WebAssembly.Module), if the worker compiled it.
+   */
+  getWasmModule(): any {
+    return this.wasmModule;
+  }
+
+  /**
+   * Set by the worker implementation when it compiles/instantiates the kernel wasm itself.
+   */
+  protected wasmModule: any;
+
   protected get Module() {
     return globalThis.Module;
   }

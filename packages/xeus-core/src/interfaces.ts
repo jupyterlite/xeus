@@ -24,6 +24,12 @@ export interface IXeusWorkerKernel extends IWorkerKernel {
   initialize(options: IXeusWorkerKernel.IOptions): Promise<void>;
 
   /**
+   * The compiled kernel wasm module (WebAssembly.Module), if the worker compiled it.
+   * The main thread hands it to the next worker of the same kernel (e.g. on restart).
+   */
+  getWasmModule(): any;
+
+  /**
    * Process drive request
    * @param data
    */
@@ -120,5 +126,10 @@ export namespace IXeusWorkerKernel {
     kernelSpec: any;
     mountDrive: boolean;
     browsingContextId: string;
+    /**
+     * An already compiled kernel wasm module (WebAssembly.Module) from a previous
+     * worker of the same kernel. Instantiating it skips the compilation.
+     */
+    wasmModule?: any;
   }
 }
