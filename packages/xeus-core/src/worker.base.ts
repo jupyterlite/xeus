@@ -228,6 +228,23 @@ export abstract class XeusRemoteKernelBase {
     this.logger.log('Kernel successfuly started!');
 
     this.setKernelReady();
+
+    // Post-start work (e.g. persisting caches) must not delay readiness,
+    // nor compete with the first cell execution.
+    setTimeout(() => {
+      this.afterKernelStarted(options).catch(e =>
+        console.warn('afterKernelStarted failed', e)
+      );
+    }, 1000);
+  }
+
+  /**
+   * Hook called asynchronously, shortly after the kernel is ready.
+   */
+  protected async afterKernelStarted(
+    options: IXeusWorkerKernel.IOptions
+  ): Promise<void> {
+    // no-op by default
   }
 
   protected initializeLogger(
