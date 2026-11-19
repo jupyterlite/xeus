@@ -165,6 +165,26 @@ export abstract class XeusRemoteKernelBase {
 
   abstract get emscriptenMajorVersion(): number;
 
+  /**
+   * The compiled kernel wasm module (WebAssembly.Module), if the worker compiled it.
+   */
+  getWasmModule(): any {
+    return this.wasmModule;
+  }
+
+  /**
+   * Set by the worker implementation when it compiles/instantiates the kernel wasm itself.
+   */
+  protected wasmModule: any;
+
+  /**
+   * Snapshot of the unpacked environment for the next worker (restart).
+   * None by default.
+   */
+  async getFsSnapshot(): Promise<any> {
+    return undefined;
+  }
+
   protected get Module() {
     return globalThis.Module;
   }
@@ -228,6 +248,23 @@ export abstract class XeusRemoteKernelBase {
     this.logger.log('Kernel successfuly started!');
 
     this.setKernelReady();
+
+    // Post-start work (e.g. persisting caches) must not delay readiness,
+    // nor compete with the first cell execution.
+    setTimeout(() => {
+      this.afterKernelStarted(options).catch(e =>
+        console.warn('afterKernelStarted failed', e)
+      );
+    }, 1000);
+  }
+
+  /**
+   * Hook called asynchronously, shortly after the kernel is ready.
+   */
+  protected async afterKernelStarted(
+    options: IXeusWorkerKernel.IOptions
+  ): Promise<void> {
+    // no-op by default
   }
 
   protected initializeLogger(

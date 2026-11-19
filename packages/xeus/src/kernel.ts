@@ -129,7 +129,7 @@ export class WebWorkerKernel extends WebWorkerKernelBase {
    * @param options
    */
   protected async initRemote(options: WebWorkerKernel.IOptions) {
-    return (this.remoteKernel as IEmpackXeusWorkerKernel).initialize({
+    return this.initializeRemote(options, {
       baseUrl: PageConfig.getBaseUrl(),
       kernelId: this.id,
       mountDrive: options.mountDrive,
